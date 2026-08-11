@@ -14,8 +14,8 @@ const LINES = [
     key: 'stewardship-line',
   },
   { text: '— harnessing it ethically', from: 'left', delay: '1s' },
-  { text: 'for people, communities,', from: 'up' },
-  { text: 'and the world.', from: 'up' },
+  { text: 'for people, communities,', from: 'up', delay: '1.6s' },
+  { text: 'and the world.', from: 'up', delay: '1.8s' },
 ]
 
 const GROW_DISTANCE = 500
