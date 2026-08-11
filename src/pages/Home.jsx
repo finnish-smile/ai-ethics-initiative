@@ -71,6 +71,7 @@ export default function Home() {
       <div className="hero-title">
         <h1 style={{ transform: `scale(${heroScale})` }}>Welcome</h1>
         <div className="hero-subtitle">to the BYU Marriott AI &amp; Ethics Initiative</div>
+        <div className="hero-subtitle hero-subtitle-small">We are so happy you're here</div>
       </div>
 
       <div className="reveal-lines">
