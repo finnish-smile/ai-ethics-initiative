@@ -13,9 +13,8 @@ const LINES = [
     from: 'scale',
     key: 'stewardship-line',
   },
-  { text: '— harnessing it ethically', from: 'left' },
-  { text: 'for people,', from: 'up' },
-  { text: 'communities,', from: 'up' },
+  { text: '— harnessing it ethically', from: 'left', delay: '0.4s' },
+  { text: 'for people, communities,', from: 'up' },
   { text: 'and the world.', from: 'up' },
 ]
 
@@ -70,7 +69,7 @@ export default function Home() {
       <div className="reveal-lines">
         {LINES.map((line, idx) => {
           const staggerIndex = idx - 4
-          const delay = staggerIndex >= 0 ? `${staggerIndex * 0.15}s` : '0s'
+          const delay = line.delay ?? (staggerIndex >= 0 ? `${staggerIndex * 0.15}s` : '0s')
           return (
             <div
               key={line.key || line.text}
