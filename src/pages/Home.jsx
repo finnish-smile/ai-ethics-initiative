@@ -26,9 +26,22 @@ const FLAT_LINES = LINES.flatMap((line) => (Array.isArray(line) ? line : [line])
 const GROW_DISTANCE = 500
 const MAX_GROW = 0.5
 
+const WELCOME_WORDS = [
+  'so happy',
+  'overjoyed',
+  'thrilled',
+  'ecstatic',
+  'delighted',
+  'stoked',
+  'elated',
+]
+
 export default function Home() {
   const [revealed, setRevealed] = useState(FLAT_LINES.map(() => false))
   const [heroScale, setHeroScale] = useState(1)
+  const [welcomeWord] = useState(
+    () => WELCOME_WORDS[Math.floor(Math.random() * WELCOME_WORDS.length)],
+  )
   const lineRefs = useRef([])
 
   useEffect(() => {
@@ -71,7 +84,9 @@ export default function Home() {
       <div className="hero-title">
         <h1 style={{ transform: `scale(${heroScale})` }}>Welcome</h1>
         <div className="hero-subtitle">to the BYU Marriott AI &amp; Ethics Initiative</div>
-        <div className="hero-subtitle hero-subtitle-small">We are so happy you're here</div>
+        <div className="hero-subtitle hero-subtitle-small">
+          We are {welcomeWord} you're here!
+        </div>
       </div>
 
       <div className="reveal-lines">
