@@ -67,7 +67,7 @@ export default function Home() {
   let flatIndex = 0
 
   return (
-    <>
+    <div className="worm-cursor">
       <div className="hero-title">
         <h1 style={{ transform: `scale(${heroScale})` }}>Welcome</h1>
         <div className="hero-subtitle">to the BYU Marriott AI &amp; Ethics Initiative</div>
@@ -120,6 +120,6 @@ export default function Home() {
       <Link to="/get-involved" className="btn-outline hero-cta">
         Get Involved
       </Link>
-    </>
+    </div>
   )
 }
