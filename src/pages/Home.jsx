@@ -68,30 +68,20 @@ export default function Home() {
       </div>
 
       <div className="reveal-lines">
-        {LINES.slice(0, 4).map((line, i) => (
-          <div
-            key={line.key || line.text}
-            ref={setLineRef(i)}
-            className={`reveal-line reveal-${line.from} ${revealed[i] ? 'revealed' : ''}`}
-          >
-            {line.text}
-          </div>
-        ))}
-        <div className="reveal-line-group">
-          {LINES.slice(4).map((line, i) => {
-            const idx = i + 4
-            return (
-              <div
-                key={line.key || line.text}
-                ref={setLineRef(idx)}
-                className={`reveal-line reveal-${line.from} ${revealed[idx] ? 'revealed' : ''}`}
-                style={{ transitionDelay: revealed[idx] ? `${i * 0.15}s` : '0s' }}
-              >
-                {line.text}
-              </div>
-            )
-          })}
-        </div>
+        {LINES.map((line, idx) => {
+          const staggerIndex = idx - 4
+          const delay = staggerIndex >= 0 ? `${staggerIndex * 0.15}s` : '0s'
+          return (
+            <div
+              key={line.key || line.text}
+              ref={setLineRef(idx)}
+              className={`reveal-line reveal-${line.from} ${revealed[idx] ? 'revealed' : ''}`}
+              style={{ transitionDelay: revealed[idx] ? delay : '0s' }}
+            >
+              {line.text}
+            </div>
+          )
+        })}
       </div>
 
       <p className="body-text center">
