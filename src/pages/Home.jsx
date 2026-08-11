@@ -115,7 +115,7 @@ export default function Home() {
         The AI &amp; Ethics Initiative is a BYU student-run initiative (which is awesome)! We are
         faculty-supervised and funded through the BYU Marriott School of Business (to whom we are
         so grateful). Our goal is to develop Christlike, ethical leadership around artificial
-        intelligence one small step at a time. 🐛
+        intelligence one small step at a time. 🪱
       </p>
 
       <Link to="/get-involved" className="btn-outline hero-cta">
