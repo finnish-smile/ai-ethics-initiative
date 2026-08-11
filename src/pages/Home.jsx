@@ -16,9 +16,9 @@ const LINES = [
   { text: '— harnessing it ethically', from: 'left', delay: '0.5s' },
   [
     { text: 'for people,', from: 'up', delay: '0.65s' },
-    { text: 'communities,', from: 'up', delay: '0.8s' },
+    { text: 'communities,', from: 'up', delay: '1.15s' },
   ],
-  { text: 'and the world.', from: 'up', delay: '0.95s' },
+  { text: 'and the world.', from: 'up', delay: '1.3s' },
 ]
 
 const FLAT_LINES = LINES.flatMap((line) => (Array.isArray(line) ? line : [line]))
