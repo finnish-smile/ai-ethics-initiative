@@ -3,7 +3,19 @@ import { Link } from 'react-router-dom'
 
 const LINES = [
   { text: 'We develop Christlike leaders', from: 'left' },
-  { text: 'who treat artificial intelligence as a stewardship —', from: 'right' },
+  {
+    text: (
+      <>
+        who treat artificial intelligence as a{' '}
+        <a href="#" className="stewardship-word">
+          stewardship
+        </a>{' '}
+        —
+      </>
+    ),
+    from: 'right',
+    key: 'stewardship-line',
+  },
   { text: 'harnessing it ethically', from: 'left' },
   { text: 'for people,', from: 'up' },
   { text: 'communities,', from: 'up' },
@@ -61,7 +73,7 @@ export default function Home() {
       <div className="reveal-lines">
         {LINES.slice(0, 3).map((line, i) => (
           <div
-            key={line.text}
+            key={line.key || line.text}
             ref={setLineRef(i)}
             className={`reveal-line reveal-${line.from} ${revealed[i] ? 'revealed' : ''}`}
           >
@@ -73,7 +85,7 @@ export default function Home() {
             const idx = i + 3
             return (
               <div
-                key={line.text}
+                key={line.key || line.text}
                 ref={setLineRef(idx)}
                 className={`reveal-line reveal-${line.from} ${revealed[idx] ? 'revealed' : ''}`}
                 style={{ transitionDelay: revealed[idx] ? `${i * 0.15}s` : '0s' }}

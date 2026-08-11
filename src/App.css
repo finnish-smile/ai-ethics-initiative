@@ -87,6 +87,20 @@
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
+.stewardship-word {
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: #111111;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.stewardship-word:hover {
+  transform: scale(1.12);
+  color: #111111;
+}
+
 .reveal-left {
   transform: translateX(-70px);
 }
