@@ -24,15 +24,19 @@ export default function Home() {
 
       setHeroScale(1 + Math.min(1, y / GROW_DISTANCE) * MAX_GROW)
 
-      if (y <= 0) return
+      if (y <= 0) {
+        setRevealed((prev) => (prev.some(Boolean) ? LINES.map(() => false) : prev))
+        return
+      }
       setRevealed((prev) => {
         let changed = false
         const next = [...prev]
         lineRefs.current.forEach((el, i) => {
-          if (!el || next[i]) return
+          if (!el) return
           const rect = el.getBoundingClientRect()
-          if (rect.top < window.innerHeight * 0.75) {
-            next[i] = true
+          const shouldShow = rect.top < window.innerHeight * 0.75
+          if (shouldShow !== next[i]) {
+            next[i] = shouldShow
             changed = true
           }
         })
