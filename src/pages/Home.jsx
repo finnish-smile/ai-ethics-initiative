@@ -128,10 +128,10 @@ export default function Home() {
       </div>
 
       <p className="body-text center">
-        The AI &amp; Ethics Initiative is a student-run thing here at BYU (pretty awesome, if you
-        ask us)! We're faculty-supervised and funded by the BYU Marriott School of Business —
-        big thanks to them. Our whole goal is to grow Christlike, ethical leadership around
-        AI... one inchworm step at a time. 🪱
+        The AI &amp; Ethics Initiative is a student-run venture here at BYU (pretty awesome, if
+        you ask us)! We're faculty-supervised and funded by the BYU Marriott School of Business
+        — big thanks to them. Our whole goal is to grow Christlike, ethical leadership around
+        AI... one inch at a time. 🪱
       </p>
 
       <Link to="/get-involved" className="btn-outline hero-cta">
