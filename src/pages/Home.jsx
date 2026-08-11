@@ -13,7 +13,7 @@ const LINES = [
     from: 'scale',
     key: 'stewardship-line',
   },
-  { text: '— harnessing it ethically', from: 'left', delay: '0.4s' },
+  { text: '— harnessing it ethically', from: 'left', delay: '1s' },
   { text: 'for people, communities,', from: 'up' },
   { text: 'and the world.', from: 'up' },
 ]
