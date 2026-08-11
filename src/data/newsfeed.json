@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "lastUpdated": "2026-08-10T09:00:00-06:00",
+    "note": "Placeholder data. Refreshed periodically by an automated process — see README."
+  },
+  "items": [
+    {
+      "title": "Placeholder: Study finds gaps in AI bias auditing practices",
+      "source": "Placeholder Journal",
+      "url": "#",
+      "category": "Research",
+      "date": "2026-08-08",
+      "summary": "Placeholder summary describing the finding and why it matters for practitioners."
+    },
+    {
+      "title": "Placeholder: Major model provider updates usage policy",
+      "source": "Placeholder News Outlet",
+      "url": "#",
+      "category": "Major Updates",
+      "date": "2026-08-07",
+      "summary": "Placeholder summary of the policy change and its expected impact."
+    },
+    {
+      "title": "Placeholder: Universities debate AI use guidelines for coursework",
+      "source": "Placeholder Publication",
+      "url": "#",
+      "category": "News",
+      "date": "2026-08-06",
+      "summary": "Placeholder summary covering the debate and positions involved."
+    },
+    {
+      "title": "Placeholder: New benchmark for measuring AI reasoning limits",
+      "source": "Placeholder Journal",
+      "url": "#",
+      "category": "Research",
+      "date": "2026-08-05",
+      "summary": "Placeholder summary of the benchmark's design and early results."
+    },
+    {
+      "title": "Placeholder: Regulator proposes new AI transparency rules",
+      "source": "Placeholder News Outlet",
+      "url": "#",
+      "category": "Major Updates",
+      "date": "2026-08-04",
+      "summary": "Placeholder summary of the proposed rules and who they'd affect."
+    },
+    {
+      "title": "Placeholder: Panel discussion recap on AI and the workforce",
+      "source": "Placeholder Publication",
+      "url": "#",
+      "category": "News",
+      "date": "2026-08-02",
+      "summary": "Placeholder recap summary of key points raised in the panel."
+    }
+  ]
+}

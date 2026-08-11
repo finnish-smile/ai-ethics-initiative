@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Original Claude Design export (reference only, not part of the build)
+/BYU Marriott animated logo/
+*.zip
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
