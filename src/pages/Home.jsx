@@ -3,17 +3,14 @@ import { Link } from 'react-router-dom'
 
 const LINES = [
   { text: 'We develop Christlike leaders', from: 'left' },
+  { text: 'who treat artificial intelligence as a', from: 'right' },
   {
     text: (
-      <>
-        who treat artificial intelligence as a{' '}
-        <a href="#" className="stewardship-word">
-          stewardship
-        </a>{' '}
-        —
-      </>
+      <a href="#" className="stewardship-word">
+        stewardship —
+      </a>
     ),
-    from: 'right',
+    from: 'scale',
     key: 'stewardship-line',
   },
   { text: 'harnessing it ethically', from: 'left' },
@@ -71,7 +68,7 @@ export default function Home() {
       </div>
 
       <div className="reveal-lines">
-        {LINES.slice(0, 3).map((line, i) => (
+        {LINES.slice(0, 4).map((line, i) => (
           <div
             key={line.key || line.text}
             ref={setLineRef(i)}
@@ -81,8 +78,8 @@ export default function Home() {
           </div>
         ))}
         <div className="reveal-line-group">
-          {LINES.slice(3).map((line, i) => {
-            const idx = i + 3
+          {LINES.slice(4).map((line, i) => {
+            const idx = i + 4
             return (
               <div
                 key={line.key || line.text}

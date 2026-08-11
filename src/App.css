@@ -113,9 +113,17 @@
   transform: translateY(28px);
 }
 
+.reveal-scale {
+  transform: scale(0.6);
+}
+
 .reveal-line.revealed {
   opacity: 1;
   transform: translateX(0) translateY(0);
+}
+
+.reveal-scale.revealed {
+  transform: scale(1);
 }
 
 .reveal-line-group {
