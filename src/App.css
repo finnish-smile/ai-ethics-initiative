@@ -190,8 +190,9 @@
 }
 
 .hero-cta {
-  margin-top: 56px;
-  margin-bottom: 100px;
+  display: block;
+  width: fit-content;
+  margin: 56px auto 100px;
 }
 
 /* Generic page layouts */
