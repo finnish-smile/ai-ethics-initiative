@@ -7,13 +7,13 @@ const LINES = [
   {
     text: (
       <a href="#" className="stewardship-word">
-        stewardship —
+        stewardship
       </a>
     ),
     from: 'scale',
     key: 'stewardship-line',
   },
-  { text: 'harnessing it ethically', from: 'left' },
+  { text: '— harnessing it ethically', from: 'left' },
   { text: 'for people,', from: 'up' },
   { text: 'communities,', from: 'up' },
   { text: 'and the world.', from: 'up' },
