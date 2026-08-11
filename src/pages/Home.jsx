@@ -13,12 +13,12 @@ const LINES = [
     from: 'scale',
     key: 'stewardship-line',
   },
-  { text: '— harnessing it ethically', from: 'left', delay: '1s' },
+  { text: '— harnessing it ethically', from: 'left', delay: '0.5s' },
   [
-    { text: 'for people,', from: 'up', delay: '1.6s' },
-    { text: 'communities,', from: 'up', delay: '1.9s' },
+    { text: 'for people,', from: 'up', delay: '0.65s' },
+    { text: 'communities,', from: 'up', delay: '0.8s' },
   ],
-  { text: 'and the world.', from: 'up', delay: '2.2s' },
+  { text: 'and the world.', from: 'up', delay: '0.95s' },
 ]
 
 const FLAT_LINES = LINES.flatMap((line) => (Array.isArray(line) ? line : [line]))
