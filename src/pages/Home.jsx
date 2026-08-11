@@ -14,15 +14,20 @@ const LINES = [
     key: 'stewardship-line',
   },
   { text: '— harnessing it ethically', from: 'left', delay: '1s' },
-  { text: 'for people, communities,', from: 'up', delay: '1.6s' },
-  { text: 'and the world.', from: 'up', delay: '1.8s' },
+  [
+    { text: 'for people,', from: 'up', delay: '1.6s' },
+    { text: 'communities,', from: 'up', delay: '1.9s' },
+  ],
+  { text: 'and the world.', from: 'up', delay: '2.2s' },
 ]
+
+const FLAT_LINES = LINES.flatMap((line) => (Array.isArray(line) ? line : [line]))
 
 const GROW_DISTANCE = 500
 const MAX_GROW = 0.5
 
 export default function Home() {
-  const [revealed, setRevealed] = useState(LINES.map(() => false))
+  const [revealed, setRevealed] = useState(FLAT_LINES.map(() => false))
   const [heroScale, setHeroScale] = useState(1)
   const lineRefs = useRef([])
 
@@ -33,7 +38,7 @@ export default function Home() {
       setHeroScale(1 + Math.min(1, y / GROW_DISTANCE) * MAX_GROW)
 
       if (y <= 0) {
-        setRevealed((prev) => (prev.some(Boolean) ? LINES.map(() => false) : prev))
+        setRevealed((prev) => (prev.some(Boolean) ? FLAT_LINES.map(() => false) : prev))
         return
       }
       setRevealed((prev) => {
@@ -59,6 +64,8 @@ export default function Home() {
     lineRefs.current[i] = el
   }
 
+  let flatIndex = 0
+
   return (
     <>
       <div className="hero-title">
@@ -67,15 +74,36 @@ export default function Home() {
       </div>
 
       <div className="reveal-lines">
-        {LINES.map((line, idx) => {
-          const staggerIndex = idx - 4
-          const delay = line.delay ?? (staggerIndex >= 0 ? `${staggerIndex * 0.15}s` : '0s')
+        {LINES.map((line) => {
+          if (Array.isArray(line)) {
+            return (
+              <div className="reveal-line-row" key={line.map((item) => item.text).join('-')}>
+                {line.map((item) => {
+                  const idx = flatIndex++
+                  return (
+                    <span
+                      key={item.key || item.text}
+                      ref={setLineRef(idx)}
+                      className={`reveal-line-item reveal-${item.from} ${
+                        revealed[idx] ? 'revealed' : ''
+                      }`}
+                      style={{ transitionDelay: revealed[idx] ? item.delay ?? '0s' : '0s' }}
+                    >
+                      {item.text}
+                    </span>
+                  )
+                })}
+              </div>
+            )
+          }
+
+          const idx = flatIndex++
           return (
             <div
               key={line.key || line.text}
               ref={setLineRef(idx)}
               className={`reveal-line reveal-${line.from} ${revealed[idx] ? 'revealed' : ''}`}
-              style={{ transitionDelay: revealed[idx] ? delay : '0s' }}
+              style={{ transitionDelay: revealed[idx] ? line.delay ?? '0s' : '0s' }}
             >
               {line.text}
             </div>

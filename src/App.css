@@ -126,6 +126,29 @@
   transform: scale(1);
 }
 
+.reveal-line-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.35;
+  color: #111111;
+  text-align: center;
+}
+
+.reveal-line-item {
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal-line-item.revealed {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
 .body-text {
   margin: 0;
   max-width: 640px;
