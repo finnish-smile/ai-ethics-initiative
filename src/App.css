@@ -54,6 +54,8 @@
   font-size: 96px;
   line-height: 1;
   letter-spacing: 0.01em;
+  transform-origin: center top;
+  will-change: transform;
 }
 
 .hero-subtitle {
@@ -74,7 +76,7 @@
 
 .reveal-line {
   margin: 0;
-  padding: 40px 0;
+  padding: 8px 0;
   font-style: italic;
   font-weight: 500;
   font-size: 32px;

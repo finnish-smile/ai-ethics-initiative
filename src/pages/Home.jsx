@@ -10,30 +10,37 @@ const LINES = [
   { text: 'and the world.', from: 'up' },
 ]
 
+const GROW_DISTANCE = 500
+const MAX_GROW = 0.5
+
 export default function Home() {
   const [revealed, setRevealed] = useState(LINES.map(() => false))
+  const [heroScale, setHeroScale] = useState(1)
   const lineRefs = useRef([])
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          const idx = lineRefs.current.indexOf(entry.target)
-          if (idx !== -1) {
-            setRevealed((prev) => {
-              if (prev[idx]) return prev
-              const next = [...prev]
-              next[idx] = true
-              return next
-            })
+    const onScroll = () => {
+      const y = window.scrollY
+
+      setHeroScale(1 + Math.min(1, y / GROW_DISTANCE) * MAX_GROW)
+
+      if (y <= 0) return
+      setRevealed((prev) => {
+        let changed = false
+        const next = [...prev]
+        lineRefs.current.forEach((el, i) => {
+          if (!el || next[i]) return
+          const rect = el.getBoundingClientRect()
+          if (rect.top < window.innerHeight * 0.75) {
+            next[i] = true
+            changed = true
           }
         })
-      },
-      { threshold: 0.5 },
-    )
-    lineRefs.current.forEach((el) => el && observer.observe(el))
-    return () => observer.disconnect()
+        return changed ? next : prev
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const setLineRef = (i) => (el) => {
@@ -43,7 +50,7 @@ export default function Home() {
   return (
     <>
       <div className="hero-title">
-        <h1>Welcome</h1>
+        <h1 style={{ transform: `scale(${heroScale})` }}>Welcome</h1>
         <div className="hero-subtitle">to the BYU Marriott AI &amp; Ethics Initiative</div>
       </div>
 
