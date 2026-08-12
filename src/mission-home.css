@@ -13,21 +13,19 @@
 }
 
 .mission--hero {
-  min-height: calc(200svh - 79px);
+  min-height: calc(100svh - 79px);
+  display: flex;
+  align-items: center;
 }
 
 .mission--hero .wrap {
-  padding-top: 0;
-  padding-bottom: clamp(64px, 12vw, 140px);
+  padding-block: clamp(64px, 12vw, 140px);
   width: 100%;
 }
 
 .mission--hero .mission__inner {
   margin: 0 auto;
   text-align: center;
-  /* Nothing is visible until the user scrolls — the hero starts a full
-     screen below the fold, then the rest reveals as you continue down. */
-  padding-top: 100svh;
 }
 
 .mission--hero .mission__actions {
@@ -47,7 +45,7 @@
   font-size: clamp(56px, 11vw, 140px);
   line-height: 1;
   color: #fff;
-  margin: 0;
+  margin: clamp(24px, 8vh, 96px) 0 0;
   transform-origin: center top;
   will-change: transform;
 }
