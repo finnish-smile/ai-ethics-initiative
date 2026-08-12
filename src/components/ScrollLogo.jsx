@@ -20,11 +20,21 @@ export default function ScrollLogo({ progress = 0 }) {
   const [w, setW] = useState(null)
 
   useLayoutEffect(() => {
-    const widths = {}
-    Object.entries(refs).forEach(([k, r]) => {
-      if (r.current) widths[k] = r.current.offsetWidth
-    })
-    setW(widths)
+    const measure = () => {
+      const widths = {}
+      Object.entries(refs).forEach(([k, r]) => {
+        if (r.current) widths[k] = r.current.offsetWidth
+      })
+      setW(widths)
+    }
+    measure()
+    // The initial measurement can run before the Newsreader webfont has
+    // finished loading, baking in narrower fallback-font widths that clip
+    // the real (wider) glyphs once the font swaps in. Re-measure once fonts
+    // are actually ready.
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(measure)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
