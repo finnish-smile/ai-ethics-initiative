@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About &middot; AI Ethics Initiative</title>
+<script>try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+<style>
+  /* "Three ways we show up" cards: lift in 3D (grow + shadow) instead of sliding up */
+  .cols-3 .card { transform-origin: center bottom; }
+  .cols-3 .card:hover {
+    transform: scale(1.035);
+    box-shadow: 0 14px 32px -20px rgba(12,34,54,0.30), 0 4px 10px -8px rgba(12,34,54,0.16);
+  }
+  .btn--copied, .btn--copied:hover {
+    background: #8a9aa8; color: #fff; cursor: default; filter: none; pointer-events: none;
+  }
+</style>
+</head>
+<body data-page="about">
+<div id="site-header"></div>
+
+<main data-screen-label="About page">
+  <header class="phead">
+    <div class="wrap">
+      <nav class="crumbs"><a href="index.html">Home</a> <span>/</span> <span>About</span></nav>
+      <p class="kicker">About the Initiative</p>
+      <h1>Shaping Wise and Accountable Stewards of AI, Rooted in Christ.</h1>
+      <p>Doctrine and Covenants 136:27 &mdash; &ldquo;Thou shalt be diligent in preserving what thou hast, that thou mayest be a wise steward; for it is the free gift of the Lord thy God, and thou art his steward.&rdquo;</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="intro-2col">
+        <div>
+          <p class="kicker">Why we exist</p>
+          <h2 style="font-size:clamp(24px,3vw,34px);margin-top:10px;">Short version.</h2>
+        </div>
+        <div class="prose" style="max-width:none;">
+          <p>Paragraph 1 of why we exist.</p>
+          <p>Paragraph 2 of why we exist.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background:#fff;border-block:1px solid var(--line);">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">What we do</p>
+          <h2>Three ways we show up</h2>
+        </div>
+      </div>
+      <div class="grid cols-3">
+        <a class="card" href="principles.html"><div class="card__body">
+          <span class="card__cat">GUIDANCE</span>
+          <h3 class="card__title">Principles &amp; Practical Tools</h3>
+          <p class="card__excerpt">Vital and insightful questions to consider when deciding how to use AI morally, paired with tools to help put those convictions into practice.</p>
+        </div></a>
+        <a class="card" href="news.html"><div class="card__body">
+          <span class="card__cat">INFORMATION</span>
+          <h3 class="card__title">News &amp; Newsletter</h3>
+          <p class="card__excerpt">Current and relevant information on the biggest questions today in the realm of AI Ethics.</p>
+        </div></a>
+        <a class="card" href="connections.html"><div class="card__body">
+          <span class="card__cat">CONNECTION</span>
+          <h3 class="card__title">Campus-Wide Engagement</h3>
+          <p class="card__excerpt">Organizations across BYU invested in helping AI move forward ethically, which we work to bring together and make accessible for students.</p>
+        </div></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="team">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">The team</p>
+          <h2>People behind the Initiative</h2>
+          <p>Something about us.</p>
+        </div>
+      </div>
+      <div class="team-grid">
+        <div class="member"><div class="member__photo ph"><span>portrait</span></div><h4>Paige Roberts</h4><p>Role &middot; Department/Major</p></div>
+        <div class="member"><div class="member__photo ph"><span>portrait</span></div><h4>Navy Wright</h4><p>Role &middot; Department/Major</p></div>
+        <div class="member"><div class="member__photo ph"><span>portrait</span></div><h4>Isaac Olsson</h4><p>Role &middot; Department/Major</p></div>
+        <div class="member"><div class="member__photo ph"><span>portrait</span></div><h4>Supporting Faculty</h4><p>Role &middot; Department/Major</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mission" id="contact" style="background:var(--navy);">
+    <div class="wrap" style="padding-block:clamp(48px,6vw,80px);">
+      <div class="mission__inner" style="display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;max-width:none;">
+        <p class="mission__statement" style="font-size:clamp(22px,3vw,32px);margin:0;max-width:30ch;">Chat with us! Schedule a meeting, ask a question, or just say hi!</p>
+        <button class="btn btn--accent" type="button" onclick="copyEmail(this)">Copy our email</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script>
+  function copyEmail(btn) {
+    var email = "ai-ethics@byu.edu";
+    function done() {
+      btn.classList.add("btn--copied");
+      btn.disabled = true;
+      btn.textContent = "Copied!";
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email).then(done, function () { fallbackCopy(email); done(); });
+    } else {
+      fallbackCopy(email);
+      done();
+    }
+    function fallbackCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+</script>
+<script src="assets/events.js"></script>
+<script src="assets/chrome.js"></script>
+</body>
+</html>

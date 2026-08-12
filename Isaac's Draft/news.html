@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>window.addEventListener("unhandledrejection",function(e){if(e.reason&&String(e.reason).indexOf("Transition was skipped")!==-1)e.preventDefault();});</script>
+<title>News &amp; Newsletter &middot; AI Ethics Initiative</title>
+<script>try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body data-page="news">
+<div id="site-header"></div>
+
+<main data-screen-label="News overview">
+  <header class="phead">
+    <div class="wrap">
+      <nav class="crumbs"><a href="index.html">Home</a> <span>/</span> <span>News</span></nav>
+      <p class="kicker">News &amp; newsletter</p>
+      <h1>News Something-or-other</h1>
+      <p>Tag-line for the news feed and newsletter</p>
+    </div>
+  </header>
+
+  <!-- FEATURED: newsletter (lead) + recent articles (side) -->
+  <section class="section" data-screen-label="Featured">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Latest</p>
+          <h2>This week in AI ethics</h2>
+        </div>
+        <a class="link-more" href="articles.html">Browse all articles<span class="arrow">&rarr;</span></a>
+      </div>
+      <div class="news-layout">
+        <article class="news-lead news-lead--nl" id="nl-lead"></article>
+        <div class="news-side-col">
+          <div class="news-side" id="news-side"></div>
+          <div class="page-actions" style="margin-top:28px;">
+            <a class="btn btn--primary" href="articles.html">View all news<span class="arrow">&rarr;</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER SUBSCRIBE BANNER -->
+  <section class="newsletter" id="newsletter" style="scroll-margin-top:84px;" data-screen-label="Subscribe">
+    <div class="wrap">
+      <div class="nl-banner">
+        <div class="nl-banner__text">
+          <p class="kicker" style="color:rgba(255,255,255,0.65);">The Inchworm Newsletter</p>
+          <h2>Get it in your inbox every week</h2>
+          <p>One short email with the week&rsquo;s reading. No noise &mdash; unsubscribe anytime.</p>
+        </div>
+        <form class="nl-form" id="nl-form" novalidate>
+          <input type="email" id="nl-email" placeholder="you@byu.edu" aria-label="Email address" required>
+          <button class="btn btn--accent" type="submit">Subscribe</button>
+          <label class="nl-toggle">
+            <input type="checkbox" id="nl-events" checked>
+            <span class="nl-toggle__track" aria-hidden="true"><span class="nl-toggle__thumb"></span></span>
+            <span class="nl-toggle__label">Include the weekly event schedule</span>
+          </label>
+          <p class="nl-ok" id="nl-ok" hidden>Thanks &mdash; you&rsquo;re on the list.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/news.js"></script>
+<script src="assets/chrome.js"></script>
+<script>
+  AIEINews.renderNewsletterLead(document.getElementById("nl-lead"));
+  AIEINews.renderSideArticles(document.getElementById("news-side"), 3);
+
+  var f = document.getElementById("nl-form");
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("nl-email");
+    if (!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
+      email.focus(); email.style.borderColor = "oklch(0.7 0.18 25)"; return;
+    }
+    f.style.display = "none";
+    document.getElementById("nl-ok").hidden = false;
+  });
+</script>
+</body>
+</html>

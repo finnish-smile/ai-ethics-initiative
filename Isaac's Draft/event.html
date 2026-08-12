@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>window.addEventListener("unhandledrejection",function(e){if(e.reason&&String(e.reason).indexOf("Transition was skipped")!==-1)e.preventDefault();});</script>
+<title>Event &middot; AI Ethics Initiative</title>
+<script>try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body data-page="events">
+<div id="site-header"></div>
+
+<!-- =======================================================================
+     SINGLE-EVENT TEMPLATE
+     Every [data-ev="..."] node is a fill slot. In Claude Code, populate them
+     from your event record:
+       title    → event title
+       type     → category label (Workshop, Panel, …) — used in kicker + crumb
+       date     → full date line (e.g. "Thursday, June 18, 2026")
+       time     → time line
+       place    → location
+       host     → hosting organization
+       cal-mon / cal-day → big calendar chip (month abbr + day number)
+       description → one <p> per paragraph
+       invitation  → invitation line
+     The inline script below fills these from assets/events.js as a live demo
+     (event.html?event=<slug>); replace that script with your own data wiring.
+======================================================================== -->
+<main data-screen-label="Event detail page">
+  <header class="phead">
+    <div class="wrap">
+      <nav class="crumbs"><a href="index.html">Home</a> <span>/</span> <a href="events.html">Events</a> <span>/</span> <span data-ev="crumb">Event</span></nav>
+      <p class="kicker" data-ev="type">Event</p>
+      <h1 data-ev="title">Event title</h1>
+      <p data-ev="host-line">Hosted by the AI Ethics Initiative</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap ev-layout">
+      <div class="ev-detail">
+        <a class="back-link" href="events.html"><span class="arr">&larr;</span> All events</a>
+        <h2 class="ev-detail__h">About this event</h2>
+        <div class="prose" data-ev="description">
+          <p>Full event description goes here. This area can hold one or more paragraphs describing what the event is, who it's for, and what attendees can expect.</p>
+        </div>
+        <div class="ev-invite">
+          <h3>You&rsquo;re invited</h3>
+          <p data-ev="invitation">Invitation details go here &mdash; who should come, whether to RSVP, and what to bring.</p>
+        </div>
+      </div>
+
+      <aside>
+        <div class="aside-card ev-facts">
+          <div class="ev-facts__cal">
+            <span class="ev-facts__mon" data-ev="cal-mon">Jun</span>
+            <span class="ev-facts__day" data-ev="cal-day">18</span>
+          </div>
+          <ul class="ev-facts__list">
+            <li class="ev-facts__row"><span class="ev-facts__k">Date</span><span class="ev-facts__v" data-ev="date">Date</span></li>
+            <li class="ev-facts__row"><span class="ev-facts__k">Time</span><span class="ev-facts__v" data-ev="time">Time</span></li>
+            <li class="ev-facts__row"><span class="ev-facts__k">Location</span><span class="ev-facts__v" data-ev="place">Location</span></li>
+            <li class="ev-facts__row"><span class="ev-facts__k">Host</span><span class="ev-facts__v" data-ev="host">Host</span></li>
+          </ul>
+          <a class="btn btn--accent" href="news.html#newsletter">Add to your calendar</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/events.js"></script>
+<script src="assets/chrome.js"></script>
+<script>
+  // DEMO FILL — populates the [data-ev] slots from assets/events.js using the
+  // ?event=<slug> query param. Replace this block with your own data wiring
+  // in Claude Code; the markup above is the template it targets.
+  (function () {
+    var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var params = new URLSearchParams(location.search);
+    var slug = params.get("event");
+    var ev = (slug && AIEI.eventBySlug(slug)) || AIEI.events[0];
+    if (!ev) return;
+    var d = AIEI.parse(ev.date);
+
+    function set(key, value) {
+      document.querySelectorAll('[data-ev="' + key + '"]').forEach(function (n) { n.textContent = value; });
+    }
+    set("crumb", ev.title);
+    set("type", ev.type);
+    set("title", ev.title);
+    set("host-line", ev.host ? "Hosted by " + ev.host : "");
+    set("date", AIEI.longDate(ev.date));
+    set("time", ev.time);
+    set("place", ev.place);
+    set("host", ev.host || "—");
+    set("cal-mon", MON[d.getMonth()]);
+    set("cal-day", String(d.getDate()));
+
+    var descEl = document.querySelector('[data-ev="description"]');
+    if (descEl && ev.desc) {
+      descEl.innerHTML = ev.desc.map(function (p) { return "<p>" + p + "</p>"; }).join("");
+    }
+    if (ev.invite) set("invitation", ev.invite);
+
+    document.title = ev.title + " · AI Ethics Initiative";
+  })();
+</script>
+</body>
+</html>

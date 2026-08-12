@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>window.addEventListener("unhandledrejection",function(e){if(e.reason&&String(e.reason).indexOf("Transition was skipped")!==-1)e.preventDefault();});</script>
+<title>The Newsletter &middot; AI Ethics Initiative</title>
+<script>try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body data-page="news">
+<div id="site-header"></div>
+
+<main data-screen-label="Newsletter page">
+  <header class="phead">
+    <div class="wrap">
+      <nav class="crumbs"><a href="index.html">Home</a> <span>/</span> <a href="news.html">News</a> <span>/</span> <span>Newsletter</span></nav>
+      <p class="kicker" id="nl-kicker">The newsletter</p>
+      <h1 id="nl-title"></h1>
+      <p id="nl-dateline"></p>
+    </div>
+  </header>
+
+  <section class="section" data-screen-label="Newsletter body">
+    <div class="wrap feed-layout">
+      <div class="feed-main">
+        <a class="back-link" href="news.html"><span class="arr">&larr;</span> Back to News</a>
+        <div id="newsletter-body"></div>
+      </div>
+
+      <aside class="feed-aside" aria-label="More from the newsletter">
+        <div class="aside-card nl-teaser">
+          <span class="issue-tag">The archive</span>
+          <h3>Past issues</h3>
+          <p>Every Friday digest since April &mdash; titles, dates, and summaries at a glance.</p>
+          <a class="link-more" href="newsletter-archive.html">Browse the archive<span class="arrow">&rarr;</span></a>
+        </div>
+        <div class="aside-card">
+          <h3>The full feed</h3>
+          <p>Want more than the weekly picks? Search and filter every article we&rsquo;ve tagged.</p>
+          <a class="link-more" href="articles.html">View all news<span class="arrow">&rarr;</span></a>
+        </div>
+        <div class="aside-card">
+          <h3>Got a tip?</h3>
+          <p>Reading coverage we should feature next week? Send it our way.</p>
+          <a class="link-more" href="about.html#contact">Suggest a source<span class="arrow">&rarr;</span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- SUBSCRIBE -->
+  <section class="newsletter" id="subscribe" style="scroll-margin-top:90px;" data-screen-label="Subscribe">
+    <div class="wrap">
+      <div class="nl-grid">
+        <div class="nl-digest">
+          <p class="kicker" style="color:rgba(255,255,255,0.65);">Don&rsquo;t miss the next one</p>
+          <h2>Get the newsletter every week</h2>
+          <p class="issue-summary">A short Friday email with the week&rsquo;s most important AI-ethics reading &mdash; and why it matters.</p>
+        </div>
+        <div class="nl-sub">
+          <h3>Subscribe</h3>
+          <p>One concise issue a week. No noise, unsubscribe anytime.</p>
+          <form class="nl-form" id="nl-form" novalidate>
+            <input type="email" id="nl-email" placeholder="you@byu.edu" aria-label="Email address" required>
+            <button class="btn btn--accent" type="submit">Subscribe</button>
+          </form>
+          <p class="nl-note">We use your email only for this newsletter.</p>
+          <p class="nl-ok" id="nl-ok" hidden>Thanks &mdash; you&rsquo;re on the list.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/news.js"></script>
+<script src="assets/chrome.js"></script>
+<script>
+  (function () {
+    var iss = AIEINews.latestIssue;
+    var MON = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var p = iss.date.split("-"), dl = MON[+p[1] - 1] + " " + (+p[2]) + ", " + p[0];
+    document.getElementById("nl-kicker").textContent = "The newsletter \u00b7 No. " + iss.no;
+    document.getElementById("nl-title").textContent = iss.title;
+    document.getElementById("nl-dateline").textContent = "Issue No. " + iss.no + " \u2014 " + dl + " \u00b7 " + iss.picks.length + " articles";
+    AIEINews.renderNewsletter(document.getElementById("newsletter-body"));
+  })();
+
+  var f = document.getElementById("nl-form");
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = document.getElementById("nl-email");
+    if (!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
+      email.focus(); email.style.borderColor = "oklch(0.7 0.18 25)"; return;
+    }
+    f.style.display = "none";
+    document.getElementById("nl-ok").hidden = false;
+  });
+</script>
+</body>
+</html>

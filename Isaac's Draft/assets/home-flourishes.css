@@ -1,0 +1,105 @@
+/* =========================================================================
+   Home page flourishes — ported from the React prototype:
+   scroll-reveal mission lines, a growing "Welcome" line, a linkable
+   hover-bulge "stewardship" word, and a worm-emoji cursor easter egg
+   (shake the mouse back and forth to summon it). Scoped to the home
+   page only.
+   ========================================================================= */
+
+body[data-page="home"].worm-active,
+body[data-page="home"].worm-active * {
+  cursor:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32'><text x='16' y='24' font-size='26' text-anchor='middle'>%F0%9F%AA%B1</text></svg>")
+      16 16,
+    auto;
+}
+
+.mission--hero {
+  min-height: calc(100svh - 79px);
+  display: flex;
+  align-items: center;
+}
+
+.mission--hero .wrap {
+  padding-block: clamp(48px, 8vw, 96px);
+}
+
+.mission__welcome {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-style: italic;
+  font-size: clamp(32px, 5vw, 56px);
+  color: #fff;
+  margin: 0;
+  transform-origin: left top;
+  will-change: transform;
+}
+
+.mission__lines {
+  display: flex;
+  flex-direction: column;
+  margin-top: 14px;
+}
+
+.mission-line,
+.mission-line-item {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  font-style: italic;
+  font-size: clamp(20px, 3vw, 32px);
+  line-height: 1.35;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.mission-line {
+  margin: 0;
+  padding: 6px 0;
+}
+
+.mission-line[data-from="left"] { transform: translateX(-70px); }
+.mission-line[data-from="right"] { transform: translateX(70px); }
+.mission-line[data-from="up"] { transform: translateY(28px); }
+.mission-line-item[data-from="up"] { transform: translateY(28px); }
+
+.mission-line--scale { transform: scale(0.6); }
+
+.mission-line.revealed,
+.mission-line-item.revealed {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+.mission-line--scale.revealed { transform: scale(1); }
+
+.mission-line-row {
+  display: flex;
+  gap: 8px;
+  padding: 6px 0;
+  flex-wrap: wrap;
+}
+
+.stewardship-word {
+  display: inline-block;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  color: oklch(0.78 0.1 255);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.stewardship-word:hover {
+  transform: scale(1.12);
+  color: oklch(0.85 0.1 255);
+  text-decoration: underline;
+}
+
+:root[data-type="grotesque"] .mission-line,
+:root[data-type="grotesque"] .mission-line-item,
+:root[data-type="grotesque"] .mission__welcome,
+:root[data-type="classic"] .mission-line,
+:root[data-type="classic"] .mission-line-item,
+:root[data-type="classic"] .mission__welcome {
+  font-style: normal;
+}

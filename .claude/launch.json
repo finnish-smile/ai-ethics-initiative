@@ -6,6 +6,12 @@
       "runtimeExecutable": "/bin/zsh",
       "runtimeArgs": ["-c", "export PATH=/opt/homebrew/bin:$PATH && exec npm run dev"],
       "port": 5173
+    },
+    {
+      "name": "isaacs-draft",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": ["-c", "cd \"Isaac's Draft\" && exec python3 -m http.server 8097"],
+      "port": 8097
     }
   ]
 }

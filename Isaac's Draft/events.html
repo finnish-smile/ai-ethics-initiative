@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events &middot; AI Ethics Initiative</title>
+<script>try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body data-page="events">
+<div id="site-header"></div>
+
+<main data-screen-label="Events page">
+  <header class="phead">
+    <div class="wrap">
+      <nav class="crumbs"><a href="index.html">Home</a> <span>/</span> <span>Events</span></nav>
+      <p class="kicker">Events calendar</p>
+      <h1>Clubs, workshops, and forums</h1>
+      <p>All events in the coming weeks, hosted by us or our affiliates. All events are free and open to the campus community unless noted.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="wrap ev-layout">
+      <div>
+        <div class="filter-chips" id="filters" style="margin-bottom:28px;">
+          <button type="button" data-type="all" aria-pressed="true">All</button>
+          <button type="button" data-type="Club">Clubs</button>
+          <button type="button" data-type="Workshop">Workshops</button>
+          <button type="button" data-type="Panel">Panels</button>
+          <button type="button" data-type="Forum">Forums</button>
+          <button type="button" data-type="Lecture">Lectures</button>
+        </div>
+        <div id="event-list"></div>
+        <p id="empty-note" hidden style="color:var(--muted);padding:24px 0;">No events of this type are currently scheduled.</p>
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <h3>Never miss an event</h3>
+          <p>Get the week's schedule in your inbox. See all the coming events to stay on top of AI Ethics.</p>
+          <a class="btn btn--accent" href="news.html#newsletter" style="width:100%;justify-content:center;">Join the mailing list</a>
+        </div>
+        <div class="aside-card">
+          <h3>Partner with us</h3>
+          <p>Hosting an event connected to AI Ethics? Let us know so we can spread the word!</p>
+          <a class="link-more" href="about.html#contact">Get in touch<span class="arrow">&rarr;</span></a>
+        </div>
+        <div class="aside-card">
+          <h3>Get involved</h3>
+          <p>Interested in joining a club? See who we work with and connect with them!</p>
+          <a class="link-more" href="connections.html">See our partners<span class="arrow">&rarr;</span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="assets/events.js"></script>
+<script src="assets/chrome.js"></script>
+<script>
+  var listEl = document.getElementById("event-list");
+  AIEI.renderEventList(listEl);
+  var chips = document.querySelectorAll("#filters button");
+  var emptyNote = document.getElementById("empty-note");
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      var t = c.getAttribute("data-type");
+      chips.forEach(function (x) { x.setAttribute("aria-pressed", String(x === c)); });
+      var anyShown = false;
+      listEl.querySelectorAll(".ev-row").forEach(function (row) {
+        var rt = row.querySelector(".ev-type").textContent.trim();
+        var show = t === "all" || rt === t;
+        row.style.display = show ? "" : "none";
+        if (show) anyShown = true;
+      });
+      // hide month headers with no visible rows
+      listEl.querySelectorAll(".ev-month").forEach(function (m) {
+        var visible = [...m.querySelectorAll(".ev-row")].some(function (r) { return r.style.display !== "none"; });
+        m.style.display = visible ? "" : "none";
+      });
+      emptyNote.hidden = anyShown;
+    });
+  });
+</script>
+</body>
+</html>

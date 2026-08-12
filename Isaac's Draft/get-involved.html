@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-type="editorial" data-accent="blue" data-hero="split">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Involved · AI Ethics Initiative</title>
+<script>/* apply saved design variation before paint to avoid flash */
+try{var _s=Object.assign({type:"editorial",accent:"blue",hero:"split",nav:"right"},JSON.parse(localStorage.getItem("aiei.design.v1")||"{}"));var _r=document.documentElement;_r.setAttribute("data-type",_s.type);_r.setAttribute("data-accent",_s.accent);_r.setAttribute("data-hero",_s.hero);_r.setAttribute("data-nav",_s.nav);}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Public+Sans:wght@400;500;600;700;800&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+</head>
+<body data-page="get-involved">
+<div id="site-header"></div>
+
+<main>
+  <!-- HERO: carousel + condensed calendar -->
+  <section class="hero" data-screen-label="Home hero">
+    <div class="wrap hero-grid">
+      <div class="hero-main" id="hero-carousel" aria-roledescription="carousel" aria-label="Featured"></div>
+      <aside class="hero-aside" aria-label="Upcoming events">
+        <div class="hero-aside__head">
+          <h3>Upcoming</h3>
+          <p class="kicker">Next few weeks</p>
+        </div>
+        <ul class="up-list" id="upcoming"></ul>
+        <div class="hero-aside__foot">
+          <a class="link-more" href="events.html">Full events calendar<span class="arrow">&rarr;</span></a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- SYMBOL LINK BAR -->
+  <nav class="symbar" aria-label="Sections">
+    <div class="wrap symbar__grid">
+      <a class="symbar__item" href="about.html">
+        <svg class="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M10 12a3 3 0 0 1 3-3h9a3 3 0 0 1 2 1 3 3 0 0 1 2-1h9a3 3 0 0 1 3 3v22a2 2 0 0 1-2 2h-9a3 3 0 0 0-3 2 3 3 0 0 0-3-2h-9a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 11v25" stroke="currentColor" stroke-width="2.2"/></svg>
+        <span class="symbar__label">About</span>
+        <span class="symbar__sub">What is the Initiative?</span>
+      </a>
+      <a class="symbar__item" href="principles.html">
+        <svg class="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 6l14 6v10c0 9-6 15-14 18-8-3-14-9-14-18V12z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 24l4.5 4.5L31 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="symbar__label">Principles</span>
+        <span class="symbar__sub">Ethical AI use</span>
+      </a>
+      <a class="symbar__item" href="events.html">
+        <svg class="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="8" y="11" width="32" height="29" rx="3" stroke="currentColor" stroke-width="2.2"/><path d="M8 19h32M16 7v8M32 7v8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="17" cy="27" r="1.8" fill="currentColor"/><circle cx="24" cy="27" r="1.8" fill="currentColor"/><circle cx="31" cy="27" r="1.8" fill="currentColor"/></svg>
+        <span class="symbar__label">Events</span>
+        <span class="symbar__sub">Calendar</span>
+      </a>
+      <a class="symbar__item" href="news.html">
+        <svg class="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 12h24v26H11a3 3 0 0 1-3-3z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M32 17h6v18a3 3 0 0 1-6 0z" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 18h14M13 24h14M13 30h9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="symbar__label">News</span>
+        <span class="symbar__sub">Updates &amp; Newsletters</span>
+      </a>
+      <a class="symbar__item" href="connections.html">
+        <svg class="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="11" r="5" stroke="currentColor" stroke-width="2.2"/><circle cx="11" cy="35" r="5" stroke="currentColor" stroke-width="2.2"/><circle cx="37" cy="35" r="5" stroke="currentColor" stroke-width="2.2"/><path d="M24 16v9m0 0l-9 7m9-7l9 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span class="symbar__label">Connections</span>
+        <span class="symbar__sub">On campus</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- FEATURED -->
+  <section class="section" data-screen-label="Featured">
+    <div class="wrap">
+      <div class="feature-split">
+        <div class="ph"><span>photo · students &amp; faculty</span></div>
+        <div class="feature-split__body">
+          <p class="kicker">Featured</p>
+          <h2>Something Cool That Should be Featured</h2>
+          <p class="lead">We made this really cool thing for students, and we want to show it off. Check it out!</p>
+          <a class="link-more" href="about.html">Learn how it works<span class="arrow">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LATEST NEWS -->
+  <section class="section section--tight" style="background:#fff;border-block:1px solid var(--line);" data-screen-label="Latest news">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker">Latest</p>
+          <h2>News &amp; announcements</h2>
+        </div>
+        <a class="link-more" href="news.html">All news<span class="arrow">&rarr;</span></a>
+      </div>
+      <div class="grid cols-3">
+        <a class="card" href="news.html">
+          <div class="card__media ph"><span>photo · classroom</span></div>
+          <div class="card__body">
+            <span class="card__cat">Teaching</span>
+            <h3 class="card__title">Six departments adopt the new syllabus toolkit</h3>
+            <p class="card__excerpt">Instructors now have shared language for setting fair, transparent expectations around AI use.</p>
+          </div>
+        </a>
+        <a class="card" href="news.html">
+          <div class="card__media ph"><span>photo · research</span></div>
+          <div class="card__body">
+            <span class="card__cat">Research</span>
+            <h3 class="card__title">Student researchers map AI use across 40 courses</h3>
+            <p class="card__excerpt">A first look at how generative tools are actually showing up in coursework this term.</p>
+          </div>
+        </a>
+        <a class="card" href="news.html">
+          <div class="card__media ph"><span>photo · panel</span></div>
+          <div class="card__body">
+            <span class="card__cat">Community</span>
+            <h3 class="card__title">Recap: our spring panel on academic integrity</h3>
+            <p class="card__excerpt">Faculty and students traded hard questions about disclosure, fairness, and trust.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECONDARY FEATURE BLOCKS (room for the team to fill) -->
+  <section class="section" data-screen-label="Highlights">
+    <div class="wrap">
+      <div class="grid cols-2">
+        <a class="card" href="principles.html" style="display:grid;grid-template-columns:1fr;">
+          <div class="card__body" style="padding:32px;">
+            <p class="kicker">Start here</p>
+            <h3 class="card__title" style="font-size:26px;">The Principles of Ethical AI Use</h3>
+            <p class="card__excerpt" style="font-size:16px;">Tag-line for the principles</p>
+            <span class="link-more" style="margin-top:18px;"><span class="uline">Read the Principles</span><span class="arrow">&rarr;</span></span>
+          </div>
+        </a>
+        <a class="card" href="news.html#newsletter" style="display:grid;grid-template-columns:1fr;">
+          <div class="card__body" style="padding:32px;">
+            <p class="kicker">Stay in the loop</p>
+            <h3 class="card__title" style="font-size:26px;">The AI Ethics Newsletter</h3>
+            <p class="card__excerpt" style="font-size:16px;">Tag-line for the principles</p>
+            <span class="link-more" style="margin-top:18px;"><span class="uline">Subscribe now</span><span class="arrow">&rarr;</span></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script src="assets/events.js"></script>
+<script src="assets/chrome.js"></script>
+<script>
+  AIEI.renderCarousel(document.getElementById("hero-carousel"));
+  AIEI.renderUpcoming(document.getElementById("upcoming"), 4);
+</script>
+</body>
+</html>
