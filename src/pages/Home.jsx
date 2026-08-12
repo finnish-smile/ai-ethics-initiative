@@ -126,10 +126,12 @@ export default function Home() {
     <section className="mission mission--hero" data-screen-label="Mission">
       <div className="wrap">
         <div className="mission__inner worm-cursor" ref={missionRef}>
-          <h2 className="mission__welcome" style={{ transform: `scale(${heroScale})` }}>
-            Welcome
-          </h2>
-          <p className="mission__welcome-sub">We are {welcomeWord} you&apos;re here!</p>
+          <div className="mission__intro">
+            <h2 className="mission__welcome" style={{ transform: `scale(${heroScale})` }}>
+              Welcome
+            </h2>
+            <p className="mission__welcome-sub">We are {welcomeWord} you&apos;re here!</p>
+          </div>
 
           <div className="mission__lines">
             {LINES.map((line) => {

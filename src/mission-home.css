@@ -12,20 +12,26 @@
     auto;
 }
 
-.mission--hero {
-  min-height: calc(100svh - 79px);
-  display: flex;
-  align-items: center;
-}
-
 .mission--hero .wrap {
-  padding-block: clamp(64px, 12vw, 140px);
+  padding-top: 0;
+  padding-bottom: clamp(64px, 12vw, 140px);
   width: 100%;
 }
 
 .mission--hero .mission__inner {
   margin: 0 auto;
   text-align: center;
+}
+
+/* "Welcome" + subtitle get their own full-height block, truly centered
+   (equal space above and below) — everything else flows after it,
+   below the fold. */
+.mission__intro {
+  min-height: calc(100svh - 79px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .mission--hero .mission__actions {
@@ -45,7 +51,7 @@
   font-size: clamp(56px, 11vw, 140px);
   line-height: 1;
   color: #fff;
-  margin: clamp(24px, 8vh, 96px) 0 0;
+  margin: 0;
   transform-origin: center top;
   will-change: transform;
 }
