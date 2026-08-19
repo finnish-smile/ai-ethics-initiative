@@ -65,7 +65,7 @@ export default function Home() {
         lineRefs.current.forEach((el, i) => {
           if (!el) return
           const rect = el.getBoundingClientRect()
-          const shouldShow = rect.top < window.innerHeight
+          const shouldShow = rect.top < window.innerHeight + 100
           if (shouldShow !== next[i]) {
             next[i] = shouldShow
             changed = true

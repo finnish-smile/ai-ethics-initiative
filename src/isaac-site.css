@@ -9,21 +9,21 @@
    ========================================================================= */
 
 :root {
-  --ink:      #0c2236;   /* near-black navy for text */
-  --navy:     #102a43;   /* brand navy */
-  --navy-2:   #0a1e30;   /* deeper navy (footer / utility strip) */
-  --paper:    #f7f5f1;   /* warm page background */
-  --card:     #ffffff;
-  --muted:    #5a6b7b;   /* secondary text */
-  --faint:    #8a98a5;
-  --line:     #e3ddd3;   /* warm hairline */
-  --line-2:   #d6cfc2;
-  --accent:   oklch(0.52 0.13 255);
-  --accent-ink: oklch(0.40 0.13 255);
-  --accent-wash: oklch(0.52 0.13 255 / 0.08);
+  --ink:      #2A251E;   /* warm near-black for text */
+  --navy:     #14110C;   /* dark warm brown (replaces navy for dark sections) */
+  --navy-2:   #0c0a07;   /* deeper still (footer / utility strip) */
+  --paper:    #F4F0E8;   /* warm cream page background */
+  --card:     #EFEAE0;
+  --muted:    #8A8071;   /* secondary text */
+  --faint:    #A79C89;
+  --line:     #E0D9CA;   /* warm hairline */
+  --line-2:   #C9BFA6;
+  --accent:   #13499B;
+  --accent-ink: #13499B;
+  --accent-wash: rgba(19, 73, 155, 0.08);
 
   --font-display: 'Newsreader', Georgia, serif;
-  --font-body:    'Public Sans', system-ui, sans-serif;
+  --font-body:    'Hanken Grotesk', system-ui, sans-serif;
   --display-weight: 500;
   --display-italic-ok: 1;
 
@@ -31,8 +31,8 @@
   --gutter: clamp(20px, 5vw, 64px);
   --radius: 3px;
 
-  --shadow-sm: 0 1px 2px rgba(12,34,54,0.06);
-  --shadow-md: 0 14px 40px -18px rgba(12,34,54,0.28);
+  --shadow-sm: 0 1px 2px rgba(20,17,12,0.06);
+  --shadow-md: 0 14px 40px -18px rgba(20,17,12,0.28);
 }
 
 /* ---- Accent variants (shared chroma/lightness, varied hue) ---- */
