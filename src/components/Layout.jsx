@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import ScrollLogo from './ScrollLogo.jsx'
+import useRevealOnScroll from '../hooks/useRevealOnScroll.js'
+import '../reveal.css'
 
 const NAV = [
   { to: '/', label: 'Home' },
@@ -61,6 +63,8 @@ export default function Layout() {
     setScrollProgress(window.matchMedia('(max-width: 640px)').matches ? 1 : 0)
     setMenuOpen(false)
   }, [location.pathname])
+
+  useRevealOnScroll([location.pathname])
 
   useEffect(() => {
     // Below the mobile nav breakpoint there's no room for the full wordmark

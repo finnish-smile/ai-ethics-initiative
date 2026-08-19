@@ -18,6 +18,17 @@
     url('/images/hero-lackawanna-valley.jpg');
   background-size: cover;
   background-position: 50% 65%;
+  /* Pinned/parallax feel matching the reference's fixed hero — the
+     painting stays put while the mission content scrolls over it. */
+  background-attachment: fixed;
+}
+
+@media (max-width: 800px), (pointer: coarse) {
+  /* background-attachment: fixed is unreliable on touch/mobile browsers
+     (notably iOS Safari) — fall back to a normal scrolling background. */
+  .mission--hero {
+    background-attachment: scroll;
+  }
 }
 
 .mission--hero .wrap {

@@ -109,7 +109,7 @@ export default function GetInvolved() {
 
       <section className="section" data-screen-label="Featured">
         <div className="wrap">
-          <div className="feature-split">
+          <div className="feature-split" data-reveal>
             <div className="ph">
               <span>photo · students &amp; faculty</span>
             </div>
@@ -143,9 +143,9 @@ export default function GetInvolved() {
               All news<span className="arrow">&rarr;</span>
             </Link>
           </div>
-          <div className="grid cols-3">
+          <div className="grid cols-3 reveal-stagger">
             {NEWS_CARDS.map((c) => (
-              <Link className="card" to="/news" key={c.title}>
+              <Link className="card" to="/news" key={c.title} data-reveal>
                 <div className="card__media ph">
                   <span>{c.ph}</span>
                 </div>
@@ -162,8 +162,8 @@ export default function GetInvolved() {
 
       <section className="section" data-screen-label="Highlights">
         <div className="wrap">
-          <div className="grid cols-2">
-            <Link className="card" to="/principles" style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+          <div className="grid cols-2 reveal-stagger">
+            <Link className="card" to="/principles" data-reveal style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
               <div className="card__body" style={{ padding: 32 }}>
                 <p className="kicker">Start here</p>
                 <h3 className="card__title" style={{ fontSize: 26 }}>
@@ -178,7 +178,7 @@ export default function GetInvolved() {
                 </span>
               </div>
             </Link>
-            <Link className="card" to="/news#newsletter" style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
+            <Link className="card" to="/news#newsletter" data-reveal style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
               <div className="card__body" style={{ padding: 32 }}>
                 <p className="kicker">Stay in the loop</p>
                 <h3 className="card__title" style={{ fontSize: 26 }}>

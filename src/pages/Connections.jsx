@@ -84,9 +84,9 @@ export default function Connections() {
               <p>Each brings a different lens to the same question: how do we use these tools well?</p>
             </div>
           </div>
-          <div className="grid cols-2">
+          <div className="grid cols-2 reveal-stagger">
             {PARTNERS.map((p) => (
-              <a className="partner" href="#" key={p.name}>
+              <a className="partner" href="#" key={p.name} data-reveal>
                 <div className="partner__mark">
                   <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
                     {p.icon}
@@ -108,7 +108,11 @@ export default function Connections() {
 
       <section className="section" style={{ background: '#fff', borderTop: '1px solid var(--line)' }}>
         <div className="wrap">
-          <div className="callout" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+          <div
+            className="callout"
+            data-reveal
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}
+          >
             <div>
               <h3>Want to become a partner?</h3>
               <p>

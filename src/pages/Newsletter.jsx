@@ -43,9 +43,9 @@ export default function Newsletter() {
             <div className="nl-read">
               <p className="nl-lead">{iss.intro}</p>
               <h2 className="nl-section-h">In this issue</h2>
-              <ol className="nl-picks">
+              <ol className="nl-picks reveal-stagger">
                 {(iss.picks || []).map((p, i) => (
-                  <li className="nl-pick" key={p.title}>
+                  <li className="nl-pick" key={p.title} data-reveal>
                     <span className="nl-pick__n">{i + 1}</span>
                     <div className="nl-pick__body">
                       <span className="nl-pick__src">{p.source}</span>

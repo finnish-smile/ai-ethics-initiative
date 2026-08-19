@@ -66,7 +66,7 @@ export default function About() {
 
       <section className="section">
         <div className="wrap">
-          <div className="intro-2col">
+          <div className="intro-2col" data-reveal>
             <div>
               <p className="kicker">Why we exist</p>
               <h2 style={{ fontSize: 'clamp(24px,3vw,34px)', marginTop: 10 }}>Short version.</h2>
@@ -87,8 +87,8 @@ export default function About() {
               <h2>Three ways we show up</h2>
             </div>
           </div>
-          <div className="grid cols-3">
-            <Link className="card" to="/principles">
+          <div className="grid cols-3 reveal-stagger">
+            <Link className="card" to="/principles" data-reveal>
               <div className="card__body">
                 <span className="card__cat">GUIDANCE</span>
                 <h3 className="card__title">Principles &amp; Practical Tools</h3>
@@ -98,7 +98,7 @@ export default function About() {
                 </p>
               </div>
             </Link>
-            <Link className="card" to="/news">
+            <Link className="card" to="/news" data-reveal>
               <div className="card__body">
                 <span className="card__cat">INFORMATION</span>
                 <h3 className="card__title">News &amp; Newsletter</h3>
@@ -108,7 +108,7 @@ export default function About() {
                 </p>
               </div>
             </Link>
-            <Link className="card" to="/connections">
+            <Link className="card" to="/connections" data-reveal>
               <div className="card__body">
                 <span className="card__cat">CONNECTION</span>
                 <h3 className="card__title">Campus-Wide Engagement</h3>
@@ -131,9 +131,9 @@ export default function About() {
               <p>Something about us.</p>
             </div>
           </div>
-          <div className="team-grid">
+          <div className="team-grid reveal-stagger">
             {TEAM.map((m) => (
-              <div className="member" key={m.name}>
+              <div className="member" key={m.name} data-reveal>
                 <div className="member__photo ph">
                   <span>portrait</span>
                 </div>
@@ -149,6 +149,7 @@ export default function About() {
         <div className="wrap" style={{ paddingBlock: 'clamp(48px,6vw,80px)' }}>
           <div
             className="mission__inner"
+            data-reveal
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap', maxWidth: 'none' }}
           >
             <p className="mission__statement" style={{ fontSize: 'clamp(22px,3vw,32px)', margin: 0, maxWidth: '30ch' }}>

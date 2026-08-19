@@ -59,7 +59,7 @@ export default function News() {
             </Link>
           </div>
           <div className="news-layout">
-            <article className="news-lead news-lead--nl">
+            <article className="news-lead news-lead--nl" data-reveal>
               <div className="ph ph--nl">
                 <span>cover &middot; newsletter</span>
                 <span className="nl-flag">Newsletter</span>
@@ -86,9 +86,9 @@ export default function News() {
               </div>
             </article>
             <div className="news-side-col">
-              <div className="news-side">
+              <div className="news-side reveal-stagger">
                 {side.map((a) => (
-                  <article className="news-item" key={a.title}>
+                  <article className="news-item" key={a.title} data-reveal>
                     <TagList topics={a.topics} isNew={a.isNew} />
                     <h3>
                       <a href={a.href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>

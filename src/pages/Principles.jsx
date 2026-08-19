@@ -149,7 +149,7 @@ export default function Principles() {
             </ul>
           </nav>
 
-          <div>
+          <div data-reveal>
             {PRINCIPLES.map((p) => (
               <Principle
                 key={p.id}
@@ -180,9 +180,9 @@ export default function Principles() {
               use AI in your coursework.
             </p>
           </div>
-          <div className="qa-list">
+          <div className="qa-list reveal-stagger">
             {STUDENT_FAQ.map((f) => (
-              <div className="qa-item" key={f.q}>
+              <div className="qa-item" key={f.q} data-reveal>
                 <h3 className="qa-q">{f.q}</h3>
                 <p className="qa-a">{f.a}</p>
                 <div className="qa-case">
@@ -212,9 +212,9 @@ export default function Principles() {
               and recommendations. Always align course policies with University policies.
             </p>
           </div>
-          <div className="qa-list">
+          <div className="qa-list reveal-stagger">
             {FACULTY_FAQ.map((f) => (
-              <div className="qa-item" key={f.q}>
+              <div className="qa-item" key={f.q} data-reveal>
                 <h3 className="qa-q">{f.q}</h3>
                 <p className="qa-a">{f.a}</p>
                 <div className="qa-case">
@@ -231,6 +231,7 @@ export default function Principles() {
         <div className="wrap" style={{ paddingBlock: 'clamp(48px,6vw,80px)' }}>
           <div
             className="mission__inner"
+            data-reveal
             style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap', maxWidth: 'none' }}
           >
             <p className="mission__statement" style={{ fontSize: 'clamp(22px,3vw,32px)', margin: 0, maxWidth: '30ch' }}>

@@ -22,7 +22,7 @@ export default function EventDetail() {
 
       <section className="section">
         <div className="wrap ev-layout">
-          <div className="ev-detail">
+          <div className="ev-detail" data-reveal>
             <Link className="back-link" to="/events">
               <span className="arr">&larr;</span> All events
             </Link>
@@ -39,7 +39,7 @@ export default function EventDetail() {
           </div>
 
           <aside>
-            <div className="aside-card ev-facts">
+            <div className="aside-card ev-facts" data-reveal>
               <div className="ev-facts__cal">
                 <span className="ev-facts__mon">{MON[d.getMonth()]}</span>
                 <span className="ev-facts__day">{d.getDate()}</span>

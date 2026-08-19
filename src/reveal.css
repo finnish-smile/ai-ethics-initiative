@@ -1,0 +1,33 @@
+/* =========================================================================
+   Scroll reveal — fade + rise as content enters the viewport, matching
+   the reference design's per-block animation. Applied via [data-reveal]
+   + the useRevealOnScroll hook (toggles .is-revealed via IntersectionObserver).
+   Wrap a group in .reveal-stagger to cascade children in one after another.
+   ========================================================================= */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(30px) scale(0.97);
+  transition: opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-stagger > [data-reveal]:nth-child(2) { transition-delay: 0.08s; }
+.reveal-stagger > [data-reveal]:nth-child(3) { transition-delay: 0.16s; }
+.reveal-stagger > [data-reveal]:nth-child(4) { transition-delay: 0.24s; }
+.reveal-stagger > [data-reveal]:nth-child(5) { transition-delay: 0.32s; }
+.reveal-stagger > [data-reveal]:nth-child(6) { transition-delay: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}

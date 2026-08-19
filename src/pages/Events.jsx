@@ -93,8 +93,8 @@ export default function Events() {
             )}
           </div>
 
-          <aside>
-            <div className="aside-card">
+          <aside className="reveal-stagger">
+            <div className="aside-card" data-reveal>
               <h3>Never miss an event</h3>
               <p>
                 Get the week's schedule in your inbox. See all the coming events to stay on top of
@@ -104,14 +104,14 @@ export default function Events() {
                 Join the mailing list
               </Link>
             </div>
-            <div className="aside-card">
+            <div className="aside-card" data-reveal>
               <h3>Partner with us</h3>
               <p>Hosting an event connected to AI Ethics? Let us know so we can spread the word!</p>
               <Link className="link-more" to="/about#contact">
                 Get in touch<span className="arrow">&rarr;</span>
               </Link>
             </div>
-            <div className="aside-card">
+            <div className="aside-card" data-reveal>
               <h3>Get involved</h3>
               <p>Interested in joining a club? See who we work with and connect with them!</p>
               <Link className="link-more" to="/connections">

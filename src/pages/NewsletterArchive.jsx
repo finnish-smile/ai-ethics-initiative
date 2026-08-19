@@ -30,7 +30,7 @@ export default function NewsletterArchive() {
                 const current = idx === 0
                 const count = iss.picks ? iss.picks.length : iss.count
                 return (
-                  <Link className="arch-item" to="/newsletter" key={iss.no}>
+                  <Link className="arch-item" to="/newsletter" key={iss.no} data-reveal>
                     <span className="arch-meta">
                       <span className="arch-no">
                         No. {iss.no}
