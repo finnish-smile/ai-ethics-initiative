@@ -40,11 +40,12 @@ export default function ScrollLogo({ progress = 0 }) {
 
   const wordStyle = {
     fontFamily: FONT,
-    fontWeight: 700,
-    fontStyle: 'italic',
+    fontWeight: 600,
+    fontStyle: 'normal',
+    textTransform: 'uppercase',
     fontSize: FONT_SIZE,
-    color: '#111111',
-    letterSpacing: '0.01em',
+    color: '#2A251E',
+    letterSpacing: '0.1em',
     whiteSpace: 'nowrap',
   }
 
