@@ -53,9 +53,12 @@ function PlayIcon() {
   )
 }
 
+const NAV_HEIGHT = 79
+
 export default function Layout() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [onDark, setOnDark] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
@@ -75,6 +78,12 @@ export default function Layout() {
     const onScroll = () => {
       const p = mq.matches ? 1 : Math.max(0, Math.min(1, window.scrollY / 100))
       setScrollProgress(p)
+
+      // The header is a translucent glass strip now — tint and text color
+      // adapt to whether a dark hero (painting / navy band) or the plain
+      // cream page is still showing through underneath it.
+      const darkEl = document.querySelector('.phead, .mission--hero, .gi-pin-wrap')
+      setOnDark(darkEl ? darkEl.getBoundingClientRect().bottom > NAV_HEIGHT : false)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     mq.addEventListener('change', onScroll)
@@ -83,14 +92,15 @@ export default function Layout() {
       window.removeEventListener('scroll', onScroll)
       mq.removeEventListener('change', onScroll)
     }
-  }, [])
+  }, [location.pathname])
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header className="nav" data-open={menuOpen}>
+      <div className="nav-fade" aria-hidden="true" />
+      <header className="nav" data-open={menuOpen} data-over={onDark ? 'dark' : 'light'}>
         <div className="wrap">
           <Link className="brand" to="/" aria-label="AI & Ethics Initiative — home">
-            <ScrollLogo progress={scrollProgress} />
+            <ScrollLogo progress={scrollProgress} light={onDark} />
           </Link>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((n) => (

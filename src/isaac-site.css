@@ -23,8 +23,8 @@
   --accent-wash: rgba(19, 73, 155, 0.08);
 
   --font-display: 'Newsreader', Georgia, serif;
-  --font-body:    'Hanken Grotesk', system-ui, sans-serif;
-  --display-weight: 500;
+  --font-body:    'Newsreader', Georgia, serif;
+  --display-weight: 600;
   --display-italic-ok: 1;
 
   --maxw: 1240px;
@@ -90,6 +90,14 @@ h1, h2, h3, h4 {
   margin: 0;
   text-wrap: balance;
 }
+
+/* Page-level titles echo the nav/footer wordmark: upright, uppercase,
+   tracked — instead of each page inventing its own display treatment. */
+h1 {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
 p { text-wrap: pretty; }
 
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gutter); }
@@ -146,12 +154,13 @@ p { text-wrap: pretty; }
   background-color: #eceae4;
   background-image: repeating-linear-gradient(
     -45deg, transparent, transparent 9px,
-    rgba(16,42,67,0.05) 9px, rgba(16,42,67,0.05) 18px);
+    rgba(42,37,30,0.05) 9px, rgba(42,37,30,0.05) 18px);
   border: 1px solid var(--line);
   color: var(--faint); overflow: hidden;
 }
 .ph > span {
-  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  font-family: var(--font-body);
+  font-weight: 600;
   font-size: 12px; letter-spacing: 0.04em; text-transform: lowercase;
   padding: 4px 10px; background: rgba(247,245,241,0.85);
   border-radius: 2px; color: var(--muted);
@@ -178,11 +187,34 @@ p { text-wrap: pretty; }
 /* =========================================================================
    Primary navigation
    ========================================================================= */
+/* Sits just under the nav, always pinned to the viewport top. Content
+   scrolling past underneath blurs out progressively (heaviest right under
+   the header, fading to nothing by ~130px down) so it reads as dissolving
+   away instead of visibly colliding with the transparent header. */
+.nav-fade {
+  position: fixed; top: 0; left: 0; right: 0; height: 130px; z-index: 39;
+  pointer-events: none;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 40%, transparent 100%);
+}
 .nav {
-  position: sticky; top: 0; z-index: 40;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: saturate(1.2) blur(8px);
-  border-bottom: 1px solid var(--line);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  /* Fully see-through — no tint of its own. It floats directly over the
+     page (which now bleeds all the way to the real top of the viewport,
+     see .phead / .mission--hero / .gi-pin-wrap below) and over .nav-fade,
+     which does the work of dissolving whatever scrolls underneath.
+     Legibility comes from adaptive text color + shadow via data-over. */
+  background: transparent;
+}
+.nav[data-over="dark"] .nav__links a:not([aria-current="page"]) {
+  color: #F4F0E8;
+  text-shadow: 0 1px 5px rgba(20, 17, 12, 0.55);
+}
+.nav[data-over="dark"] .nav__toggle span {
+  background: #F4F0E8;
+  box-shadow: 0 1px 4px rgba(20, 17, 12, 0.4);
 }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 24px; position: relative; }
 /* Reserve the header's height before chrome.js injects it, so content doesn't jump (no load flash) */
@@ -198,7 +230,7 @@ p { text-wrap: pretty; }
 .brand__logo { height: 44px; width: auto; display: block; }
 @media (max-width: 560px) { .brand__logo { height: 36px; } }
 .brand__text { display: flex; flex-direction: column; line-height: 1.04; }
-.brand__name { font-family: var(--font-display); font-weight: 600; font-size: 19px; letter-spacing: -0.01em; color: var(--ink); white-space: nowrap; }
+.brand__name { font-family: var(--font-display); font-weight: 700; font-size: 19px; letter-spacing: -0.01em; color: var(--ink); white-space: nowrap; }
 .brand__sub { font-size: 11px; line-height: 1.25; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-top: 2px; }
 
 /* ---- Animated scroll-morph wordmark logo (header) ------------------------ */
@@ -263,7 +295,7 @@ p { text-wrap: pretty; }
     display: inline-flex; flex-direction: column; gap: 5px; background: none; border: 0;
     padding: 10px; cursor: pointer;
   }
-  .nav__toggle span { width: 24px; height: 2px; background: var(--navy); border-radius: 2px; }
+  .nav__toggle span { width: 24px; height: 2px; background: var(--navy); border-radius: 2px; transition: background .25s ease; }
   .nav[data-open="true"] .nav__links {
     display: flex; flex-direction: column; align-items: stretch; gap: 2px;
     position: absolute; left: 0; right: 0; top: 100%;
@@ -289,7 +321,13 @@ p { text-wrap: pretty; }
 .foot__social a { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid var(--line-2); border-radius: var(--radius); color: var(--navy); }
 .foot__social a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
 .foot__band { background: var(--navy-2); color: #fff; text-align: center; padding-block: 40px; }
-.foot__wordmark { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.22em; font-size: clamp(20px, 3vw, 30px); text-transform: uppercase; }
+.foot__wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  font-size: clamp(20px, 3vw, 30px);
+  text-transform: uppercase;
+}
 .foot__fine { color: rgba(255,255,255,0.7); font-size: 13.5px; margin-top: 14px; }
 .foot__fine a { color: rgba(255,255,255,0.9); }
 @media (max-width: 820px) { .foot__cols { grid-template-columns: 1fr 1fr; gap: 32px; } }
@@ -325,7 +363,9 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 
 /* page hero (interior pages) */
 .phead { background: var(--navy); color: #fff; }
-.phead .wrap { padding-block: clamp(56px, 8vw, 96px); }
+/* The fixed nav floats over this band's top edge now — pad enough extra
+   room up top so the kicker/title clear it instead of sitting underneath. */
+.phead .wrap { padding-top: calc(79px + clamp(40px, 6vw, 72px)); padding-bottom: clamp(56px, 8vw, 96px); }
 .phead .kicker { color: rgba(255,255,255,0.7); }
 .phead h1 { font-size: clamp(38px, 6vw, 66px); margin: 14px 0 0; color: #fff; }
 .phead p { color: rgba(255,255,255,0.82); font-size: clamp(17px, 2vw, 20px); max-width: 60ch; margin: 20px 0 0; }

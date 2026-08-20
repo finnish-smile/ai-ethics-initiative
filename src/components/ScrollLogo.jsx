@@ -14,7 +14,7 @@ function tween(from, to, start, end, t) {
   return from + (to - from) * ease((t - start) / (end - start))
 }
 
-export default function ScrollLogo({ progress = 0 }) {
+export default function ScrollLogo({ progress = 0, light = false }) {
   const p = Math.max(0, Math.min(1, progress))
   const refs = { byu: useRef(), marriott: useRef(), and: useRef(), amp: useRef() }
   const [w, setW] = useState(null)
@@ -44,9 +44,11 @@ export default function ScrollLogo({ progress = 0 }) {
     fontStyle: 'normal',
     textTransform: 'uppercase',
     fontSize: FONT_SIZE,
-    color: '#2A251E',
+    color: light ? '#F4F0E8' : '#2A251E',
     letterSpacing: '0.1em',
     whiteSpace: 'nowrap',
+    textShadow: light ? '0 1px 5px rgba(20, 17, 12, 0.55)' : 'none',
+    transition: 'color .25s ease, text-shadow .25s ease',
   }
 
   const measureBlock = (

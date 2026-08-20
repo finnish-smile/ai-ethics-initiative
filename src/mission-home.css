@@ -23,9 +23,11 @@
   background-attachment: fixed;
 }
 
-@media (max-width: 800px), (pointer: coarse) {
+@media (pointer: coarse) {
   /* background-attachment: fixed is unreliable on touch/mobile browsers
-     (notably iOS Safari) — fall back to a normal scrolling background. */
+     (notably iOS Safari) — fall back to a normal scrolling background.
+     Gated on touch input specifically (not window width) so the painting
+     stays put on any desktop browser, even a narrower window. */
   .mission--hero {
     background-attachment: scroll;
   }
@@ -45,9 +47,11 @@
 
 /* "Welcome" + subtitle get their own full-height block, truly centered
    (equal space above and below) — everything else flows after it,
-   below the fold. */
+   below the fold. The header is a fixed transparent overlay now (not in
+   document flow), so the painting and this block both run the full
+   viewport height, right up to the true top edge. */
 .mission__intro {
-  min-height: calc(100svh - 79px);
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,9 +70,10 @@
 
 .mission__welcome {
   font-family: var(--font-display);
-  font-weight: var(--display-weight);
-  font-style: italic;
-  font-size: clamp(56px, 11vw, 140px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: clamp(48px, 9.5vw, 120px);
   line-height: 1;
   color: #F4F0E8;
   margin: 0;
@@ -79,24 +84,63 @@
 
 .mission__welcome-sub {
   font-family: var(--font-display);
-  font-style: italic;
   font-size: clamp(17px, 1.8vw, 22px);
   color: rgba(244, 240, 232, 0.72);
   text-shadow: 0 1px 6px rgba(20, 17, 12, 0.6);
   margin: 20px 0 0;
 }
 
-.mission__lines {
+/* Shared "Scroll" cue — a small fading hint used anywhere a full-bleed
+   hero needs to invite the next scroll (Home welcome, Get Involved hero). */
+.scroll-cue {
+  color: rgba(244, 240, 232, 0.7);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
   display: flex;
   flex-direction: column;
-  margin-top: 88px;
+  align-items: center;
+  gap: 8px;
+}
+
+.scroll-cue::after {
+  content: '';
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(rgba(244, 240, 232, 0.8), transparent);
+}
+
+.mission__scroll-cue {
+  margin-top: 36px;
+}
+
+/* Pinned scroll section: .mission__lines-pin gives extra scroll room that
+   .mission__lines (sticky) eats into while holding still on screen — right
+   where the painting is holding still too — until every line has revealed.
+   Only then does scrolling continue on to the buttons and footer below. */
+.mission__lines-pin {
+  position: relative;
+  height: 240vh;
+}
+
+.mission__lines {
+  position: sticky;
+  /* Sticks right under the header — not centered — so it lands at the
+     top of the page the moment it engages, in step with "Welcome" and
+     its subtitle scrolling up out of view. Padding (not the sticky
+     offset itself) pushes the text down about an inch of extra
+     breathing room below the header. */
+  top: 79px;
+  padding-top: calc(24px + 1in);
+  display: flex;
+  flex-direction: column;
 }
 
 .mission-line,
 .mission-line-item {
   font-family: var(--font-display);
   font-weight: var(--display-weight);
-  font-style: italic;
   font-size: clamp(26px, 4.4vw, 48px);
   line-height: 1.3;
   color: #F4F0E8;
@@ -156,13 +200,13 @@
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 4px;
-  color: #8FB4E8;
+  color: #E8C88F;
   transition: transform 0.25s ease, color 0.25s ease;
 }
 
 .stewardship-word:hover {
   transform: scale(1.12);
-  color: #B9D0F0;
+  color: #F2DDAE;
   text-decoration: underline;
 }
 

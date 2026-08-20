@@ -119,9 +119,9 @@
   font-size: clamp(26px, 4vw, 46px); line-height: 1.18; letter-spacing: -0.01em;
   margin: 22px 0 0; text-wrap: balance;
 }
-.mission__statement em { font-style: italic; color: oklch(0.78 0.1 255); }
+.mission__statement em { font-style: italic; color: oklch(0.78 0.1 70); }
 :root[data-type="grotesque"] .mission__statement em,
-:root[data-type="classic"] .mission__statement em { font-style: normal; color: oklch(0.8 0.1 255); }
+:root[data-type="classic"] .mission__statement em { font-style: normal; color: oklch(0.8 0.1 70); }
 .mission__actions { margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap; }
 .mission .btn--ghost { color: #fff; border-color: rgba(255,255,255,0.4); }
 .mission .btn--ghost:hover { background: rgba(255,255,255,0.08); border-color: #fff; }
@@ -190,7 +190,7 @@
 /* ---------- Principles ---------------------------------------------------- */
 .principle { display: grid; grid-template-columns: 88px 1fr; gap: 28px; padding: 36px 0; border-top: 1px solid var(--line); align-items: start; scroll-margin-top: 90px; }
 .principle:first-of-type { border-top: 0; }
-.principle__num { font-family: var(--font-display); font-weight: 600; font-size: 52px; color: var(--accent); line-height: 0.9; }
+.principle__num { font-family: var(--font-display); font-weight: 700; font-size: 52px; color: var(--accent); line-height: 0.9; }
 .principle__body h3 { font-size: clamp(22px, 2.6vw, 28px); margin-bottom: 10px; }
 .principle__body p { color: var(--muted); margin: 0 0 12px; max-width: 64ch; }
 .principle__body p:last-child { margin-bottom: 0; }
@@ -240,7 +240,7 @@
 /* ---------- About: stats + team ------------------------------------------- */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
 .stat { background: var(--card); padding: 30px 24px; }
-.stat__num { font-family: var(--font-display); font-weight: 600; font-size: clamp(34px, 5vw, 52px); color: var(--navy); line-height: 1; }
+.stat__num { font-family: var(--font-display); font-weight: 700; font-size: clamp(34px, 5vw, 52px); color: var(--navy); line-height: 1; }
 .stat__label { color: var(--muted); font-size: 14px; margin-top: 8px; }
 @media (max-width: 720px) { .stats { grid-template-columns: 1fr 1fr; } }
 
@@ -443,7 +443,7 @@
 .nl-section-h { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; color: var(--accent-ink); margin: 46px 0 6px; padding-bottom: 14px; border-bottom: 2px solid var(--line-2); }
 .nl-picks { list-style: none; margin: 0; padding: 0; counter-reset: pick; }
 .nl-pick { display: grid; grid-template-columns: 46px 1fr; gap: 22px; padding: 30px 0; border-bottom: 1px solid var(--line); }
-.nl-pick__n { font-family: var(--font-display); font-weight: 600; font-size: 34px; color: var(--accent); line-height: 0.85; }
+.nl-pick__n { font-family: var(--font-display); font-weight: 700; font-size: 34px; color: var(--accent); line-height: 0.85; }
 .nl-pick__src { display: block; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800; color: var(--accent-ink); margin-bottom: 7px; }
 .nl-pick__title { font-size: clamp(20px, 2.4vw, 24px); line-height: 1.18; margin: 0 0 12px; }
 .nl-pick__title a { color: var(--ink); display: inline; }
