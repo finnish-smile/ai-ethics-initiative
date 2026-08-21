@@ -25,6 +25,23 @@
   margin-top: 14px;
   max-width: 56ch;
 }
+.ks-hero__note {
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 56ch;
+}
+
+.ks-storage-note {
+  margin-top: 32px;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  border: 1px dashed var(--line-2);
+  background: var(--card);
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 70ch;
+}
 
 .ks-section-label {
   display: flex;
@@ -85,6 +102,20 @@
 }
 .ks-card--current {
   border-color: var(--navy);
+}
+.ks-card--disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.ks-card--disabled:hover {
+  transform: none;
+  border-color: var(--line);
+}
+.ks-card__meta-note {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: var(--faint);
 }
 
 .ks-card__top {

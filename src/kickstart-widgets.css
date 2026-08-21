@@ -1,0 +1,349 @@
+/* =========================================================================
+   Kickstart content blocks: pull-quotes, callouts, and the interactive
+   widgets (toggle, hallucination-spotter, quiz) used inside module steps.
+   ========================================================================= */
+
+.ks-quote {
+  margin: 24px 0;
+  padding: 4px 0 4px 22px;
+  border-left: 3px solid var(--accent);
+}
+.ks-quote p {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.ks-quote cite {
+  font-style: normal;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ks-callout {
+  margin: 26px 0;
+  padding: 20px 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--card);
+}
+.ks-callout p {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+.ks-callout__title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 6px !important;
+}
+.ks-callout--link-out {
+  background: var(--accent-wash);
+  border-color: transparent;
+}
+.ks-callout--placeholder {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 9px,
+    rgba(42, 37, 30, 0.05) 9px,
+    rgba(42, 37, 30, 0.05) 18px
+  );
+  border: 1px dashed var(--line-2);
+}
+.ks-callout--placeholder .ks-callout__title {
+  color: var(--muted);
+}
+
+/* ---- Widgets: shared shell ---- */
+.ks-widget {
+  margin: 22px 0 30px;
+  padding: 22px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+}
+.ks-widget__prompt {
+  font-weight: 700;
+  font-size: 16px;
+  margin: 0 0 16px !important;
+}
+.ks-widget__options {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.ks-widget__option {
+  flex: 1 1 200px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14.5px;
+  text-align: center;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.ks-widget__option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+.ks-widget__option:disabled {
+  cursor: default;
+}
+.ks-widget__option.is-picked {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+.ks-widget__vs {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--faint);
+  flex: none;
+}
+
+.ks-widget__ai-answer {
+  font-family: var(--font-display);
+  font-size: 18px;
+  padding: 10px 16px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  display: inline-block;
+  margin: 0 0 16px !important;
+}
+
+.ks-widget__reveal {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.ks-widget__reveal p {
+  font-size: 14.5px;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+.ks-widget__reveal-head {
+  font-weight: 700;
+  color: var(--ink) !important;
+  font-size: 15.5px;
+}
+.ks-widget__reveal.is-correct .ks-widget__reveal-head {
+  color: var(--accent-ink) !important;
+}
+
+.ks-widget__quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ks-widget__quiz-opt {
+  font: inherit;
+  text-align: left;
+  font-size: 14.5px;
+  padding: 13px 16px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: var(--paper);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.ks-widget__quiz-opt:hover {
+  border-color: var(--accent);
+}
+.ks-widget__quiz-opt.is-correct {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  font-weight: 700;
+}
+.ks-widget__quiz-opt.is-off {
+  border-color: var(--line-2);
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+@media (max-width: 560px) {
+  .ks-widget__options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ks-widget__vs {
+    align-self: center;
+  }
+}
+
+/* ---- Case study cards ---- */
+.ks-case {
+  margin: 22px 0 30px;
+  padding: 26px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+}
+.ks-case__kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin: 0 0 6px !important;
+}
+.ks-case__title {
+  font-size: 21px;
+  margin-bottom: 14px;
+}
+.ks-case__scenario {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.ks-case__discuss {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.ks-case__discuss-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  margin-bottom: 8px !important;
+}
+.ks-case__discuss p:last-child {
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* ---- Principle tabs (Gong quotes) ---- */
+.ks-tabs {
+  margin: 22px 0 30px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  overflow: hidden;
+  background: #fff;
+}
+.ks-tabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--card);
+  border-bottom: 1.5px solid var(--line-2);
+}
+.ks-tabs__tab {
+  flex: 1 1 auto;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 13px 10px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.ks-tabs__tab:hover {
+  color: var(--ink);
+}
+.ks-tabs__tab.is-active {
+  color: var(--accent-ink);
+  border-bottom-color: var(--accent);
+  background: #fff;
+}
+.ks-tabs__panel {
+  padding: 26px;
+}
+.ks-tabs__pause {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--muted);
+  margin: 0 0 18px !important;
+}
+.ks-tabs__panel .ks-quote {
+  margin: 0 0 18px;
+}
+.ks-tabs__panel .ks-quote:last-of-type {
+  margin-bottom: 20px;
+}
+
+/* ---- Personal AI Constitution builder ---- */
+.ks-constitution {
+  margin: 22px 0 10px;
+  padding: 26px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+}
+.ks-constitution__note {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--muted);
+  background: var(--accent-wash);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.ks-constitution__note strong {
+  color: var(--ink);
+}
+.ks-constitution__row {
+  margin-bottom: 18px;
+}
+.ks-constitution__row label {
+  display: block;
+  margin-bottom: 8px;
+}
+.ks-constitution__title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+}
+.ks-constitution__pause {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
+}
+.ks-constitution__row textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 14.5px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: var(--paper);
+  color: var(--ink);
+  resize: vertical;
+}
+.ks-constitution__row textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.ks-constitution__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.ks-constitution__count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-right: auto;
+}

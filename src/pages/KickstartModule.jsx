@@ -1,35 +1,37 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { lessonById } from '../data/kickstart.js'
+import { moduleById } from '../data/kickstart/index.js'
 import useKickstartProgress from '../hooks/useKickstartProgress.js'
+import StepContent from '../components/kickstart/StepContent.jsx'
 import '../kickstart.css'
+import '../kickstart-widgets.css'
 
-export default function KickstartLesson() {
-  const { lessonId } = useParams()
+export default function KickstartModule() {
+  const { moduleId } = useParams()
   const navigate = useNavigate()
-  const lesson = lessonById(lessonId)
+  const mod = moduleById(moduleId)
   const { isStepDone, markStepDone, lessonProgress } = useKickstartProgress()
 
   // Resume where the reader left off: steps complete in order, so the
   // count of completed steps doubles as the index of the next one — unless
   // every step is already done, in which case land on the last one.
-  const doneCount = lesson ? lesson.steps.filter((s) => isStepDone(lesson.id, s.id)).length : 0
+  const doneCount = mod ? mod.steps.filter((s) => isStepDone(mod.id, s.id)).length : 0
   const [stepIndex, setStepIndex] = useState(() => {
-    if (!lesson) return 0
-    return doneCount >= lesson.steps.length ? lesson.steps.length - 1 : doneCount
+    if (!mod) return 0
+    return doneCount >= mod.steps.length ? mod.steps.length - 1 : doneCount
   })
 
   useEffect(() => {
     window.scrollTo(0, 0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId])
+  }, [moduleId])
 
-  if (!lesson) {
+  if (!mod) {
     return (
       <section className="section">
         <div className="wrap">
           <p className="kicker">Not found</p>
-          <h1>We couldn&rsquo;t find that lesson</h1>
+          <h1>We couldn&rsquo;t find that module</h1>
           <Link className="btn btn--ghost" to="/kickstart">
             Back to Kickstart
           </Link>
@@ -38,15 +40,15 @@ export default function KickstartLesson() {
     )
   }
 
-  const step = lesson.steps[stepIndex]
-  const { completed, total } = lessonProgress(lesson)
+  const step = mod.steps[stepIndex]
+  const { completed, total } = lessonProgress(mod)
   const pct = Math.round((completed / total) * 100)
-  const isLast = stepIndex === lesson.steps.length - 1
+  const isLast = stepIndex === mod.steps.length - 1
 
-  const goTo = (idx) => setStepIndex(Math.min(Math.max(idx, 0), lesson.steps.length - 1))
+  const goTo = (idx) => setStepIndex(Math.min(Math.max(idx, 0), mod.steps.length - 1))
 
   const handleNext = () => {
-    markStepDone(lesson.id, step.id)
+    markStepDone(mod.id, step.id)
     if (isLast) {
       navigate('/kickstart')
       return
@@ -73,23 +75,23 @@ export default function KickstartLesson() {
         </div>
       </div>
 
-      <aside className="ksl__sidebar" aria-label="Lesson steps">
+      <aside className="ksl__sidebar" aria-label="Module steps">
         <div className="ksl__sidebar-head">
-          <p className="kicker">Kickstart</p>
-          <h1>{lesson.title}</h1>
+          <p className="kicker">
+            Module {mod.number} &middot; Kickstart
+          </p>
+          <h1>{mod.title}</h1>
         </div>
-        {lesson.steps.map((s, i) => (
+        {mod.steps.map((s, i) => (
           <button
             key={s.id}
             type="button"
             className={`ksl__step ${i === stepIndex ? 'is-active' : ''} ${
-              isStepDone(lesson.id, s.id) ? 'is-done' : ''
+              isStepDone(mod.id, s.id) ? 'is-done' : ''
             }`}
             onClick={() => goTo(i)}
           >
-            <span className="ksl__step-num">
-              {isStepDone(lesson.id, s.id) ? '✓' : i + 1}
-            </span>
+            <span className="ksl__step-num">{isStepDone(mod.id, s.id) ? '✓' : i + 1}</span>
             <span className="ksl__step-label">{s.label}</span>
           </button>
         ))}
@@ -97,12 +99,10 @@ export default function KickstartLesson() {
 
       <main className="ksl__main">
         <p className="kicker">
-          Lesson {lesson.number} &middot; Step {stepIndex + 1}
+          Module {mod.number} &middot; Step {stepIndex + 1}
         </p>
         <h2>{step.title}</h2>
-        {step.body.map((p, i) => (
-          <p key={i}>{p}</p>
-        ))}
+        <StepContent blocks={step.blocks} />
       </main>
 
       <div className="ksl__nav">
@@ -110,10 +110,10 @@ export default function KickstartLesson() {
           &larr; Back
         </button>
         <span className="ksl__nav-count">
-          {stepIndex + 1} / {lesson.steps.length}
+          {stepIndex + 1} / {mod.steps.length}
         </span>
         <button type="button" className="btn btn--accent" onClick={handleNext}>
-          {isLast ? 'Finish' : `Next: ${lesson.steps[stepIndex + 1].label}`}
+          {isLast ? 'Finish' : `Next: ${mod.steps[stepIndex + 1].label}`}
           <span className="arrow">&rarr;</span>
         </button>
       </div>
