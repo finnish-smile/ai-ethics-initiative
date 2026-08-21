@@ -1,0 +1,434 @@
+/* =========================================================================
+   Kickstart: a Leland-"AI Builder Foundations"-style course — a lesson
+   dashboard (gradient banner + lesson cards) and a per-lesson page with a
+   step sidebar, a progress bar, and back/next navigation. Progress is
+   tracked per step in localStorage (see useKickstartProgress).
+   ========================================================================= */
+
+/* ---------- Dashboard ------------------------------------------------- */
+.ks-hero {
+  background: linear-gradient(160deg, var(--accent-wash), var(--paper) 72%);
+  border-bottom: 1px solid var(--line);
+}
+.ks-hero .wrap {
+  /* Same clearance as .phead — the fixed transparent header floats over
+     the top of the page, so content needs real room below it. */
+  padding-top: calc(79px + clamp(40px, 6vw, 72px));
+  padding-bottom: clamp(48px, 7vw, 84px);
+}
+.ks-hero .crumbs a {
+  /* .crumbs defaults to light text for use on .phead's dark navy — this
+     hero is light/cream, so it needs the dark-on-light variant instead. */
+  color: var(--accent-ink);
+}
+.ks-hero p.lead {
+  margin-top: 14px;
+  max-width: 56ch;
+}
+
+.ks-section-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.ks-section-label h2 {
+  font-size: clamp(22px, 3vw, 28px);
+}
+.ks-section-label__tag {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.ks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 720px) {
+  .ks-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.ks-grid--optional {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 900px) {
+  .ks-grid--optional {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .ks-grid--optional {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ks-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.ks-card:hover {
+  text-decoration: none;
+  border-color: var(--line-2);
+  transform: translateY(-2px);
+}
+.ks-card--current {
+  border-color: var(--navy);
+}
+
+.ks-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ks-card__num {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  background: var(--paper);
+  border: 1.5px solid var(--line-2);
+  color: var(--ink);
+}
+.ks-card--current .ks-card__num {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.ks-card--done .ks-card__num {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.ks-card__meta {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ks-card__meta strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-top: 2px;
+}
+
+.ks-card__badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--muted);
+  border: 1px solid var(--line-2);
+  white-space: nowrap;
+}
+.ks-card__badge--start {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+.ks-card__badge--done {
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+  border-color: transparent;
+}
+
+.ks-card h3 {
+  font-size: 21px;
+  line-height: 1.2;
+}
+.ks-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.ks-card__progress {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.ks-card__progress-bar {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.ks-card__progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+}
+
+.ks-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--accent-ink);
+}
+.ks-card__cta .arrow {
+  transition: transform 0.15s ease;
+}
+.ks-card:hover .ks-card__cta .arrow {
+  transform: translateX(3px);
+}
+
+.ks-cta-band {
+  background: var(--navy);
+  border-radius: var(--radius);
+  padding: clamp(28px, 4vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.ks-cta-band p {
+  color: rgba(255, 255, 255, 0.82);
+  margin: 6px 0 0;
+  max-width: 52ch;
+}
+.ks-cta-band h3 {
+  color: #fff;
+  font-size: 22px;
+}
+
+/* ---------- Lesson page ------------------------------------------------ */
+.ksl {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  padding-top: 79px;
+}
+@media (max-width: 860px) {
+  .ksl {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ksl__topbar {
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 79px;
+  z-index: 5;
+  background: rgba(244, 240, 232, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px var(--gutter);
+}
+.ksl__topbar-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 14.5px;
+  min-width: 0;
+}
+.ksl__topbar-name a {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  color: var(--ink);
+  flex: none;
+}
+.ksl__topbar-name a:hover {
+  text-decoration: none;
+  border-color: var(--navy);
+}
+.ksl__topbar-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.ksl__topbar-bar {
+  width: 140px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+.ksl__topbar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.ksl__sidebar {
+  border-right: 1px solid var(--line);
+  padding: 28px 18px;
+  align-self: start;
+  position: sticky;
+  top: 137px;
+}
+@media (max-width: 860px) {
+  .ksl__sidebar {
+    position: static;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 16px var(--gutter);
+  }
+}
+
+.ksl__sidebar-head {
+  padding: 0 12px 14px;
+}
+.ksl__sidebar-head .kicker {
+  font-size: 11px;
+}
+.ksl__sidebar-head h1 {
+  font-size: 19px;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-top: 6px;
+}
+@media (max-width: 860px) {
+  .ksl__sidebar-head {
+    display: none;
+  }
+}
+
+.ksl__step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+}
+.ksl__step:hover {
+  background: var(--card);
+}
+.ksl__step.is-active {
+  background: var(--accent-wash);
+  font-weight: 700;
+}
+@media (max-width: 860px) {
+  .ksl__step {
+    flex: none;
+    white-space: nowrap;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px 8px 8px;
+  }
+  .ksl__step.is-active {
+    border-color: var(--accent);
+  }
+}
+
+.ksl__step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex: none;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid var(--line-2);
+  color: var(--muted);
+}
+.ksl__step.is-active .ksl__step-num {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.ksl__step.is-done .ksl__step-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.ksl__step-label {
+  font-size: 14.5px;
+}
+
+.ksl__main {
+  padding: clamp(32px, 5vw, 56px) clamp(24px, 5vw, 64px) 40px;
+  max-width: 720px;
+}
+.ksl__main .kicker {
+  color: var(--accent-ink);
+}
+.ksl__main h2 {
+  font-size: clamp(28px, 4vw, 38px);
+  margin: 12px 0 24px;
+}
+.ksl__main p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.ksl__nav {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px var(--gutter) 40px;
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+}
+.ksl__nav-count {
+  font-size: 13.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.ksl__nav button {
+  font: inherit;
+  cursor: pointer;
+}
+.ksl__nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

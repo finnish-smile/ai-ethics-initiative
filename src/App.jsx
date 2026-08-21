@@ -12,6 +12,7 @@ import Newsletter from './pages/Newsletter.jsx'
 import NewsletterArchive from './pages/NewsletterArchive.jsx'
 import Connections from './pages/Connections.jsx'
 import Kickstart from './pages/Kickstart.jsx'
+import KickstartLesson from './pages/KickstartLesson.jsx'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="newsletter-archive" element={<NewsletterArchive />} />
           <Route path="connections" element={<Connections />} />
           <Route path="kickstart" element={<Kickstart />} />
+          <Route path="kickstart/:lessonId" element={<KickstartLesson />} />
         </Route>
       </Routes>
     </BrowserRouter>
