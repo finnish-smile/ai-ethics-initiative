@@ -6,6 +6,15 @@ import HarderThanItLooksToggle from './widgets/HarderThanItLooksToggle.jsx'
 import HallucinationSpotter from './widgets/HallucinationSpotter.jsx'
 import IntuitionQuiz from './widgets/IntuitionQuiz.jsx'
 import ConstitutionBuilder from './widgets/ConstitutionBuilder.jsx'
+import ToolPicker from './widgets/ToolPicker.jsx'
+import Checklist from './widgets/Checklist.jsx'
+import PromptCompare from './widgets/PromptCompare.jsx'
+import RolesExercise from './widgets/RolesExercise.jsx'
+import ContextWindowFill from './widgets/ContextWindowFill.jsx'
+import AgentLoopSimulator from './widgets/AgentLoopSimulator.jsx'
+import ReversibilitySort from './widgets/ReversibilitySort.jsx'
+import ProjectPlanner from './widgets/ProjectPlanner.jsx'
+import ConstitutionCheck from './widgets/ConstitutionCheck.jsx'
 
 // Widgets are looked up by name from step data, so the content files stay
 // plain data (no JSX) and new widgets just need one line added here.
@@ -15,6 +24,15 @@ const WIDGETS = {
   IntuitionQuiz,
   PrincipleTabs,
   ConstitutionBuilder,
+  ToolPicker,
+  Checklist,
+  PromptCompare,
+  RolesExercise,
+  ContextWindowFill,
+  AgentLoopSimulator,
+  ReversibilitySort,
+  ProjectPlanner,
+  ConstitutionCheck,
 }
 
 function isExternal(href) {
@@ -51,6 +69,15 @@ function PlaceholderCallout({ note }) {
   )
 }
 
+function TipCallout({ title, text }) {
+  return (
+    <div className="ks-callout ks-callout--tip">
+      <p className="ks-callout__title">{title}</p>
+      <p>{text}</p>
+    </div>
+  )
+}
+
 export default function StepContent({ blocks }) {
   return (
     <>
@@ -67,11 +94,9 @@ export default function StepContent({ blocks }) {
           case 'case-study':
             return <CaseStudyCard key={i} {...block} />
           case 'callout':
-            return block.variant === 'placeholder' ? (
-              <PlaceholderCallout key={i} note={block.note} />
-            ) : (
-              <LinkOutCallout key={i} {...block} />
-            )
+            if (block.variant === 'placeholder') return <PlaceholderCallout key={i} note={block.note} />
+            if (block.variant === 'tip') return <TipCallout key={i} title={block.title} text={block.text} />
+            return <LinkOutCallout key={i} {...block} />
           case 'widget': {
             const Widget = WIDGETS[block.component]
             if (!Widget) return null

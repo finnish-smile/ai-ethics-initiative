@@ -59,6 +59,16 @@
 .ks-callout--placeholder .ks-callout__title {
   color: var(--muted);
 }
+.ks-callout--tip {
+  background: #fff;
+  border: 1.5px dashed var(--line-2);
+}
+.ks-callout--tip .ks-callout__title {
+  color: var(--muted);
+}
+.ks-callout--tip p:last-child {
+  margin-bottom: 0;
+}
 
 /* ---- Widgets: shared shell ---- */
 .ks-widget {
@@ -346,4 +356,145 @@
   font-weight: 600;
   color: var(--muted);
   margin-right: auto;
+}
+
+/* ---- Checklist ---- */
+.ks-checklist {
+  margin: 22px 0 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ks-checklist__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+  cursor: pointer;
+}
+.ks-checklist__item:hover {
+  border-color: var(--accent);
+}
+.ks-checklist__item.is-done {
+  color: var(--muted);
+  text-decoration: line-through;
+  border-color: var(--line);
+  background: var(--card);
+}
+.ks-checklist__box {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 5px;
+  border: 1.5px solid var(--line-2);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  color: #fff;
+}
+.ks-checklist__item.is-done .ks-checklist__box {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.ks-checklist__count {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 4px 0 0 !important;
+}
+
+/* ---- Context window fill ---- */
+.ks-context__window {
+  display: flex;
+  gap: 6px;
+  margin: 18px 0;
+}
+.ks-context__slot {
+  flex: 1;
+  height: 52px;
+  border-radius: 6px;
+  border: 1.5px dashed var(--line-2);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--faint);
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.ks-context__slot.is-filled {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+}
+.ks-context__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+/* ---- Roles exercise notes (shares .ks-tabs shell) ---- */
+.ks-roles__notes {
+  width: 100%;
+  font: inherit;
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: var(--paper);
+  color: var(--ink);
+  resize: vertical;
+}
+.ks-roles__notes:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ---- Agent loop simulator ---- */
+.ks-loop__stages {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ks-loop__stage {
+  flex: 1 1 auto;
+  text-align: center;
+  padding: 12px 10px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line-2);
+  background: var(--paper);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--muted);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.ks-loop__stage.is-active {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent-ink);
+}
+.ks-loop__stage.is-done {
+  color: var(--faint);
+}
+
+/* ---- Constitution check (Module 5, read-only) ---- */
+.ks-constitution__entry {
+  font-size: 14.5px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid var(--line-2);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin: 0;
 }
