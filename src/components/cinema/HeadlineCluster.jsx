@@ -29,10 +29,18 @@ const HOPE_POSITIONS = [
 // hope: calmer/more aligned = ordered) and which fields each card reads
 // (doom shows the real headline directly; hope shows a plain-language
 // `display` line, with the real headline surfacing in the detail panel).
-export default function HeadlineCluster({ items, variant, revealed }) {
+export default function HeadlineCluster({ items, variant, revealed, fadeOut = 1 }) {
   const positions = variant === 'doom' ? DOOM_POSITIONS : HOPE_POSITIONS
   return (
-    <div className={`cinema-cluster cinema-cluster--${variant}`}>
+    <div
+      className={`cinema-cluster cinema-cluster--${variant} ${revealed ? 'cinema-cluster--revealed' : ''}`}
+      // Custom property, not a direct opacity — this div is display:
+      // contents on mobile (see cinema-sequence.css) once revealed, which
+      // generates no box of its own to fade, but custom properties still
+      // inherit down through it to each card, which reads this back as
+      // its own opacity.
+      style={{ '--cinema-fade-out': fadeOut }}
+    >
       {items.map((item, i) => (
         <HeadlineCard
           key={item.source + (item.headline || item.display)}

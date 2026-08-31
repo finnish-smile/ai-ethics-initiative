@@ -42,12 +42,29 @@ export default function Home() {
   // a fixed-length animation once triggered.
   const [beat1Ref, beat1InView] = useInView({ threshold: 0.4 })
   const [beat2Ref, beat2InView] = useInView({ threshold: 0.2 })
-  const [hopeRef, hopeInView] = useInView({ threshold: 0.15 })
+  // Higher than doom's — hope's text is dark ink (for its eventual cream
+  // background), so it shouldn't reveal too early in the black→cream
+  // crossfade, while the background is still mostly dark.
+  const [hopeRef, hopeInView] = useInView({ threshold: 0.35 })
   const [joinRef, joinInView] = useInView({ threshold: 0.5 })
 
   const [beat1FadeOpacity, setBeat1FadeOpacity] = useState(0)
   const [beat2FadeOpacity, setBeat2FadeOpacity] = useState(0)
   const [hopeFadeOpacity, setHopeFadeOpacity] = useState(0)
+  // One-shot — cards wait until the statement's own word-by-word reveal
+  // has actually finished (not just "started scrolling into the pin") so
+  // they only ever fly in once the words are sitting still, pinned in the
+  // middle of the screen — not partway through a scroll. See the effect
+  // below that arms these from beat2InView/hopeInView.
+  const [doomCardsRevealed, setDoomCardsRevealed] = useState(false)
+  const [hopeCardsRevealed, setHopeCardsRevealed] = useState(false)
+  // Continuous, not one-shot — ramps 1 → 0 as each pin's bottom edge
+  // approaches the bottom of the viewport, so the cards fade out on their
+  // own before the next beat's text/color takes over, rather than just
+  // scrolling out of frame still fully visible. See the fadeOutFor()
+  // helper in the scroll handler below.
+  const [doomCardsFade, setDoomCardsFade] = useState(1)
+  const [hopeCardsFade, setHopeCardsFade] = useState(1)
 
   const youPinRef = useRef(null)
   const [youIntroRef, youIntroInView] = useInView({ threshold: 0.5 })
@@ -103,11 +120,78 @@ export default function Home() {
       if (beat1Ref.current) setBeat1FadeOpacity(fadeFor(beat1Ref.current.getBoundingClientRect()))
       if (beat2Ref.current) setBeat2FadeOpacity(fadeFor(beat2Ref.current.getBoundingClientRect()))
       if (hopeRef.current) setHopeFadeOpacity(fadeFor(hopeRef.current.getBoundingClientRect()))
+
+      // Cards' own fade-out — 1 while the pin's bottom edge is still well
+      // below the viewport (plenty of this beat left to scroll through),
+      // ramping down to 0 over the last stretch as that edge approaches
+      // the bottom of the screen, i.e. as the pin is about to end.
+      const FADE_OUT_DISTANCE = 600
+      const fadeOutFor = (rect) =>
+        Math.min(1, Math.max(0, (rect.bottom - window.innerHeight) / FADE_OUT_DISTANCE))
+
+      if (beat2Ref.current) setDoomCardsFade(fadeOutFor(beat2Ref.current.getBoundingClientRect()))
+      if (hopeRef.current) setHopeCardsFade(fadeOutFor(hopeRef.current.getBoundingClientRect()))
+
+      // Re-arm on every scroll event while the beat is in view — so the
+      // 1s timer only ever actually elapses once scrolling has paused,
+      // giving the pinned words a real beat alone before cards fly in.
+      // This alone isn't enough on a real phone, though: inertial/momentum
+      // scrolling after a flick keeps firing native scroll events for
+      // seconds on its own, which would keep re-arming this and could
+      // delay the reveal far longer than intended — see the separate
+      // fallback timers below, which fire on a flat delay from first
+      // entering view regardless of continued scrolling, so the cards are
+      // guaranteed to show up within a bounded time either way.
+      if (beat2InView) {
+        clearTimeout(doomIdleTimer.current)
+        doomIdleTimer.current = setTimeout(() => setDoomCardsRevealed(true), 1000)
+      }
+      if (hopeInView) {
+        clearTimeout(hopeIdleTimer.current)
+        hopeIdleTimer.current = setTimeout(() => setHopeCardsRevealed(true), 1000)
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      clearTimeout(doomIdleTimer.current)
+      clearTimeout(hopeIdleTimer.current)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [beat2InView, hopeInView])
+
+  // Cards fly in only once scrolling has actually stopped inside the pin —
+  // not just "the pin became 20% visible," which a fast scroll (a mobile
+  // flick easily covers 1000px+ in under a second) blows straight past
+  // while still moving, making a plain fixed delay after that moment show
+  // the cards mid-scroll instead of after the words are pinned and sitting
+  // still. Every scroll event re-arms these timers (see the scroll handler
+  // above) while its beat is in view, so they only ever fire once the user
+  // has paused — one-shot, same as before: doesn't un-reveal on scroll-up.
+  const doomIdleTimer = useRef(null)
+  const hopeIdleTimer = useRef(null)
+
+  // Fallback safety net for the idle timers above — inertial/momentum
+  // scrolling (a real phone keeps generating native scroll events for a
+  // second or more after your finger lifts) can keep re-arming an idle
+  // timer indefinitely, so a debounce alone isn't a reliable guarantee on
+  // touch devices. This fires on a flat delay from the moment each beat
+  // first comes into view, no matter how long scrolling continues —
+  // whichever of the two reveals first wins (setState is a no-op once
+  // already true), so the idle timer above still gets first crack at the
+  // nicer "settled" timing when scrolling genuinely does stop in time.
+  useEffect(() => {
+    if (!beat2InView) return
+    const id = setTimeout(() => setDoomCardsRevealed(true), 2200)
+    return () => clearTimeout(id)
+  }, [beat2InView])
+
+  useEffect(() => {
+    if (!hopeInView) return
+    const id = setTimeout(() => setHopeCardsRevealed(true), 2200)
+    return () => clearTimeout(id)
+  }, [hopeInView])
 
   const wormRef = useRef(null)
   useEffect(() => {
@@ -171,22 +255,12 @@ export default function Home() {
       </section>
 
       <section className="cinema-sequence" data-screen-label="Cinematic sequence">
-        <div
-          className="cinema-bridge cinema-bridge--to-black"
-          style={{ opacity: beat2FadeOpacity }}
-          aria-hidden="true"
-        />
-        <div
-          className="cinema-bridge cinema-bridge--to-cream"
-          style={{ opacity: hopeFadeOpacity }}
-          aria-hidden="true"
-        />
         {/* Beat 1 — reuses .mission--hero's own painting background (fixed,
             same image/position), so scrolling from "Welcome" into this pin
             reads as one continuous, unmoving backdrop rather than a cut.
-            The brown overlay then fades in on top of it once this section
+            The black overlay then fades in on top of it once this section
             is actually in view — "starts as painting, then fades to
-            brown," not brown from the moment you leave Welcome. */}
+            black," not black from the moment you leave Welcome. */}
         <div className="cinema-pin cinema-pin--1 mission--hero" ref={beat1Ref}>
           <div
             className="mission__fade-overlay"
@@ -204,24 +278,45 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Beat 2 — pinned lead line, doom cards popping in scattered
-            around it (full-bleed black background). */}
+        {/* Beat 2 — Beat 1 has already faded all the way to black by the
+            time this pin is reached, so this pin's own base background is
+            already black too (see cinema-sequence.css) and this bridge is
+            effectively a no-op hold at black — kept for structural
+            consistency with Beat 3 and in case the two blacks ever need to
+            diverge again. */}
         <div className="cinema-pin cinema-pin--doom" ref={beat2Ref}>
+          <div
+            className="cinema-bridge cinema-bridge--to-black"
+            style={{ opacity: beat2FadeOpacity }}
+            aria-hidden="true"
+          />
           <div className="cinema-sticky">
             <div className="cinema-stage">
               <CinemaWords
-                text="And we're sure you've seen the headlines..."
+                text="A lot of people have thoughts on where this is headed."
                 revealed={beat2InView}
                 className="cinema-lead"
               />
-              <HeadlineCluster items={DOOM_HEADLINES} variant="doom" revealed={beat2InView} />
+              <HeadlineCluster
+                items={DOOM_HEADLINES}
+                variant="doom"
+                revealed={doomCardsRevealed}
+                fadeOut={doomCardsFade}
+              />
             </div>
           </div>
         </div>
 
-        {/* Beat 3 — pinned pivot line, hope cards popping in scattered
-            around it (full-bleed cream background). */}
+        {/* Beat 3 — starts out still showing Beat 2's black (its own base
+            background), then the cream overlay fades in over it as you
+            scroll into this pin — same nested-overlay technique, so
+            black→cream is a real gradual crossfade too. */}
         <div className="cinema-pin cinema-pin--hope" ref={hopeRef}>
+          <div
+            className="cinema-bridge cinema-bridge--to-cream"
+            style={{ opacity: hopeFadeOpacity }}
+            aria-hidden="true"
+          />
           <div className="cinema-sticky">
             <div className="cinema-stage">
               <CinemaWords
@@ -229,7 +324,12 @@ export default function Home() {
                 revealed={hopeInView}
                 className="cinema-statement"
               />
-              <HeadlineCluster items={HOPE_HEADLINES} variant="hope" revealed={hopeInView} />
+              <HeadlineCluster
+                items={HOPE_HEADLINES}
+                variant="hope"
+                revealed={hopeCardsRevealed}
+                fadeOut={hopeCardsFade}
+              />
             </div>
           </div>
         </div>
