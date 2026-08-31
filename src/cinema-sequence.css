@@ -127,22 +127,14 @@
    fixed + scroll-computed opacity, not a sticky/grid layer): each one fades
    in on top of whatever's currently showing, so by the time a beat's own
    solid background (above) takes over there's no seam. Stacked by z-index
-   — bridge 2 covers bridge 1's brown, bridge 3 covers bridge 2's black —
-   and never need to fade back out themselves. The 3s transition is what
-   actually animates the opacity smoothly over time — the value itself is
-   still driven straight off scrollY (see Home.jsx), but without a real
-   transition it just jumps to each new value with no visible fade. */
+   — bridge 2 covers bridge 1's brown, bridge 3 covers bridge 2's black.
+   No CSS transition on purpose — opacity tracks scrollY directly (see
+   Home.jsx) for a true scroll-scrubbed fade; a timed transition would lag
+   behind the actual scroll position instead of moving with it. */
 .cinema-bridge {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  transition: opacity 3s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cinema-bridge {
-    transition: none;
-  }
 }
 
 .cinema-bridge--to-black {
@@ -276,6 +268,12 @@
   position: relative;
   z-index: 3;
   height: 260vh;
+  /* Without its own opaque background, Beat 1's brown overlay (fixed,
+     nested inside .cinema-pin--1's own stacking context — see the comment
+     there) has nothing later in paint order to block it once you've
+     scrolled down here, so it kept showing through. Every section after
+     Beat 1 needs its own full-bleed background for the same reason. */
+  background: var(--paper);
 }
 
 .cinema-you-sticky {
@@ -339,12 +337,13 @@
   background: var(--paper);
 }
 
-/* The landing state — static, no reveal animation (see Home.jsx). */
+/* The landing state — static, no reveal animation (see Home.jsx). Full-
+   bleed (no max-width/margin:auto here) so its cream background actually
+   covers the whole page rather than just a centered column — the inner
+   .cinema-statement already centers and caps the text itself. */
 .cinema-mission {
   position: relative;
   z-index: 3;
-  max-width: 820px;
-  margin: 0 auto;
   padding: 0 24px clamp(96px, 16vh, 180px);
   text-align: center;
   background: var(--paper);

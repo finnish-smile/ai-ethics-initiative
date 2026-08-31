@@ -30,33 +30,24 @@ export default function Home() {
   const [welcomeWord] = useState(
     () => WELCOME_WORDS[Math.floor(Math.random() * WELCOME_WORDS.length)],
   )
-  // --- Cinematic sequence reveal state (all IntersectionObserver-driven,
-  // not scroll-position math, per the build spec) -----------------------
+  // --- Cinematic sequence reveal state -----------------------------------
   //
-  // The three background-color overlays below (painting → brown → black →
-  // cream) are driven straight off these same "in view" booleans, not a
-  // continuous scroll calculation — each overlay is invisible (opacity: 0)
-  // until its beat actually scrolls into view, then flips to opacity: 1
-  // once and stays there; the 3s CSS transition (see mission-home.css /
-  // cinema-sequence.css) is what turns that single flip into a slow fade,
-  // rather than it snapping in the instant you reach that section.
+  // Text/card reveals stay IntersectionObserver-driven (one-shot booleans,
+  // per the build spec). The three background-color overlays (painting →
+  // brown → black → cream), though, are deliberately scroll-scrubbed —
+  // each one's opacity is a direct function of how far its beat's pin has
+  // scrolled through the viewport, computed alongside heroScale/cueOpacity
+  // in the scroll handler below, so the color genuinely tracks your scroll
+  // position (and reverses cleanly on the way back up) instead of playing
+  // a fixed-length animation once triggered.
   const [beat1Ref, beat1InView] = useInView({ threshold: 0.4 })
   const [beat2Ref, beat2InView] = useInView({ threshold: 0.2 })
   const [hopeRef, hopeInView] = useInView({ threshold: 0.15 })
   const [joinRef, joinInView] = useInView({ threshold: 0.5 })
 
-  // useInView's booleans above are one-way (they fire once and never go
-  // back to false), which is right for the text/card reveals but wrong for
-  // these color overlays on their own: without something to also undo it,
-  // scrolling back UP past a beat left its overlay stuck fully opaque
-  // forever, covering "Welcome" (and earlier beats) in brown/black/cream
-  // even once you'd scrolled back above them. These three track whether
-  // each beat's pin is currently at or below the viewport — true while
-  // you're at/past it, false again once you've scrolled back above it —
-  // so each overlay's opacity can go back to 0 on the way back up too.
-  const [beat1PinReached, setBeat1PinReached] = useState(false)
-  const [beat2PinReached, setBeat2PinReached] = useState(false)
-  const [hopePinReached, setHopePinReached] = useState(false)
+  const [beat1FadeOpacity, setBeat1FadeOpacity] = useState(0)
+  const [beat2FadeOpacity, setBeat2FadeOpacity] = useState(0)
+  const [hopeFadeOpacity, setHopeFadeOpacity] = useState(0)
 
   const youPinRef = useRef(null)
   const [youIntroRef, youIntroInView] = useInView({ threshold: 0.5 })
@@ -93,19 +84,25 @@ export default function Home() {
       setHeroScale(1 + Math.min(1, y / GROW_DISTANCE) * MAX_GROW)
       setCueOpacity(Math.max(0, 1 - y / 120))
 
-      // Just a boundary check (is this pin's top at or above the bottom of
-      // the viewport yet?) — not the kind of hand-computed fade math that
-      // caused problems before, since it isn't driving any animated value
-      // itself, only whether each overlay is allowed to show at all.
-      if (beat1Ref.current) {
-        setBeat1PinReached(beat1Ref.current.getBoundingClientRect().top <= window.innerHeight)
-      }
-      if (beat2Ref.current) {
-        setBeat2PinReached(beat2Ref.current.getBoundingClientRect().top <= window.innerHeight)
-      }
-      if (hopeRef.current) {
-        setHopePinReached(hopeRef.current.getBoundingClientRect().top <= window.innerHeight)
-      }
+      // Each overlay's opacity ramps 0 → 1 as its beat's pin scrolls up
+      // through roughly the next viewport-and-a-half — pure scroll-scrub,
+      // no timers — then holds at 1 for the rest of that pin's height.
+      // Forcing it back to 0 once the pin's bottom has passed the top of
+      // the screen (rect.bottom <= 0) is what makes it reverse cleanly on
+      // the way back up, and keeps it from lingering into later sections:
+      // each overlay is position: fixed and nested inside its own beat's
+      // pin (so it can fade in over that beat's own background) rather
+      // than a plain top-level sibling, so without this bound it would
+      // otherwise stay fully opaque forever once first triggered.
+      const FADE_DISTANCE = window.innerHeight * 1.8
+      const fadeFor = (rect) =>
+        rect.bottom > 0
+          ? Math.min(1, Math.max(0, (window.innerHeight - rect.top) / FADE_DISTANCE))
+          : 0
+
+      if (beat1Ref.current) setBeat1FadeOpacity(fadeFor(beat1Ref.current.getBoundingClientRect()))
+      if (beat2Ref.current) setBeat2FadeOpacity(fadeFor(beat2Ref.current.getBoundingClientRect()))
+      if (hopeRef.current) setHopeFadeOpacity(fadeFor(hopeRef.current.getBoundingClientRect()))
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -176,12 +173,12 @@ export default function Home() {
       <section className="cinema-sequence" data-screen-label="Cinematic sequence">
         <div
           className="cinema-bridge cinema-bridge--to-black"
-          style={{ opacity: beat2InView && beat2PinReached ? 1 : 0 }}
+          style={{ opacity: beat2FadeOpacity }}
           aria-hidden="true"
         />
         <div
           className="cinema-bridge cinema-bridge--to-cream"
-          style={{ opacity: hopeInView && hopePinReached ? 1 : 0 }}
+          style={{ opacity: hopeFadeOpacity }}
           aria-hidden="true"
         />
         {/* Beat 1 — reuses .mission--hero's own painting background (fixed,
@@ -193,7 +190,7 @@ export default function Home() {
         <div className="cinema-pin cinema-pin--1 mission--hero" ref={beat1Ref}>
           <div
             className="mission__fade-overlay"
-            style={{ opacity: beat1InView && beat1PinReached ? 1 : 0 }}
+            style={{ opacity: beat1FadeOpacity }}
             aria-hidden="true"
           />
           <div className="cinema-sticky">

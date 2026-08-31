@@ -39,24 +39,16 @@
    there's no visible seam once this overlay hands off to it. position:
    fixed + a scroll-computed opacity — deliberately NOT a sticky/grid
    background layer, since that approach was tried for the painting itself
-   earlier and caused real scroll-jump bugs. The opacity value itself is
-   still driven straight off scrollY (see Home.jsx), but this transition
-   is what actually makes it fade smoothly over real time — without it,
-   opacity was jumping straight to each new scroll-computed value with no
-   visible animation at all. */
+   earlier and caused real scroll-jump bugs. No CSS transition on purpose —
+   the opacity tracks scrollY directly (see Home.jsx) for a true scroll-
+   scrubbed fade; a timed transition would lag behind the actual scroll
+   position instead of moving with it. */
 .mission__fade-overlay {
   position: fixed;
   inset: 0;
   background: #5c4433;
   pointer-events: none;
   z-index: 0;
-  transition: opacity 3s ease;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mission__fade-overlay {
-    transition: none;
-  }
 }
 
 .mission--hero .wrap {
