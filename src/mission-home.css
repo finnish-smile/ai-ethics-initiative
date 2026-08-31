@@ -1,7 +1,7 @@
 /* =========================================================================
-   Home page flourishes: scroll-reveal mission lines, a growing "Welcome"
-   line, a linkable hover-bulge "stewardship" word, a worm-emoji cursor
+   Home page flourishes: a growing "Welcome" line, a worm-emoji cursor
    easter egg (shake the mouse to summon it), and a random welcome word.
+   The rest of the homepage's scroll sequence lives in cinema-sequence.css.
    ========================================================================= */
 
 .worm-cursor.worm-active,
@@ -33,11 +33,38 @@
   }
 }
 
+/* Fades the painting into a warm brown as "Welcome" scrolls away — the
+   backdrop for Beat 1 ("AI is the fastest-spreading..."), see
+   cinema-sequence.css. Same hex as .cinema-beat--1's own background, so
+   there's no visible seam once this overlay hands off to it. position:
+   fixed + a scroll-computed opacity — deliberately NOT a sticky/grid
+   background layer, since that approach was tried for the painting itself
+   earlier and caused real scroll-jump bugs. The opacity value itself is
+   still driven straight off scrollY (see Home.jsx), but this transition
+   is what actually makes it fade smoothly over real time — without it,
+   opacity was jumping straight to each new scroll-computed value with no
+   visible animation at all. */
+.mission__fade-overlay {
+  position: fixed;
+  inset: 0;
+  background: #5c4433;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mission__fade-overlay {
+    transition: none;
+  }
+}
+
 .mission--hero .wrap {
   padding-top: 0;
   padding-bottom: clamp(64px, 12vw, 140px);
   width: 100%;
   position: relative;
+  z-index: 1;
 }
 
 .mission--hero .mission__inner {
@@ -115,106 +142,7 @@
   margin-top: 36px;
 }
 
-/* Pinned scroll section: .mission__lines-pin gives extra scroll room that
-   .mission__lines (sticky) eats into while holding still on screen — right
-   where the painting is holding still too — until every line has revealed.
-   Only then does scrolling continue on to the buttons and footer below. */
-.mission__lines-pin {
-  position: relative;
-  height: 240vh;
-}
-
-.mission__lines {
-  position: sticky;
-  /* Sticks right under the header — not centered — so it lands at the
-     top of the page the moment it engages, in step with "Welcome" and
-     its subtitle scrolling up out of view. Padding (not the sticky
-     offset itself) pushes the text down about an inch of extra
-     breathing room below the header. */
-  top: 79px;
-  padding-top: calc(24px + 1in);
-  display: flex;
-  flex-direction: column;
-}
-
-.mission-line,
-.mission-line-item {
-  font-family: var(--font-display);
-  font-weight: var(--display-weight);
-  font-size: clamp(26px, 4.4vw, 48px);
-  line-height: 1.3;
-  color: #F4F0E8;
-  text-shadow: 0 1px 8px rgba(20, 17, 12, 0.6);
-  opacity: 0;
-  transition: opacity 1.1s ease, transform 1.1s ease;
-}
-
-.mission-line {
-  margin: 0;
-  padding: 10px 0;
-}
-
-.mission-line--left {
-  transform: translateX(-120px);
-}
-.mission-line--right {
-  transform: translateX(120px);
-}
-.mission-line--up {
-  transform: translateY(46px);
-}
-
-.mission-line--scale {
-  transform: scale(0.5);
-}
-
-.mission-line.revealed,
-.mission-line-item.revealed {
-  opacity: 1;
-  transform: translateX(0) translateY(0);
-}
-
-.mission-line--scale.revealed {
-  transform: scale(1);
-}
-
-.mission-line-row {
-  display: flex;
-  gap: 8px;
-  padding: 6px 0;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.mission__blurb {
-  color: rgba(244, 240, 232, 0.88);
-  text-shadow: 0 1px 6px rgba(20, 17, 12, 0.6);
-  font-size: clamp(17px, 1.6vw, 20px);
-  line-height: 1.65;
-  max-width: 62ch;
-  margin: 44px auto 0;
-}
-
-.stewardship-word {
-  display: inline-block;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  color: #E8C88F;
-  transition: transform 0.25s ease, color 0.25s ease;
-}
-
-.stewardship-word:hover {
-  transform: scale(1.12);
-  color: #F2DDAE;
-  text-decoration: underline;
-}
-
-:root[data-type='grotesque'] .mission-line,
-:root[data-type='grotesque'] .mission-line-item,
 :root[data-type='grotesque'] .mission__welcome,
-:root[data-type='classic'] .mission-line,
-:root[data-type='classic'] .mission-line-item,
 :root[data-type='classic'] .mission__welcome {
   font-style: normal;
 }

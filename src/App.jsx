@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
@@ -15,6 +16,18 @@ import Kickstart from './pages/Kickstart.jsx'
 import KickstartModule from './pages/KickstartModule.jsx'
 
 function App() {
+  useEffect(() => {
+    // Wait a frame so the browser actually paints body's opacity: 0 first —
+    // adding the class synchronously here (before that first paint) would
+    // let the browser collapse straight to opacity: 1 with no visible
+    // transition. Runs once on true page load, not on client-side route
+    // changes, since App only mounts once for the life of the SPA.
+    const id = requestAnimationFrame(() => {
+      document.body.classList.add('is-loaded')
+    })
+    return () => cancelAnimationFrame(id)
+  }, [])
+
   return (
     <BrowserRouter>
       <Routes>

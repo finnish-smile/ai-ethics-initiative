@@ -77,6 +77,22 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Full-page fade-in on first load — starts invisible, App.jsx adds
+     .is-loaded on the next animation frame after mount so the browser has
+     something painted to transition away from. Fires once per real page
+     load, not on client-side route changes (this is an SPA). */
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+body.is-loaded {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
 }
 img { max-width: 100%; display: block; }
 a { color: var(--accent-ink); text-decoration: none; }

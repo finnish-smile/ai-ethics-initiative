@@ -1,39 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import ExploreNav from '../components/ExploreNav.jsx'
+import HeadlineCluster from '../components/cinema/HeadlineCluster.jsx'
+import CinemaWords from '../components/cinema/CinemaWords.jsx'
+import { DOOM_HEADLINES, HOPE_HEADLINES } from '../data/cinema-headlines.js'
+import useInView from '../hooks/useInView.js'
 import '../mission-home.css'
+import '../cinema-sequence.css'
 
 const SHAKE_REVERSALS = 5
 const SHAKE_WINDOW_MS = 1000
 const WORM_DURATION_MS = 2500
 
-const LINES = [
-  { text: 'We develop Christlike leaders', from: 'left' },
-  { text: 'who treat artificial intelligence as a', from: 'right' },
-  {
-    text: (
-      <a href="#" className="stewardship-word">
-        stewardship
-      </a>
-    ),
-    from: 'scale',
-    key: 'stewardship-line',
-  },
-  { text: '— harnessing it ethically', from: 'left', delay: '0.5s' },
-  [
-    { text: 'for people,', from: 'up', delay: '0.65s' },
-    { text: 'communities,', from: 'up', delay: '1.15s' },
-  ],
-  { text: 'and the world.', from: 'up', delay: '1.3s' },
-]
-
-const FLAT_LINES = LINES.flatMap((line) => (Array.isArray(line) ? line : [line]))
-
 const GROW_DISTANCE = 500
 const MAX_GROW = 0.5
-// The reveal sequence only spends the first 65% of the pinned scroll range;
-// the rest is a held pause — nothing changes — before the page is allowed
-// to continue scrolling toward the buttons/footer.
-const REVEAL_FRACTION = 0.65
 
 const WELCOME_WORDS = [
   'so happy',
@@ -46,71 +25,96 @@ const WELCOME_WORDS = [
 ]
 
 export default function Home() {
-  const [revealed, setRevealed] = useState(FLAT_LINES.map(() => false))
   const [heroScale, setHeroScale] = useState(1)
   const [cueOpacity, setCueOpacity] = useState(1)
   const [welcomeWord] = useState(
     () => WELCOME_WORDS[Math.floor(Math.random() * WELCOME_WORDS.length)],
   )
-  const linesPinRef = useRef(null)
-  const introRef = useRef(null)
-  const subRef = useRef(null)
-  const [pinPullUp, setPinPullUp] = useState(0)
+  // --- Cinematic sequence reveal state (all IntersectionObserver-driven,
+  // not scroll-position math, per the build spec) -----------------------
+  //
+  // The three background-color overlays below (painting → brown → black →
+  // cream) are driven straight off these same "in view" booleans, not a
+  // continuous scroll calculation — each overlay is invisible (opacity: 0)
+  // until its beat actually scrolls into view, then flips to opacity: 1
+  // once and stays there; the 3s CSS transition (see mission-home.css /
+  // cinema-sequence.css) is what turns that single flip into a slow fade,
+  // rather than it snapping in the instant you reach that section.
+  const [beat1Ref, beat1InView] = useInView({ threshold: 0.4 })
+  const [beat2Ref, beat2InView] = useInView({ threshold: 0.2 })
+  const [hopeRef, hopeInView] = useInView({ threshold: 0.15 })
+  const [joinRef, joinInView] = useInView({ threshold: 0.5 })
+
+  // useInView's booleans above are one-way (they fire once and never go
+  // back to false), which is right for the text/card reveals but wrong for
+  // these color overlays on their own: without something to also undo it,
+  // scrolling back UP past a beat left its overlay stuck fully opaque
+  // forever, covering "Welcome" (and earlier beats) in brown/black/cream
+  // even once you'd scrolled back above them. These three track whether
+  // each beat's pin is currently at or below the viewport — true while
+  // you're at/past it, false again once you've scrolled back above it —
+  // so each overlay's opacity can go back to 0 on the way back up too.
+  const [beat1PinReached, setBeat1PinReached] = useState(false)
+  const [beat2PinReached, setBeat2PinReached] = useState(false)
+  const [hopePinReached, setHopePinReached] = useState(false)
+
+  const youPinRef = useRef(null)
+  const [youIntroRef, youIntroInView] = useInView({ threshold: 0.5 })
+  const isolateTriggerRef = useRef(null)
+  const ctaTriggerRef = useRef(null)
+  const [isolateYou, setIsolateYou] = useState(false)
+  const [showCTA, setShowCTA] = useState(false)
 
   useEffect(() => {
-    // .mission__intro is a full 100svh block with its content vertically
-    // centered, which leaves empty space below the subtitle before the
-    // lines section would naturally begin. Pull the lines section up to
-    // close that gap, so it engages right as the subtitle scrolls out of
-    // view instead of after a long empty scroll.
-    const measure = () => {
-      const intro = introRef.current
-      const sub = subRef.current
-      if (!intro || !sub) return
-      const gap = intro.getBoundingClientRect().bottom - sub.getBoundingClientRect().bottom
-      setPinPullUp(Math.max(0, gap - 24))
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    if (document.fonts?.ready) document.fonts.ready.then(measure)
-    return () => window.removeEventListener('resize', measure)
+    const el = isolateTriggerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setIsolateYou(entry.isIntersecting), {
+      threshold: 0,
+      rootMargin: '-50% 0px -50% 0px', // fires as the anchor crosses the vertical center of the viewport
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const el = ctaTriggerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setShowCTA(entry.isIntersecting), {
+      threshold: 0,
+      rootMargin: '-50% 0px -50% 0px',
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
   }, [])
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY
-
       setHeroScale(1 + Math.min(1, y / GROW_DISTANCE) * MAX_GROW)
       setCueOpacity(Math.max(0, 1 - y / 120))
 
-      // .mission__lines is pinned (position: sticky) for the length of
-      // .mission__lines-pin, so it holds still on screen — right where the
-      // painting (also pinned, via .mission__bg) is holding still too —
-      // while scroll progress through that pinned range drives which lines
-      // have appeared.
-      const pin = linesPinRef.current
-      if (!pin) return
-      const rect = pin.getBoundingClientRect()
-      // .mission__lines sticks at top: 79px (NAV_HEIGHT), not top: 0 — the
-      // dwell-progress math needs that same offset or it thinks the pin
-      // hasn't started yet even after the text is already stuck in place.
-      const scrollable = rect.height - window.innerHeight
-      const rawProgress = scrollable > 0 ? Math.min(1, Math.max(0, (79 - rect.top) / scrollable)) : 0
-      const progress = Math.min(1, rawProgress / REVEAL_FRACTION)
-
-      setRevealed((prev) => {
-        const next = FLAT_LINES.map((_, i) => progress > (i + 0.2) / FLAT_LINES.length)
-        return next.some((v, i) => v !== prev[i]) ? next : prev
-      })
+      // Just a boundary check (is this pin's top at or above the bottom of
+      // the viewport yet?) — not the kind of hand-computed fade math that
+      // caused problems before, since it isn't driving any animated value
+      // itself, only whether each overlay is allowed to show at all.
+      if (beat1Ref.current) {
+        setBeat1PinReached(beat1Ref.current.getBoundingClientRect().top <= window.innerHeight)
+      }
+      if (beat2Ref.current) {
+        setBeat2PinReached(beat2Ref.current.getBoundingClientRect().top <= window.innerHeight)
+      }
+      if (hopeRef.current) {
+        setHopePinReached(hopeRef.current.getBoundingClientRect().top <= window.innerHeight)
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const missionRef = useRef(null)
+  const wormRef = useRef(null)
   useEffect(() => {
-    const el = missionRef.current
+    const el = wormRef.current
     if (!el) return
     let lastX = null
     let lastDir = 0
@@ -146,65 +150,149 @@ export default function Home() {
     }
   }, [])
 
-  let flatIndex = 0
-
   return (
     <>
       <section className="mission mission--hero" data-screen-label="Mission">
+        {/* No fade here — "Welcome" always stays the plain painting, no
+            overlay at all. The brown fade now happens in Beat 1's own
+            section below, which starts out showing this same painting
+            (via the shared .mission--hero background rules) before fading
+            to brown once you've scrolled into it. */}
         <div className="wrap">
-          <div className="mission__inner worm-cursor" ref={missionRef}>
-            <div className="mission__intro" ref={introRef}>
+          <div className="mission__inner worm-cursor" ref={wormRef}>
+            <div className="mission__intro">
               <h2 className="mission__welcome" style={{ transform: `scale(${heroScale})` }}>
                 Welcome
               </h2>
-              <p className="mission__welcome-sub" ref={subRef}>
-                We are {welcomeWord} you&apos;re here!
-              </p>
+              <p className="mission__welcome-sub">We are {welcomeWord} you&apos;re here!</p>
               <div className="scroll-cue mission__scroll-cue" style={{ opacity: cueOpacity }}>
                 Scroll
               </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="mission__lines-pin" ref={linesPinRef} style={{ marginTop: -pinPullUp }}>
-              <div className="mission__lines">
-                {LINES.map((line) => {
-                  if (Array.isArray(line)) {
-                    return (
-                      <div className="mission-line-row" key={line.map((item) => item.text).join('-')}>
-                        {line.map((item) => {
-                          const idx = flatIndex++
-                          return (
-                            <span
-                              key={item.key || item.text}
-                              className={`mission-line-item mission-line--${item.from} ${
-                                revealed[idx] ? 'revealed' : ''
-                              }`}
-                              style={{ transitionDelay: revealed[idx] ? item.delay ?? '0s' : '0s' }}
-                            >
-                              {item.text}
-                            </span>
-                          )
-                        })}
-                      </div>
-                    )
-                  }
+      <section className="cinema-sequence" data-screen-label="Cinematic sequence">
+        <div
+          className="cinema-bridge cinema-bridge--to-black"
+          style={{ opacity: beat2InView && beat2PinReached ? 1 : 0 }}
+          aria-hidden="true"
+        />
+        <div
+          className="cinema-bridge cinema-bridge--to-cream"
+          style={{ opacity: hopeInView && hopePinReached ? 1 : 0 }}
+          aria-hidden="true"
+        />
+        {/* Beat 1 — reuses .mission--hero's own painting background (fixed,
+            same image/position), so scrolling from "Welcome" into this pin
+            reads as one continuous, unmoving backdrop rather than a cut.
+            The brown overlay then fades in on top of it once this section
+            is actually in view — "starts as painting, then fades to
+            brown," not brown from the moment you leave Welcome. */}
+        <div className="cinema-pin cinema-pin--1 mission--hero" ref={beat1Ref}>
+          <div
+            className="mission__fade-overlay"
+            style={{ opacity: beat1InView && beat1PinReached ? 1 : 0 }}
+            aria-hidden="true"
+          />
+          <div className="cinema-sticky">
+            <div className="cinema-stage">
+              <CinemaWords
+                text="AI is the fastest-spreading technology in human history."
+                revealed={beat1InView}
+                className="cinema-statement"
+              />
+            </div>
+          </div>
+        </div>
 
-                  const idx = flatIndex++
-                  return (
-                    <p
-                      key={line.key || line.text}
-                      className={`mission-line mission-line--${line.from} ${
-                        revealed[idx] ? 'revealed' : ''
-                      }`}
-                      style={{ transitionDelay: revealed[idx] ? line.delay ?? '0s' : '0s' }}
-                    >
-                      {line.text}
-                    </p>
-                  )
-                })}
+        {/* Beat 2 — pinned lead line, doom cards popping in scattered
+            around it (full-bleed black background). */}
+        <div className="cinema-pin cinema-pin--doom" ref={beat2Ref}>
+          <div className="cinema-sticky">
+            <div className="cinema-stage">
+              <CinemaWords
+                text="And we're sure you've seen the headlines..."
+                revealed={beat2InView}
+                className="cinema-lead"
+              />
+              <HeadlineCluster items={DOOM_HEADLINES} variant="doom" revealed={beat2InView} />
+            </div>
+          </div>
+        </div>
+
+        {/* Beat 3 — pinned pivot line, hope cards popping in scattered
+            around it (full-bleed cream background). */}
+        <div className="cinema-pin cinema-pin--hope" ref={hopeRef}>
+          <div className="cinema-sticky">
+            <div className="cinema-stage">
+              <CinemaWords
+                text="But we believe AI can help people flourish in unprecedented ways —"
+                revealed={hopeInView}
+                className="cinema-statement"
+              />
+              <HeadlineCluster items={HOPE_HEADLINES} variant="hope" revealed={hopeInView} />
+            </div>
+          </div>
+        </div>
+
+        {/* Beats 4 & 5 — the responsibility pivot, "you" held alone, then
+            the CTA. Held on screen via position: sticky (declarative CSS,
+            not scroll math); the isolate/CTA moments are still triggered
+            by IntersectionObserver watching two anchor points inside this
+            pinned range. */}
+        <div className="cinema-you-pin" ref={youPinRef}>
+          <div className="cinema-you-sticky">
+            <div className="cinema-you-stage" ref={youIntroRef}>
+              <p className="cinema-statement">
+                <span
+                  className="cinema-you-lead"
+                  style={{ opacity: youIntroInView && !isolateYou ? 1 : 0 }}
+                >
+                  Depending on how people like{' '}
+                </span>
+                <span
+                  className="cinema-highlight"
+                  style={{ opacity: youIntroInView && !showCTA ? 1 : 0, transition: 'opacity 0.9s ease' }}
+                >
+                  you
+                </span>
+                <span className="cinema-you-trail" style={{ opacity: youIntroInView && !isolateYou ? 1 : 0 }}>
+                  {' '}
+                  choose to build and use these tools.
+                </span>
+              </p>
+              <div className={`cinema-you-cta ${showCTA ? 'revealed' : ''}`}>
+                <p className="cinema-statement">
+                  <span className="cinema-highlight">You</span> can make a difference.
+                </p>
               </div>
             </div>
           </div>
+          <div className="cinema-you-trigger" ref={isolateTriggerRef} style={{ top: '42%' }} />
+          <div className="cinema-you-trigger" ref={ctaTriggerRef} style={{ top: '78%' }} />
+        </div>
+
+        {/* Beat 6 — transition into the mission statement, which per the
+            build spec lands in a distinct, settled, non-animated state
+            ("static, confident, full-stop") rather than the scroll-driven
+            reveal the rest of this sequence uses. */}
+        <div ref={joinRef}>
+          <CinemaWords text="Join us as we strive to..." revealed={joinInView} className="cinema-join" />
+        </div>
+
+        {/* Static — no scroll-triggered reveal here. Per the build spec,
+            the sequence should feel "landed" by this point: full-stop,
+            settled, always fully visible rather than animating in. */}
+        <div className="cinema-mission">
+          <p className="cinema-statement">
+            Our mission is to develop Christlike leaders who treat artificial intelligence as a{' '}
+            <a href="#" className="cinema-highlight-link">
+              stewardship
+            </a>{' '}
+            — harnessing it ethically for people, communities, and the world.
+          </p>
         </div>
       </section>
 
