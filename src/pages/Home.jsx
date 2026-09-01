@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import ExploreNav from '../components/ExploreNav.jsx'
-import HeadlineCluster from '../components/cinema/HeadlineCluster.jsx'
 import CinemaWords from '../components/cinema/CinemaWords.jsx'
-import { DOOM_HEADLINES, HOPE_HEADLINES } from '../data/cinema-headlines.js'
 import useInView from '../hooks/useInView.js'
 import '../mission-home.css'
 import '../cinema-sequence.css'
@@ -51,20 +49,6 @@ export default function Home() {
   const [beat1FadeOpacity, setBeat1FadeOpacity] = useState(0)
   const [beat2FadeOpacity, setBeat2FadeOpacity] = useState(0)
   const [hopeFadeOpacity, setHopeFadeOpacity] = useState(0)
-  // One-shot — cards wait until the statement's own word-by-word reveal
-  // has actually finished (not just "started scrolling into the pin") so
-  // they only ever fly in once the words are sitting still, pinned in the
-  // middle of the screen — not partway through a scroll. See the effect
-  // below that arms these from beat2InView/hopeInView.
-  const [doomCardsRevealed, setDoomCardsRevealed] = useState(false)
-  const [hopeCardsRevealed, setHopeCardsRevealed] = useState(false)
-  // Continuous, not one-shot — ramps 1 → 0 as each pin's bottom edge
-  // approaches the bottom of the viewport, so the cards fade out on their
-  // own before the next beat's text/color takes over, rather than just
-  // scrolling out of frame still fully visible. See the fadeOutFor()
-  // helper in the scroll handler below.
-  const [doomCardsFade, setDoomCardsFade] = useState(1)
-  const [hopeCardsFade, setHopeCardsFade] = useState(1)
 
   const youPinRef = useRef(null)
   const [youIntroRef, youIntroInView] = useInView({ threshold: 0.5 })
@@ -72,28 +56,6 @@ export default function Home() {
   const ctaTriggerRef = useRef(null)
   const [isolateYou, setIsolateYou] = useState(false)
   const [showCTA, setShowCTA] = useState(false)
-
-  useEffect(() => {
-    const el = isolateTriggerRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(([entry]) => setIsolateYou(entry.isIntersecting), {
-      threshold: 0,
-      rootMargin: '-50% 0px -50% 0px', // fires as the anchor crosses the vertical center of the viewport
-    })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = ctaTriggerRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(([entry]) => setShowCTA(entry.isIntersecting), {
-      threshold: 0,
-      rootMargin: '-50% 0px -50% 0px',
-    })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -121,77 +83,25 @@ export default function Home() {
       if (beat2Ref.current) setBeat2FadeOpacity(fadeFor(beat2Ref.current.getBoundingClientRect()))
       if (hopeRef.current) setHopeFadeOpacity(fadeFor(hopeRef.current.getBoundingClientRect()))
 
-      // Cards' own fade-out — 1 while the pin's bottom edge is still well
-      // below the viewport (plenty of this beat left to scroll through),
-      // ramping down to 0 over the last stretch as that edge approaches
-      // the bottom of the screen, i.e. as the pin is about to end.
-      const FADE_OUT_DISTANCE = 600
-      const fadeOutFor = (rect) =>
-        Math.min(1, Math.max(0, (rect.bottom - window.innerHeight) / FADE_OUT_DISTANCE))
-
-      if (beat2Ref.current) setDoomCardsFade(fadeOutFor(beat2Ref.current.getBoundingClientRect()))
-      if (hopeRef.current) setHopeCardsFade(fadeOutFor(hopeRef.current.getBoundingClientRect()))
-
-      // Re-arm on every scroll event while the beat is in view — so the
-      // 1s timer only ever actually elapses once scrolling has paused,
-      // giving the pinned words a real beat alone before cards fly in.
-      // This alone isn't enough on a real phone, though: inertial/momentum
-      // scrolling after a flick keeps firing native scroll events for
-      // seconds on its own, which would keep re-arming this and could
-      // delay the reveal far longer than intended — see the separate
-      // fallback timers below, which fire on a flat delay from first
-      // entering view regardless of continued scrolling, so the cards are
-      // guaranteed to show up within a bounded time either way.
-      if (beat2InView) {
-        clearTimeout(doomIdleTimer.current)
-        doomIdleTimer.current = setTimeout(() => setDoomCardsRevealed(true), 1000)
+      // Which side of the viewport's vertical center each anchor is on —
+      // stays true for as long as you're scrolled past it (reversing
+      // cleanly on the way back up), unlike an IntersectionObserver with a
+      // rootMargin squeezed to that same center line: against a 1px-tall
+      // anchor, isIntersecting is only ever true for the single scroll
+      // frame actually crossing that line, then flips back to false the
+      // moment you scroll past it — which was the actual bug here (the
+      // isolate/CTA moments never stayed, just flickered on the way past).
+      if (isolateTriggerRef.current) {
+        setIsolateYou(isolateTriggerRef.current.getBoundingClientRect().top <= window.innerHeight / 2)
       }
-      if (hopeInView) {
-        clearTimeout(hopeIdleTimer.current)
-        hopeIdleTimer.current = setTimeout(() => setHopeCardsRevealed(true), 1000)
+      if (ctaTriggerRef.current) {
+        setShowCTA(ctaTriggerRef.current.getBoundingClientRect().top <= window.innerHeight / 2)
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      clearTimeout(doomIdleTimer.current)
-      clearTimeout(hopeIdleTimer.current)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [beat2InView, hopeInView])
-
-  // Cards fly in only once scrolling has actually stopped inside the pin —
-  // not just "the pin became 20% visible," which a fast scroll (a mobile
-  // flick easily covers 1000px+ in under a second) blows straight past
-  // while still moving, making a plain fixed delay after that moment show
-  // the cards mid-scroll instead of after the words are pinned and sitting
-  // still. Every scroll event re-arms these timers (see the scroll handler
-  // above) while its beat is in view, so they only ever fire once the user
-  // has paused — one-shot, same as before: doesn't un-reveal on scroll-up.
-  const doomIdleTimer = useRef(null)
-  const hopeIdleTimer = useRef(null)
-
-  // Fallback safety net for the idle timers above — inertial/momentum
-  // scrolling (a real phone keeps generating native scroll events for a
-  // second or more after your finger lifts) can keep re-arming an idle
-  // timer indefinitely, so a debounce alone isn't a reliable guarantee on
-  // touch devices. This fires on a flat delay from the moment each beat
-  // first comes into view, no matter how long scrolling continues —
-  // whichever of the two reveals first wins (setState is a no-op once
-  // already true), so the idle timer above still gets first crack at the
-  // nicer "settled" timing when scrolling genuinely does stop in time.
-  useEffect(() => {
-    if (!beat2InView) return
-    const id = setTimeout(() => setDoomCardsRevealed(true), 2200)
-    return () => clearTimeout(id)
-  }, [beat2InView])
-
-  useEffect(() => {
-    if (!hopeInView) return
-    const id = setTimeout(() => setHopeCardsRevealed(true), 2200)
-    return () => clearTimeout(id)
-  }, [hopeInView])
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const wormRef = useRef(null)
   useEffect(() => {
@@ -283,7 +193,8 @@ export default function Home() {
             already black too (see cinema-sequence.css) and this bridge is
             effectively a no-op hold at black — kept for structural
             consistency with Beat 3 and in case the two blacks ever need to
-            diverge again. */}
+            diverge again. Same pin/sticky/reveal mechanic as Beat 1 —
+            no headline cards, just the pinned line of text. */}
         <div className="cinema-pin cinema-pin--doom" ref={beat2Ref}>
           <div
             className="cinema-bridge cinema-bridge--to-black"
@@ -295,13 +206,7 @@ export default function Home() {
               <CinemaWords
                 text="A lot of people have thoughts on where this is headed."
                 revealed={beat2InView}
-                className="cinema-lead"
-              />
-              <HeadlineCluster
-                items={DOOM_HEADLINES}
-                variant="doom"
-                revealed={doomCardsRevealed}
-                fadeOut={doomCardsFade}
+                className="cinema-statement"
               />
             </div>
           </div>
@@ -310,7 +215,8 @@ export default function Home() {
         {/* Beat 3 — starts out still showing Beat 2's black (its own base
             background), then the cream overlay fades in over it as you
             scroll into this pin — same nested-overlay technique, so
-            black→cream is a real gradual crossfade too. */}
+            black→cream is a real gradual crossfade too. Same pin/sticky/
+            reveal mechanic as Beat 1 — no headline cards. */}
         <div className="cinema-pin cinema-pin--hope" ref={hopeRef}>
           <div
             className="cinema-bridge cinema-bridge--to-cream"
@@ -320,15 +226,9 @@ export default function Home() {
           <div className="cinema-sticky">
             <div className="cinema-stage">
               <CinemaWords
-                text="But we believe AI can help people flourish in unprecedented ways —"
+                text="We believe AI can help people flourish in unprecedented ways."
                 revealed={hopeInView}
                 className="cinema-statement"
-              />
-              <HeadlineCluster
-                items={HOPE_HEADLINES}
-                variant="hope"
-                revealed={hopeCardsRevealed}
-                fadeOut={hopeCardsFade}
               />
             </div>
           </div>
@@ -347,11 +247,12 @@ export default function Home() {
                   className="cinema-you-lead"
                   style={{ opacity: youIntroInView && !isolateYou ? 1 : 0 }}
                 >
-                  Depending on how people like{' '}
+                  It all depends on how people like
+                  <br />
                 </span>
                 <span
                   className="cinema-highlight"
-                  style={{ opacity: youIntroInView && !showCTA ? 1 : 0, transition: 'opacity 0.9s ease' }}
+                  style={{ opacity: youIntroInView ? 1 : 0, transition: 'opacity 0.9s ease' }}
                 >
                   you
                 </span>
@@ -359,12 +260,23 @@ export default function Home() {
                   {' '}
                   choose to build and use these tools.
                 </span>
+                {/* "you" stays put (see the highlight span above, which no
+                    longer fades out for this) and this fades in on its own
+                    line right below it — one text box, a real line break,
+                    rather than a whole separate sentence appearing
+                    elsewhere or a second box position-matched against the
+                    first. The gap scales with this text's own font-size
+                    (normal line-height behavior) — same as every other
+                    line break in this sequence, not pinned to a fixed
+                    pixel distance. */}
+                <br />
+                <span
+                  className="cinema-you-cta-trail"
+                  style={{ opacity: showCTA ? 1 : 0, transition: 'opacity 0.9s ease' }}
+                >
+                  can make a difference.
+                </span>
               </p>
-              <div className={`cinema-you-cta ${showCTA ? 'revealed' : ''}`}>
-                <p className="cinema-statement">
-                  <span className="cinema-highlight">You</span> can make a difference.
-                </p>
-              </div>
             </div>
           </div>
           <div className="cinema-you-trigger" ref={isolateTriggerRef} style={{ top: '42%' }} />

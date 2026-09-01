@@ -1,17 +1,16 @@
 /* =========================================================================
-   Cinematic scroll sequence — doom/hope headlines → "you" → mission
+   Cinematic scroll sequence — doom/hope statements → "you" → mission
    statement. Sits right after "Welcome" on the homepage. Museum-green +
    cream palette (distinct from the dark painting-hero above it); typography
    stays on the site's existing Newsreader (--font-display / --font-body) —
    this section doesn't introduce a second display font.
 
    Each beat is a tall "pin": position: sticky holds its text centered on
-   screen while the user keeps scrolling, and (for the doom/hope beats) the
-   headline cards pop in scattered around it — same mechanic as the "you"
-   hold below, generalized to all four text beats. The background color for
-   each beat lives on the pin itself (a full-width block), not on the
-   narrower centered content inside it, so the color genuinely fills the
-   whole page rather than just a column down the middle.
+   screen while the user keeps scrolling — same mechanic as the "you" hold
+   below, generalized to all the text beats. The background color for each
+   beat lives on the pin itself (a full-width block), not on the narrower
+   centered content inside it, so the color genuinely fills the whole page
+   rather than just a column down the middle.
    ========================================================================= */
 
 .cinema-sequence {
@@ -62,8 +61,8 @@
      paints BELOW positioned siblings with an explicit positive z-index
      regardless of DOM order. Without this, the bridge (pointer-events:none,
      so invisible to elementFromPoint hit-testing) was visually painting on
-     top of the cards/text as its opacity climbed — dimming them — even
-     though it sits earlier in the markup. */
+     top of the text as its opacity climbed — dimming it — even though it
+     sits earlier in the markup. */
   z-index: 4;
 }
 
@@ -90,32 +89,36 @@
   z-index: 1;
 }
 
-/* Narrower than the default 760px specifically here — this is the one pin
-   where the statement shares its stage with a scattered card cluster, and
-   the extra width was letting the text's own line-wrap reach far enough
-   left/right to sit on top of the side cards. */
-.cinema-pin--hope .cinema-statement {
-  max-width: 540px;
-}
-
 .cinema-pin--1 .cinema-statement {
   color: #f4f0e8;
   text-shadow: 0 1px 8px rgba(20, 17, 12, 0.35);
 }
 
-.cinema-lead {
-  font-family: var(--font-body);
-  font-size: clamp(16px, 1.8vw, 20px);
-  color: var(--muted);
-  margin: 0 auto 32px;
-  max-width: 640px;
-  text-align: center;
-  position: relative;
-  z-index: 1;
+.cinema-pin--doom .cinema-statement {
+  color: #fff;
 }
 
-.cinema-pin--doom .cinema-lead {
-  color: #fff;
+/* Doom's line sits on the left, hope's on the right — everything else in
+   the sequence (beat 1, the "you" hold, the mission landing) stays
+   centered. Overriding .cinema-stage's own justify-content moves the
+   whole text block to that side of the screen, not just the text within
+   its own (still-centered) box. */
+.cinema-pin--doom .cinema-stage {
+  justify-content: flex-start;
+}
+
+.cinema-pin--doom .cinema-statement {
+  margin: 0;
+  text-align: left;
+}
+
+.cinema-pin--hope .cinema-stage {
+  justify-content: flex-end;
+}
+
+.cinema-pin--hope .cinema-statement {
+  margin: 0;
+  text-align: right;
 }
 
 .cinema-word {
@@ -160,121 +163,6 @@
   z-index: 2;
 }
 
-/* ---- Doom / hope headline clusters, scattered around the pinned
-   statement ------------------------------------------------------------ */
-
-.cinema-cluster {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.cinema-card {
-  position: absolute;
-  top: var(--cinema-top, 50%);
-  left: var(--cinema-left, 50%);
-  width: clamp(148px, 12.5vw, 190px);
-  text-align: left;
-  padding: 16px 18px 14px;
-  border-radius: 3px;
-  cursor: pointer;
-  pointer-events: auto;
-  opacity: 0;
-  transform: translate(-50%, -50%) rotate(var(--cinema-rotate, 0deg)) translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.25s ease;
-}
-
-.cinema-card.revealed {
-  opacity: 1;
-  transform: translate(-50%, -50%) rotate(var(--cinema-rotate, 0deg)) translateY(0);
-}
-
-.cinema-card:hover,
-.cinema-card:focus-within,
-.cinema-card.is-open {
-  box-shadow: 0 14px 28px rgba(35, 30, 20, 0.16);
-  transform: translate(-50%, -50%) rotate(0deg) translateY(-4px);
-  z-index: 2;
-}
-
-.cinema-card--doom {
-  background: #fbf9f4;
-  border: 1px solid rgba(42, 37, 30, 0.14);
-  box-shadow: 0 6px 16px rgba(35, 30, 20, 0.1);
-}
-
-.cinema-card--hope {
-  background: var(--card);
-  border: 1px solid rgba(47, 74, 60, 0.18);
-  box-shadow: 0 4px 12px rgba(35, 30, 20, 0.06);
-}
-
-.cinema-card__source {
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 6px;
-}
-
-.cinema-card__headline {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 15.5px;
-  line-height: 1.3;
-  color: var(--ink);
-  margin: 0;
-  /* Always-visible affordance (not hover-only) so it reads as interactive
-     before a mobile user ever taps it. */
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  text-decoration-color: rgba(42, 37, 30, 0.35);
-  text-underline-offset: 4px;
-}
-
-.cinema-card__detail {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  margin-top: 0;
-  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
-}
-
-.cinema-card:hover .cinema-card__detail,
-.cinema-card:focus-within .cinema-card__detail,
-.cinema-card.is-open .cinema-card__detail {
-  max-height: 140px;
-  opacity: 1;
-  margin-top: 10px;
-}
-
-.cinema-card__byline {
-  font-family: var(--font-body);
-  font-size: 11.5px;
-  color: var(--muted);
-}
-
-.cinema-card__cta {
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--museum-green);
-  text-decoration: none;
-}
-
-.cinema-card__cta:hover {
-  text-decoration: underline;
-}
-
-.cinema-card__cta--pending {
-  color: var(--muted);
-  font-style: italic;
-}
-
 /* ---- "You" hold-and-release beat ----------------------------------- */
 
 .cinema-you-pin {
@@ -295,7 +183,16 @@
   height: calc(100vh - 79px);
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* Left, like doom's statement — and specifically left-aligned (not just
+     positioned left), which is what actually keeps "you" from sliding as
+     the rest of the line changes width around it (the trail collapsing,
+     the "can make a difference" trail growing in): with left alignment
+     each line's own left edge is the fixed anchor, so "you" (first word
+     on its line, after the <br/>) never has to move — center or right
+     alignment would still shift it, since growing/shrinking content
+     re-centers or re-flushes the whole line around/against a fixed point
+     on the OTHER side, dragging "you" along with it. */
+  justify-content: flex-start;
   overflow: hidden;
 }
 
@@ -305,30 +202,25 @@
   padding: 0 24px;
 }
 
+/* .cinema-statement's own text-align: center and margin: 0 auto (its base
+   rule) take precedence over anything just inherited from the stage, so
+   override them directly here. */
+.cinema-you-stage .cinema-statement {
+  margin: 0;
+  text-align: left;
+}
+
 .cinema-you-lead,
-.cinema-you-trail {
+.cinema-you-trail,
+.cinema-you-cta-trail {
   transition: opacity 0.9s ease;
-}
-
-.cinema-you-cta {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.9s ease;
-  pointer-events: none;
-}
-
-.cinema-you-cta.revealed {
-  opacity: 1;
 }
 
 /* Invisible anchors placed at set points inside the tall pin — each one is
-   what Home.jsx's IntersectionObservers actually watch, so the "isolate
-   you" / "show the CTA" moments are still scroll-triggered, just via
-   IntersectionObserver rather than hand-computed scroll math. */
+   what Home.jsx's scroll handler actually watches (comparing the anchor's
+   position to the viewport's vertical center) to fire the "isolate you" /
+   "show the CTA" moments, still scroll-triggered but not via
+   IntersectionObserver — see the comment in Home.jsx for why. */
 .cinema-you-trigger {
   position: absolute;
   left: 0;
@@ -378,189 +270,20 @@
   text-decoration-color: currentColor;
 }
 
-/* ---- Mobile: the absolute desktop scatter (see HeadlineCluster.jsx's
-   top/left percentages) doesn't fit narrow widths — cards would overlap
-   each other and the pinned statement. Instead the pin stacks as a single
-   centered column, with the statement staying put in the middle and the
-   cards split above and below it — .cinema-cluster is display: contents
-   here so its cards become direct children of the .cinema-stage flex
-   column alongside the statement, and each card's flex `order` (set below
-   via :nth-child, first half negative/above, second half positive/below)
-   is what actually places it before or after the text. The statement's
-   own font-size is capped down to match .cinema-lead's here (both were
-   sized very differently on desktop, where the lead sits alone above a
-   full-width scatter instead of sharing a column with one). */
+/* ---- Mobile: same pin/sticky mechanic, just full-width text with no
+   side-by-side content to share the stage with. ------------------------- */
 @media (max-width: 860px) {
-  .cinema-sticky {
-    height: auto;
-    min-height: calc(100vh - 79px);
-    padding: 56px 0;
-    /* Centered, not flex-start — with the cluster hidden until revealed
-       (below), the statement is the only thing here at first, so this is
-       what actually pins it in the middle of the screen instead of at the
-       top of the (taller-than-content) sticky box. */
-    align-items: center;
-    /* The card stack can run taller than one viewport — let the page
-       scroll to reach every card instead of clipping the overflow. */
-    overflow: visible;
-  }
-
   .cinema-stage {
     width: 100%;
-  }
-
-  /* Beat 1's painting hero and the final mission landing also use
-     .cinema-stage/.cinema-statement but have no above/below card stack —
-     scope this layout to just the doom/hope pins, which do. overflow-x:
-     hidden here (not on .cinema-sticky, which stays overflow: visible on
-     the vertical axis for the tall card stack) is what lets cards bleed
-     past the screen edge and actually get cropped there instead of adding
-     a horizontal scrollbar to the page. */
-  .cinema-pin--doom,
-  .cinema-pin--hope {
-    overflow-x: hidden;
-  }
-
-  /* Grid, not flex-wrap — a fixed two-column grid is what actually
-     guarantees "two per row" regardless of how small the cards themselves
-     are (flex-wrap just fits as many as happen to reach the row's width,
-     which for small cards is three, not two). Each card centers inside
-     its own column at its own small size instead of stretching to fill
-     it; the statement spans both columns (grid-column: 1 / -1, below) to
-     sit on its own full-width row in between. */
-  .cinema-pin--doom .cinema-stage,
-  .cinema-pin--hope .cinema-stage {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .cinema-pin--doom .cinema-lead,
-  .cinema-pin--hope .cinema-statement {
-    order: 0;
-    grid-column: 1 / -1;
-    margin: 12px 0;
-    text-align: center;
-    /* Full-size — .cinema-lead's own base is smaller than .cinema-statement
-       (a deliberate lead/statement hierarchy on desktop, where the lead
-       sits quietly above a full scatter instead of alone in the middle of
-       the screen like here), so it's brought up to match rather than left
-       at its own smaller default. */
-    font-size: clamp(28px, 4.4vw, 52px);
-    max-width: none;
-  }
-
-  /* Hidden (not just transparent) until the cards' own reveal state flips
-     — see HeadlineCluster.jsx — so it takes up no layout space while
-     hidden and doesn't push the statement off-center. It's only ever
-     hidden in this state briefly, while the statement is still settling
-     in, so removing it from the accessibility tree for that moment is
-     fine. */
-  .cinema-cluster:not(.cinema-cluster--revealed) {
-    display: none;
-  }
-
-  /* display: contents (not flex) once revealed — the cards themselves
-     become the .cinema-stage flex column's direct children, so their own
-     `order` (below) can interleave them before/after the statement. This
-     div stops generating its own box, but nth-child selectors targeting
-     its .cinema-card children still work off the real DOM tree. */
-  .cinema-cluster.cinema-cluster--revealed {
-    display: contents;
-  }
-
-  .cinema-cluster--doom .cinema-card:nth-child(-n + 3) {
-    order: -1;
-  }
-  .cinema-cluster--doom .cinema-card:nth-child(n + 4) {
-    order: 1;
-  }
-  .cinema-cluster--hope .cinema-card:nth-child(-n + 4) {
-    order: -1;
-  }
-  .cinema-cluster--hope .cinema-card:nth-child(n + 5) {
-    order: 1;
-  }
-
-  .cinema-card {
-    position: static;
-    /* The grid (above) is what fixes "two per row" — this stays a small
-       fixed size and just centers within its own grid column, rather than
-       stretching to fill it. */
-    width: clamp(84px, 26vw, 108px);
-    /* Square while closed — the headline is line-clamped (below) so it can
-       never force the box taller than this. Opening a card (tap/hover/
-       focus) drops both the ratio and the clip so the detail panel isn't
-       cut off; see the reduced-motion/mobile-safe override there. */
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    padding: 9px 9px 8px;
-    transform: rotate(var(--cinema-rotate, 0deg)) translateY(20px);
-  }
-
-  /* --cinema-fade-out is set inline on .cinema-cluster (Home.jsx) — it's a
-     custom property, so it still inherits down to these cards even though
-     the cluster itself is display: contents and generates no box of its
-     own to fade. Ramps 1 → 0 as the pin scrolls toward its end, so the
-     cards fade out before the next beat's own text/color takes over,
-     rather than just vanishing off-screen mid-scroll. */
-  .cinema-card.revealed {
-    opacity: var(--cinema-fade-out, 1);
-    transform: rotate(var(--cinema-rotate, 0deg)) translateY(0);
-  }
-
-  .cinema-card:hover,
-  .cinema-card:focus-within,
-  .cinema-card.is-open {
-    aspect-ratio: auto;
-    overflow: visible;
-    z-index: 2;
-    transform: rotate(0deg) translateY(-4px);
-  }
-
-  .cinema-card__source {
-    font-size: 7px;
-    margin-bottom: 3px;
-  }
-
-  .cinema-card__headline {
-    font-size: 9.5px;
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    overflow: hidden;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cinema-word,
-  .cinema-card,
   .cinema-you-lead,
   .cinema-you-trail,
-  .cinema-you-cta {
+  .cinema-you-cta-trail {
     transition: opacity 0.3s ease;
-    transform: none;
-  }
-  .cinema-card.revealed,
-  .cinema-card:hover,
-  .cinema-card:focus-within,
-  .cinema-card.is-open {
-    transform: translate(-50%, -50%);
-  }
-}
-
-/* Mobile cards are position: static (see above), so there's no translate
-   offset to preserve here — just drop rotation/translateY like every
-   other reduced-motion override. */
-@media (prefers-reduced-motion: reduce) and (max-width: 860px) {
-  .cinema-card,
-  .cinema-card.revealed,
-  .cinema-card:hover,
-  .cinema-card:focus-within,
-  .cinema-card.is-open {
     transform: none;
   }
 }
