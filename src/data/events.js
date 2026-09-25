@@ -2,6 +2,16 @@
 
 export const spotlights = [
   {
+    cat: 'Competition',
+    title: 'Logo Design Competition',
+    blurb:
+      "Help design the AI Ethics Initiative's new logo. Read the guidelines and submit your design.",
+    cta: 'Submit a design',
+    href: '/logo-competition',
+    ph: 'artwork · logo competition',
+    tone: 'navy',
+  },
+  {
     cat: 'New Resource',
     title: 'Personal AI Constitution',
     blurb:

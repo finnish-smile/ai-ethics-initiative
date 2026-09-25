@@ -13,6 +13,7 @@ import Kickstart from './pages/Kickstart.jsx'
 import KickstartModule from './pages/KickstartModule.jsx'
 import Professors from './pages/Professors.jsx'
 import Showcase from './pages/Showcase.jsx'
+import LogoCompetition from './pages/LogoCompetition.jsx'
 
 function App() {
   useEffect(() => {
@@ -48,6 +49,7 @@ function App() {
           <Route path="kickstart" element={<Kickstart />} />
           <Route path="professors" element={<Professors />} />
           <Route path="showcase" element={<Showcase />} />
+          <Route path="logo-competition" element={<LogoCompetition />} />
           <Route path="kickstart/:moduleId" element={<KickstartModule />} />
         </Route>
       </Routes>

@@ -1,0 +1,142 @@
+/* Logo Design Competition page. Builds on showcase.css (.sc-*) and
+   kickstart.css (.ks-section-label); only page-specific pieces live here. */
+
+/* ---- Slim title bar: a compact take on .phead--paper that sits right
+   under the fixed nav. As the visitor scrolls the first 80px, the title
+   shrinks and fades, the subtitle fades faster, and the bar slides up under
+   the nav. Both are fully faded by ~35px of scroll, before the text would
+   overlap the nav's own wordmark (the nav has no solid background).
+   --lc-squeeze (0 to 1) is set by useHeaderSqueeze in LogoCompetition.jsx. ---- */
+.phead--slim { --lc-squeeze: 0; }
+.phead--slim .wrap {
+  padding-top: calc(79px + 10px);
+  padding-bottom: 22px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 20px;
+  row-gap: 6px;
+}
+.phead--slim h1 {
+  font-size: 26px;
+  margin: 0;
+  transform-origin: left center;
+  transform: scale(calc(1 - 0.25 * var(--lc-squeeze)));
+  opacity: calc(1 - 2.2 * var(--lc-squeeze));
+}
+.phead--slim p {
+  margin: 0;
+  font-size: 16px;
+  padding-left: 20px;
+  border-left: 1px solid var(--line-2);
+  line-height: 1.3;
+  opacity: calc(1 - 2.6 * var(--lc-squeeze));
+}
+@media (max-width: 640px) {
+  .phead--slim .wrap { flex-direction: column; align-items: flex-start; padding-top: calc(79px + 8px); padding-bottom: 20px; }
+  .phead--slim h1 { font-size: 24px; }
+  .phead--slim p { padding-left: 0; border-left: 0; font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .phead--slim h1 { transform: none; opacity: 1; }
+  .phead--slim p { opacity: 1; }
+}
+
+/* On this page only, shrink the nav's blur band (normally 130px) to the
+   nav's own height so the resting title stays sharp and only content that
+   has scrolled under the nav dissolves. */
+body:has(.phead--slim) .nav-fade { height: 84px; }
+
+/* Half the standard .section top padding, so the guidelines sit closer to
+   the slim header. */
+.lc-guidelines { padding-top: clamp(28px, 4vw, 52px); }
+
+.lc-pending {
+  margin: 0 0 24px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-wash);
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 500;
+  max-width: 760px;
+}
+
+/* ---- Submission band: set apart from the guidelines ---- */
+.lc-submit {
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding-block: clamp(56px, 8vw, 104px);
+  scroll-margin-top: 90px;
+}
+.lc-submit__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .lc-submit__grid { grid-template-columns: 1fr; }
+}
+.lc-submit__intro h2 { font-size: clamp(28px, 4vw, 40px); margin: 12px 0 0; }
+.lc-submit__intro > p:not(.kicker) { color: var(--muted); margin: 16px 0 0; max-width: 44ch; }
+.lc-steps { margin: 22px 0 0; padding-left: 22px; display: grid; gap: 8px; color: var(--ink); }
+.lc-steps li::marker { color: var(--accent-ink); font-weight: 700; }
+
+.lc-form {
+  margin-top: 0;
+  max-width: none;
+  border-top: 4px solid var(--accent);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---- File picker ---- */
+.lc-file { display: grid; gap: 6px; }
+.lc-file__label { font-size: 13.5px; font-weight: 600; color: var(--navy); }
+.sc-form label.lc-drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  padding: 20px;
+  border: 2px dashed var(--line-2);
+  border-radius: var(--radius);
+  background: var(--accent-wash);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.lc-drop:hover { border-color: var(--accent); }
+.lc-drop:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+.lc-drop--ready { border-style: solid; border-color: var(--accent); }
+.lc-drop--error { border-color: #A3082A; }
+.lc-drop__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+.lc-drop__text { display: grid; gap: 4px; }
+.lc-drop__text strong { font-size: 15px; color: var(--navy); word-break: break-word; }
+.lc-drop__text span { font-size: 13.5px; font-weight: 400; color: var(--muted); }
+.lc-file__help { margin: 0; font-size: 13.5px; color: var(--muted); }
+.lc-error { margin: 0; font-size: 13.5px; font-weight: 600; color: #A3082A; }
+
+.lc-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.lc-form .btn[disabled] { opacity: 0.6; cursor: wait; transform: none; }
+
+/* ---- Success state ---- */
+.lc-done {
+  padding: 32px 28px;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--shadow-md);
+}
+.lc-done h3 { font-size: 24px; margin: 0 0 8px; }
+.lc-done p { margin: 0 0 20px; color: var(--muted); }
