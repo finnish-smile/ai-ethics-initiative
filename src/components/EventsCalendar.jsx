@@ -52,7 +52,7 @@ export default function EventsCalendar() {
           {g.items.map((e) => {
             const d = parseDate(e.date)
             return (
-              <Link className="ev-row" to={`/events/${e.slug}`} key={e.slug}>
+              <Link className="ev-row" to={e.href || `/events/${e.slug}`} key={e.slug}>
                 <span className="ev-date">
                   <span className="ev-day">{d.getDate()}</span>
                   <span className="ev-dow">{DOW[d.getDay()]}</span>

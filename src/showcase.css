@@ -86,6 +86,25 @@
 }
 .sc-form__actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .sc-form__note { font-size: 13.5px; color: var(--muted); max-width: 46ch; }
+.sc-form__error { margin: 0; font-size: 13.5px; font-weight: 600; color: #A3082A; }
+/* After sending, the fields stay in the layout (invisible) so the box keeps its
+   size, and the thank-you note is centered over them. */
+.sc-form[data-sent] { position: relative; }
+.sc-form__body { display: contents; }
+.sc-form[data-sent] .sc-form__body { visibility: hidden; }
+.sc-form__done {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 28px;
+  text-align: center;
+}
+.sc-form__done .sc-form__actions { justify-content: center; }
+/* Spam-bot honeypot: kept in the form but out of sight and out of the tab order. */
+.sc-form__hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 
 .sc-more {
   display: inline-flex;

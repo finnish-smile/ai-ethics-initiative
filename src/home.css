@@ -1,0 +1,72 @@
+/* =========================================================================
+   Homepage — adjustments on top of isaac-site.css / isaac-pages.css.
+   The section components themselves (.hero-grid, .symbar, .mission,
+   .feature-split, .card) are already on the BYU tokens there; this file
+   only covers what's specific to how the homepage stacks them.
+   ========================================================================= */
+
+/* The fixed, see-through nav floats over the top of the page, so the hero
+   needs room above it (same 79px clearance .phead uses). .hero and
+   .hero-grid each add their own vertical padding — on the homepage the
+   grid supplies it, so .hero's is dropped to avoid doubling up. */
+.home-hero {
+  padding-block: 0;
+  padding-top: 79px;
+  background: linear-gradient(170deg, var(--accent-wash), var(--paper) 55%);
+}
+
+/* The carousel/calendar pair sit on the white page now (not the old warm
+   paper), so give both boxes a white fill + soft shadow to lift them. */
+.home-hero .hero-slide,
+.home-hero .hero-aside {
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Four tiles, matching the main nav, instead of the original five. */
+.symbar--4 .symbar__grid {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 1040px;
+}
+@media (max-width: 640px) {
+  .symbar--4 .symbar__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mission band: the "stewardship" emphasis in a warm cream drawn from the
+   Inness painting behind it (the old light-blue tint was built for navy and
+   loses contrast against the painting's sky). */
+.mission__statement em {
+  font-style: italic;
+  color: #F6DFA8;
+}
+
+/* Latest news sits in a light band so it separates from the white sections
+   above and below it; cards inside flip to white to stay distinct. */
+.home-news {
+  background: var(--card);
+  border-block: 1px solid var(--line);
+}
+.home-news .card { background: #fff; }
+
+/* Highlight cards (Principles / Newsletter) */
+.home-highlight .card__body { padding: 32px; }
+.home-highlight .card__title { font-size: 26px; }
+.home-highlight .card__excerpt { font-size: 16px; }
+.home-highlight .link-more { margin-top: 18px; }
+.home-highlight { border-top: 3px solid var(--accent); }
+
+/* Once the hero stacks (single column), the calendar no longer needs to
+   match the carousel's height — let it shrink to fit its events instead
+   of leaving a tall empty box. */
+@media (max-width: 1040px) {
+  .home-hero .hero-aside { height: auto; }
+}
+
+/* Navy placeholder for the featured image — same treatment the carousel
+   uses for its navy slides, until real artwork is dropped in. */
+.ph--navy {
+  background-color: var(--navy);
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 9px, rgba(255,255,255,0.05) 9px, rgba(255,255,255,0.05) 18px);
+  border: 0;
+}
+.ph--navy > span { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85); }

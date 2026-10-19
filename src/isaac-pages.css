@@ -115,10 +115,36 @@
 @media (max-width: 480px) { .symbar__grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------- Mission band -------------------------------------------------- */
-.mission { background: var(--navy); color: #fff; }
+/* Background: George Inness, Peace and Plenty, 1865 (The Met, public domain).
+   Navy stays as the fallback colour while the painting loads. */
+.mission {
+  position: relative;
+  background: var(--navy) url('/stewardship-outline/assets/mission-inness-peace-and-plenty.jpg') 50% 80% / cover no-repeat;
+  color: #fff;
+  /* On wide screens the band grows with the viewport so the sky, the two
+     elms and the harvest workers all stay in frame; below ~1400px the
+     content is already taller than this and nothing changes. */
+  min-height: 37vw;
+  display: flex; flex-direction: column; justify-content: center;
+}
+/* Navy gradient from the left: keeps the mission text high-contrast and ties
+   the band to BYU navy, then fades out so the right of the painting stays clear. */
+.mission::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(to right, rgba(0,46,93,0.75) 0%, rgba(0,46,93,0.45) 45%, rgba(0,46,93,0) 85%);
+}
+.mission > .wrap { position: relative; z-index: 1; }
+.mission__caption {
+  position: absolute; left: 20px; bottom: 14px; z-index: 2; margin: 0;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 11px; letter-spacing: .05em;
+  color: rgba(255,255,255,0.6); white-space: nowrap;
+}
 .mission .wrap { padding-block: clamp(64px, 9vw, 120px); }
 .mission__inner { max-width: 980px; }
-.mission .kicker { color: rgba(255,255,255,0.65); }
+.mission .kicker { color: rgba(255,255,255,0.85); text-shadow: 0 1px 8px rgba(0,0,0,0.55); }
+/* Soft shadow keeps the white statement readable over the painting's bright sky. */
+.mission__statement { text-shadow: 0 2px 18px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.45); }
+.mission__caption { text-shadow: 0 1px 4px rgba(0,0,0,0.6); }
 .mission__statement {
   font-family: var(--font-display); font-weight: var(--display-weight);
   font-size: clamp(26px, 4vw, 46px); line-height: 1.18; letter-spacing: -0.01em;

@@ -1,4 +1,4 @@
-/* Logo Design Competition page. Builds on showcase.css (.sc-*) and
+/* AI Constitution Competition page. Builds on showcase.css (.sc-*) and
    kickstart.css (.ks-section-label); only page-specific pieces live here. */
 
 /* ---- Slim title bar: a compact take on .phead--paper that sits right
@@ -6,7 +6,7 @@
    shrinks and fades, the subtitle fades faster, and the bar slides up under
    the nav. Both are fully faded by ~35px of scroll, before the text would
    overlap the nav's own wordmark (the nav has no solid background).
-   --lc-squeeze (0 to 1) is set by useHeaderSqueeze in LogoCompetition.jsx. ---- */
+   --lc-squeeze (0 to 1) is set by useHeaderSqueeze in AiConstitutionCompetition.jsx. ---- */
 .phead--slim { --lc-squeeze: 0; }
 .phead--slim .wrap {
   padding-top: calc(79px + 10px);
@@ -51,6 +51,14 @@ body:has(.phead--slim) .nav-fade { height: 84px; }
    the slim header. */
 .lc-guidelines { padding-top: clamp(28px, 4vw, 52px); }
 
+/* Overview of the competition, above the guidelines. */
+.lc-overview { margin: 8px 0 32px; max-width: 760px; display: grid; gap: 10px; }
+.lc-overview p { margin: 0; font-size: 17px; line-height: 1.55; color: var(--ink); }
+
+/* Handbook link in the slim header subtitle. */
+.phead--slim p a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--accent); }
+.phead--slim p a:hover { color: var(--accent-ink); }
+
 .lc-pending {
   margin: 0 0 24px;
   padding: 12px 16px;
@@ -90,6 +98,9 @@ body:has(.phead--slim) .nav-fade { height: 84px; }
   border-top: 4px solid var(--accent);
   box-shadow: var(--shadow-md);
 }
+
+/* Large paste-in box for the full constitution. */
+.lc-form textarea.lc-constitution { min-height: 280px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; line-height: 1.5; }
 
 /* ---- File picker ---- */
 .lc-file { display: grid; gap: 6px; }

@@ -2,36 +2,46 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../kickstart.css'
 import '../showcase.css'
-import '../logo-competition.css'
+import '../ai-constitution-competition.css'
 
-// Submissions go straight to Formspree (no backend of our own).
+// Submissions currently go to Formspree (no backend of our own).
+// TODO: Formspree is a temporary stand-in. Video files can exceed its upload
+// limits, so swap FORMSPREE_URL (and the fetch in onSubmit) for the new
+// upload service once it is chosen.
 const FORMSPREE_URL = 'https://formspree.io/f/xrpbkgbn'
 
-// Only PNG and JPEG are accepted. Every file is checked three ways before it
-// is sent: extension, the browser-reported MIME type, and the file's first
-// bytes (its "magic number"), so a renamed ZIP or other file is rejected.
-const MAX_MB = 10
-const MAX_BYTES = MAX_MB * 1024 * 1024
-const ALLOWED_EXT = ['png', 'jpg', 'jpeg']
-const ALLOWED_MIME = ['image/png', 'image/jpeg']
-const ACCEPT_ATTR = '.png,.jpg,.jpeg,image/png,image/jpeg'
+// Only @byu.edu addresses are accepted.
+const BYU_EMAIL = /^[^\s@]+@byu\.edu$/i
+const BYU_EMAIL_PATTERN = '[^\\s@]+@[Bb][Yy][Uu]\\.[Ee][Dd][Uu]'
 
-async function checkLogoFile(file) {
-  if (!file) return 'Please choose a logo file to upload.'
+// Video upload: MP4, MOV, or WebM, up to MAX_MB. Every file is checked three
+// ways before it is sent: extension, the browser-reported MIME type (when
+// the browser reports one), and the file's first bytes (its "magic number"),
+// so a renamed ZIP or other file is rejected.
+const MAX_MB = 100
+const MAX_BYTES = MAX_MB * 1024 * 1024
+const ALLOWED_EXT = ['mp4', 'mov', 'webm']
+const ALLOWED_MIME = ['video/mp4', 'video/quicktime', 'video/webm']
+const ACCEPT_ATTR = '.mp4,.mov,.webm,video/mp4,video/quicktime,video/webm'
+// Top-level atom names a valid MP4/MOV file can start with.
+const ISO_ATOMS = ['ftyp', 'moov', 'mdat', 'wide', 'free', 'skip', 'pnot']
+
+async function checkVideoFile(file) {
+  if (!file) return 'Please choose a video file to upload.'
   const ext = file.name.split('.').pop().toLowerCase()
-  if (!ALLOWED_EXT.includes(ext) || !ALLOWED_MIME.includes(file.type)) {
-    return 'Only PNG or JPG images can be submitted. ZIP files and other file types are not accepted.'
+  if (!ALLOWED_EXT.includes(ext) || (file.type && !ALLOWED_MIME.includes(file.type))) {
+    return 'Only MP4, MOV, or WebM videos can be submitted. ZIP files and other file types are not accepted.'
   }
-  if (file.size > MAX_BYTES) return `That file is larger than ${MAX_MB} MB. Please upload a smaller version.`
+  if (file.size > MAX_BYTES) return `That video is larger than ${MAX_MB} MB. Please upload a shorter or smaller version.`
   if (file.size === 0) return 'That file appears to be empty.'
 
-  const head = new Uint8Array(await file.slice(0, 8).arrayBuffer())
-  const isPng =
-    head[0] === 0x89 && head[1] === 0x50 && head[2] === 0x4e && head[3] === 0x47 &&
-    head[4] === 0x0d && head[5] === 0x0a && head[6] === 0x1a && head[7] === 0x0a
-  const isJpeg = head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff
-  if (!isPng && !isJpeg) {
-    return 'That file is not a valid PNG or JPG image. Please export your logo as a PNG or JPG and try again.'
+  const head = new Uint8Array(await file.slice(0, 12).arrayBuffer())
+  const atom = String.fromCharCode(head[4], head[5], head[6], head[7])
+  const isIso = ISO_ATOMS.includes(atom)
+  const isWebm = head[0] === 0x1a && head[1] === 0x45 && head[2] === 0xdf && head[3] === 0xa3
+  const valid = ext === 'webm' ? isWebm : isIso
+  if (!valid) {
+    return 'That file is not a valid MP4, MOV, or WebM video. Please export your video in one of those formats and try again.'
   }
   return null
 }
@@ -44,29 +54,29 @@ function formatSize(bytes) {
 // specifications before the competition opens.
 const GUIDELINES = [
   {
-    tag: 'Concept',
-    title: 'Theme & purpose',
-    text: '[Placeholder: describe what the logo should represent and the ideas it should communicate about the AI Ethics Initiative.]',
+    tag: 'Purpose',
+    title: 'Your personal AI constitution',
+    text: 'Using the principles in our AI Stewardship handbook, write a set of rules for yourself to follow in your use of generative AI. [Placeholder: further detail on the goals of the competition.]',
+  },
+  {
+    tag: 'Content',
+    title: 'What your constitution should include',
+    text: '[Placeholder: the aspects and principles every constitution should address.]',
+  },
+  {
+    tag: 'Video',
+    title: 'Video requirements',
+    text: 'Submit a simple video of yourself explaining your constitution. [Placeholder: required length, contents, and recording guidance.]',
   },
   {
     tag: 'Format',
-    title: 'Dimensions & files',
-    text: '[Placeholder: required size and aspect ratio, minimum resolution, and whether a transparent background is needed.] Submissions must be PNG or JPG, up to 10 MB.',
-  },
-  {
-    tag: 'Style',
-    title: 'Colors & typography',
-    text: '[Placeholder: required or suggested color palette, font guidance, and how the logo should look in one color or on dark backgrounds.]',
+    title: 'Format & file types',
+    text: 'You will put this constitution into your AI model of choice, so write it in an LLM-readable format. [Placeholder: formatting expectations and accepted file types.]',
   },
   {
     tag: 'Who',
     title: 'Eligibility',
-    text: '[Placeholder: who may enter, whether teams are allowed, and how many designs each person may submit.]',
-  },
-  {
-    tag: 'Integrity',
-    title: 'Originality & AI use',
-    text: '[Placeholder: rules on original work, use of AI image tools, and disclosure of any tools used in the design.]',
+    text: '[Placeholder: who may enter, whether teams are allowed, and how many entries each person may submit.]',
   },
   {
     tag: 'When',
@@ -75,12 +85,13 @@ const GUIDELINES = [
   },
 ]
 
-const EMPTY = { name: '', email: '', title: '', description: '' }
+const EMPTY = { name: '', email: '', constitution: '', aiUse: '' }
 
 function SubmissionForm() {
   const [form, setForm] = useState(EMPTY)
   const [file, setFile] = useState(null)
   const [fileError, setFileError] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
   const fileInput = useRef(null)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
@@ -90,13 +101,16 @@ function SubmissionForm() {
     if (fileInput.current) fileInput.current.value = ''
   }
 
+  const checkEmail = (value) =>
+    BYU_EMAIL.test(value.trim()) ? '' : 'Please use your BYU email address (ending in @byu.edu).'
+
   const onFileChange = async (e) => {
     const chosen = e.target.files && e.target.files[0]
     if (!chosen) {
       setFile(null)
       return
     }
-    const err = await checkLogoFile(chosen)
+    const err = await checkVideoFile(chosen)
     if (err) {
       setFileError(err)
       clearFile()
@@ -108,21 +122,22 @@ function SubmissionForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    const eErr = checkEmail(form.email)
+    setEmailError(eErr)
     // Re-check at submit time in case the input was tampered with.
-    const err = await checkLogoFile(file)
-    if (err) {
-      setFileError(err)
-      return
-    }
+    const fErr = await checkVideoFile(file)
+    if (fErr) setFileError(fErr)
+    if (eErr || fErr) return
 
+    const email = form.email.trim()
     const data = new FormData()
     data.append('name', form.name)
-    data.append('email', form.email)
-    data.append('logo_title', form.title)
-    data.append('description', form.description)
-    data.append('logo', file, file.name)
-    data.append('_subject', `Logo competition entry: ${form.title}`)
-    data.append('_replyto', form.email)
+    data.append('email', email)
+    data.append('constitution', form.constitution)
+    data.append('ai_use', form.aiUse)
+    data.append('video', file, file.name)
+    data.append('_subject', `AI Constitution entry: ${email}`)
+    data.append('_replyto', email)
     data.append('_gotcha', e.target.elements._gotcha.value)
 
     setStatus('sending')
@@ -144,10 +159,10 @@ function SubmissionForm() {
   if (status === 'sent') {
     return (
       <div className="lc-done" role="status">
-        <h3>Thanks, your logo is in.</h3>
-        <p>We received your submission and will be in touch by email if we have any questions.</p>
+        <h3>Thanks, your constitution is in.</h3>
+        <p>We received your entry and will be in touch by email if we have any questions.</p>
         <button type="button" className="btn btn--ghost" onClick={() => setStatus('idle')}>
-          Submit another design
+          Submit another entry
         </button>
       </div>
     )
@@ -163,44 +178,64 @@ function SubmissionForm() {
           <input name="name" required value={form.name} onChange={set('name')} autoComplete="name" />
         </label>
         <label>
-          Email
+          BYU email
           <input
             type="email"
             name="email"
             required
+            pattern={BYU_EMAIL_PATTERN}
+            title="Use your BYU email address (ending in @byu.edu)."
             value={form.email}
-            onChange={set('email')}
+            onChange={(e) => {
+              set('email')(e)
+              if (emailError) setEmailError(checkEmail(e.target.value))
+            }}
+            onBlur={() => form.email && setEmailError(checkEmail(form.email))}
             placeholder="you@byu.edu"
             autoComplete="email"
+            aria-invalid={emailError ? 'true' : undefined}
           />
         </label>
       </div>
+      {emailError && (
+        <p className="lc-error" role="alert">
+          {emailError}
+        </p>
+      )}
       <label>
-        Logo title
-        <input name="title" required value={form.title} onChange={set('title')} placeholder="Give your design a name" />
+        Your constitution
+        <textarea
+          name="constitution"
+          className="lc-constitution"
+          required
+          rows={14}
+          value={form.constitution}
+          onChange={set('constitution')}
+          placeholder="Paste your full constitution here, written in a format an AI model can read."
+        />
       </label>
       <label>
-        About your design
+        AI used in creating your constitution
         <textarea
-          name="description"
+          name="ai_use"
           required
           rows={4}
-          value={form.description}
-          onChange={set('description')}
-          placeholder="What does your logo represent, and what choices did you make?"
+          value={form.aiUse}
+          onChange={set('aiUse')}
+          placeholder="Describe any AI tools you used and how you used them. If you used none, write “None.”"
         />
       </label>
 
       <div className="lc-file">
         <span className="lc-file__label" id="lc-file-label">
-          Logo file
+          Video explanation
         </span>
         <label className={`lc-drop${fileError ? ' lc-drop--error' : ''}${file ? ' lc-drop--ready' : ''}`}>
           <input
             ref={fileInput}
             className="lc-drop__input"
             type="file"
-            name="logo"
+            name="video"
             accept={ACCEPT_ATTR}
             onChange={onFileChange}
             aria-labelledby="lc-file-label"
@@ -213,13 +248,13 @@ function SubmissionForm() {
             </span>
           ) : (
             <span className="lc-drop__text">
-              <strong>Choose a PNG or JPG</strong>
+              <strong>Choose an MP4, MOV, or WebM video</strong>
               <span>Click to browse your files</span>
             </span>
           )}
         </label>
         <p className="lc-file__help" id="lc-file-help">
-          PNG or JPG only, up to {MAX_MB} MB. ZIP files and other file types are not accepted.
+          MP4, MOV, or WebM only, up to {MAX_MB} MB. ZIP files and other file types are not accepted.
         </p>
         {fileError && (
           <p className="lc-error" role="alert">
@@ -233,7 +268,7 @@ function SubmissionForm() {
 
       <div className="sc-form__actions">
         <button type="submit" className="btn btn--accent" disabled={sending}>
-          {sending ? 'Sending…' : 'Submit logo'}
+          {sending ? 'Sending…' : 'Submit entry'}
           {!sending && <span className="arrow">&rarr;</span>}
         </button>
         {status === 'error' && (
@@ -273,25 +308,38 @@ function useHeaderSqueeze(ref) {
   }, [ref])
 }
 
-export default function LogoCompetition() {
+export default function AiConstitutionCompetition() {
   const headerRef = useRef(null)
   useHeaderSqueeze(headerRef)
   return (
     <>
       <header className="phead phead--paper phead--slim" ref={headerRef}>
         <div className="wrap">
-          <h1>Logo Design Competition</h1>
-          <p>Read the guidelines, then submit your design below.</p>
+          <h1>AI Constitution Competition</h1>
+          <p>
+            Using the principles laid out in our <Link to="/principles">AI Stewardship handbook</Link>, write a set of
+            rules for yourself to follow in your use of generative AI.
+          </p>
         </div>
       </header>
 
-      <section className="section lc-guidelines" data-screen-label="Logo guidelines">
+      <section className="section lc-guidelines" data-screen-label="Competition guidelines">
         <div className="wrap">
           <Link className="back-link" to="/get-involved">
             <span className="arr">&larr;</span> Back to Events
           </Link>
+          <div className="lc-overview" data-reveal>
+            <p>
+              You will submit your completed constitution as well as a simple video of yourself explaining your
+              constitution.
+            </p>
+            <p>
+              In practice, you will be putting this constitution into your AI model of choice, so write your
+              constitution in an LLM-readable format.
+            </p>
+          </div>
           <div className="ks-section-label">
-            <h2>Design guidelines</h2>
+            <h2>Competition guidelines</h2>
             <span className="ks-section-label__tag">Read before submitting</span>
           </div>
           <p className="lc-pending" data-reveal>
@@ -311,18 +359,17 @@ export default function LogoCompetition() {
         </div>
       </section>
 
-      <section className="lc-submit" id="submit" data-screen-label="Submit a logo">
+      <section className="lc-submit" id="submit" data-screen-label="Submit a constitution">
         <div className="wrap lc-submit__grid">
           <div className="lc-submit__intro" data-reveal>
             <p className="kicker">Submission point</p>
-            <h2>Submit your logo</h2>
-            <p>
-              Upload one design per submission as a PNG or JPG. Make sure it follows the guidelines above.
-            </p>
+            <h2>Submit your constitution</h2>
+            <p>Make sure your entry follows the guidelines above. Entries require a BYU email address.</p>
             <ol className="lc-steps">
-              <li>Fill in your name and email.</li>
-              <li>Give your design a title and a short description.</li>
-              <li>Attach your logo file and press Submit.</li>
+              <li>Fill in your name and BYU email.</li>
+              <li>Paste your full constitution into the text box.</li>
+              <li>Describe any AI you used in creating it.</li>
+              <li>Attach your video explanation and press Submit.</li>
             </ol>
           </div>
           <SubmissionForm />

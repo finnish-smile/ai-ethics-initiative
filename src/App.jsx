@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Home from './pages/Home.jsx'
 import Principles from './pages/Principles.jsx'
@@ -14,7 +14,7 @@ import Kickstart from './pages/Kickstart.jsx'
 import KickstartModule from './pages/KickstartModule.jsx'
 import Professors from './pages/Professors.jsx'
 import Showcase from './pages/Showcase.jsx'
-import LogoCompetition from './pages/LogoCompetition.jsx'
+import AiConstitutionCompetition from './pages/AiConstitutionCompetition.jsx'
 
 function App() {
   useEffect(() => {
@@ -51,7 +51,9 @@ function App() {
           <Route path="kickstart" element={<Kickstart />} />
           <Route path="professors" element={<Professors />} />
           <Route path="showcase" element={<Showcase />} />
-          <Route path="logo-competition" element={<LogoCompetition />} />
+          <Route path="ai-constitution-competition" element={<AiConstitutionCompetition />} />
+          {/* Old address from the Logo Design Competition. */}
+          <Route path="logo-competition" element={<Navigate to="/ai-constitution-competition" replace />} />
           <Route path="kickstart/:moduleId" element={<KickstartModule />} />
         </Route>
       </Routes>

@@ -9,7 +9,7 @@ export default function UpcomingEvents({ limit }) {
         const d = parseDate(e.date)
         return (
           <li className="up-item" key={e.slug}>
-            <Link to={`/events/${e.slug}`}>
+            <Link to={e.href || `/events/${e.slug}`}>
               <span className="up-date">
                 <span className="up-dow">{DOW[d.getDay()]}</span>
                 <span className="up-day">{d.getDate()}</span>

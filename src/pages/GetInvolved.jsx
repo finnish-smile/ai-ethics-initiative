@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import Carousel from '../components/Carousel.jsx'
 import EventsCalendar from '../components/EventsCalendar.jsx'
 import EventSuggestForm from '../components/EventSuggestForm.jsx'
@@ -30,27 +29,6 @@ export default function GetInvolved() {
             </div>
             <EventsCalendar />
             <EventSuggestForm />
-          </div>
-        </section>
-
-        <section className="section" data-screen-label="Featured">
-          <div className="wrap">
-            <div className="feature-split" data-reveal>
-              <div className="ph">
-                <span>photo · students &amp; faculty</span>
-              </div>
-              <div className="feature-split__body">
-                <p className="kicker">Featured</p>
-                <h2>Something Cool That Should be Featured</h2>
-                <p className="lead">
-                  We made this really cool thing for students, and we want to show it off. Check
-                  it out!
-                </p>
-                <Link className="link-more" to="/kickstart">
-                  Learn how it works<span className="arrow">&rarr;</span>
-                </Link>
-              </div>
-            </div>
           </div>
         </section>
       </div>

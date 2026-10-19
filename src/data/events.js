@@ -3,12 +3,12 @@
 export const spotlights = [
   {
     cat: 'Competition',
-    title: 'Logo Design Competition',
+    title: 'AI Constitution Competition',
     blurb:
-      "Help design the AI Ethics Initiative's new logo. Read the guidelines and submit your design.",
-    cta: 'Submit a design',
-    href: '/logo-competition',
-    ph: 'artwork · logo competition',
+      'Using the principles in our AI Stewardship handbook, write your own rules for using generative AI, then submit your constitution and a short video explaining it.',
+    cta: 'Enter the competition',
+    href: '/ai-constitution-competition',
+    ph: 'cover · ai constitution competition',
     tone: 'navy',
   },
   {
@@ -46,13 +46,15 @@ export const spotlights = [
 // Events (ISO date, sorted ascending). `slug` powers the event detail page
 // (/events/<slug>). Only `date`, `title`, `type`, and `slug` are required;
 // `time`, `place`, `host`, `desc` (array of paragraphs), and `invite` are
-// optional and simply left out of the pages when missing.
+// optional and simply left out of the pages when missing. An optional `href`
+// sends the event's links to a dedicated page instead of /events/<slug>.
 export const events = [
   {
     date: '2026-10-01',
-    title: 'AI Stewardship Competition',
+    title: 'AI Constitution Competition',
     type: 'Competition',
-    slug: 'ai-stewardship-competition',
+    slug: 'ai-constitution-competition',
+    href: '/ai-constitution-competition',
   },
   {
     date: '2026-11-05',

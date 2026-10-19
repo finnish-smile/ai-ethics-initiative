@@ -1,236 +1,229 @@
-import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import CinemaWords from '../components/cinema/CinemaWords.jsx'
-import useInView from '../hooks/useInView.js'
-import '../cinema-sequence.css'
-import '../homepage.css'
+import Carousel from '../components/Carousel.jsx'
+import UpcomingEvents from '../components/UpcomingEvents.jsx'
+import '../home.css'
 
-// The opening argument, tightened to four short beats instead of a long
-// scroll-hijacked sequence — see cinema-sequence.css for why each one is
-// its own short pin rather than one continuous scroll-scrubbed narrative.
-const OPENING_BEATS = [
-  'We believe AI can help people flourish.',
-  'But technology does not determine who we become.',
-]
+// Homepage — restored from the earlier Isaac's Draft layout (carousel +
+// upcoming events, icon link bar, mission band, featured split, latest
+// news, highlight cards), restyled onto the site's current BYU tokens.
+// Section styles come from isaac-site.css / isaac-pages.css; home.css
+// only holds the homepage-specific adjustments.
+//
+// Placeholder copy and the links to removed pages ("More about us",
+// "Learn how it works" — both pointed at the old About page) are kept
+// as-is on purpose; they'll be filled in / repointed later.
 
-function OpeningBeat({ text }) {
-  const [ref, inView] = useInView({ threshold: 0.5 })
-  return (
-    <div className="cinema-pin" ref={ref}>
-      <div className="cinema-sticky">
-        <div className="cinema-stage">
-          <CinemaWords text={text} revealed={inView} className="cinema-statement" />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// The finale's scroll budget, in vh: the background spends BG_FADE_VH
-// fading completely from navy to white, then — only once it's fully
-// white — the statement spends TEXT_FADE_VH fading in on that same spot.
-// HOLD_VH is extra scroll distance after that with nothing left to
-// animate, which is what makes the pin keep holding "You do." on screen
-// for a beat before releasing into the pivot section, rather than a timed
-// animation or an intercepted scroll gesture.
-const BG_FADE_VH = 60
-const TEXT_FADE_VH = 40
-const HOLD_VH = 60
-
-function clamp01(n) {
-  return Math.min(1, Math.max(0, n))
-}
-
-function Finale() {
-  const pinRef = useRef(null)
-  const [bgOpacity, setBgOpacity] = useState(0)
-  const [textOpacity, setTextOpacity] = useState(0)
-
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setBgOpacity(1)
-      setTextOpacity(1)
-      return
-    }
-    const onScroll = () => {
-      const pin = pinRef.current
-      if (!pin) return
-      const vh = window.innerHeight / 100
-      const scrolled = Math.max(0, -pin.getBoundingClientRect().top)
-      setBgOpacity(clamp01(scrolled / (BG_FADE_VH * vh)))
-      setTextOpacity(clamp01((scrolled - BG_FADE_VH * vh) / (TEXT_FADE_VH * vh)))
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  return (
-    <div
-      className="cinema-finale-pin"
-      ref={pinRef}
-      style={{ height: `${100 + BG_FADE_VH + TEXT_FADE_VH + HOLD_VH}vh` }}
-      data-screen-label="Finale"
-    >
-      <div className="cinema-finale-sticky">
-        {bgOpacity < 0.6 && <div className="cinema-finale-dark-zone" aria-hidden="true" />}
-        <div className="cinema-finale-fade" style={{ opacity: bgOpacity }} aria-hidden="true" />
-        <p className="cinema-finale__statement" style={{ opacity: textOpacity }}>
-          We do.
-        </p>
-      </div>
-    </div>
-  )
-}
-
-// Mission — pinned in place (same mechanic as the opening beats) so it
-// holds centered on screen for a beat rather than just scrolling past.
-// Plain white throughout — the white → navy crossfade now happens on the
-// Pivot below instead (see Pivot).
-function Mission() {
-  return (
-    <section className="mission-band" data-screen-label="Mission">
-      <div className="mission-band__pin">
-        <div className="mission-band__sticky">
-          <div className="wrap">
-            <h2 className="mission-band__headline" data-reveal>
-              Join us as we become Christlike leaders in an age of artificial intelligence
-            </h2>
-            <p className="mission-band__statement" data-reveal>
-              that treat AI as a <Link to="/principles">stewardship</Link> &mdash; harnessing
-              it ethically for people, communities, and the world.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Pivot — no pinned crossfade and no added scroll distance: white → navy
-// is a plain CSS color transition (background + text, eased over ~0.9s)
-// triggered once by useInView when the section scrolls into view, rather
-// than a hard cut or a scroll-scrubbed fade.
-function Pivot() {
-  const [ref, inView] = useInView({ threshold: 0.3 })
-  return (
-    <section className={`pivot${inView ? ' pivot--in' : ''}`} ref={ref} data-screen-label="Pivot">
-      <div className="wrap">
-        <p className="kicker" data-reveal>Our principles</p>
-        <h2 className="pivot__headline" data-reveal>
-          Our Principles for Ethical AI Use
-        </h2>
-        <p className="pivot__body" data-reveal>
-          The AI &amp; Ethics Initiative explores principles that can guide how we use
-          artificial intelligence, regardless of what tools come next.
-        </p>
-        <Link to="/principles" className="pivot__cta" data-reveal>
-          Explore our principles <span aria-hidden="true">&rarr;</span>
-        </Link>
-      </div>
-    </section>
-  )
-}
-
-// "Put the Principles into practice" — three circles that hold just a
-// label until hovered (or focused, for keyboard users), when a panel
-// slides up over the circle with a fuller description and a link.
-const PRACTICE_CIRCLES = [
+const TILES = [
   {
-    key: 'learn',
+    to: '/principles',
+    label: 'Principles',
+    sub: 'Ethical AI use',
+    icon: (
+      <>
+        <path d="M24 6l14 6v10c0 9-6 15-14 18-8-3-14-9-14-18V12z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M18 24l4.5 4.5L31 19" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+  },
+  {
+    to: '/kickstart',
     label: 'Learn',
-    title: 'Coursework & Materials',
-    text: 'Courses, guides, and tools from professors and practitioners for using AI well.',
-    href: '/kickstart',
+    sub: 'Coursework & materials',
+    icon: (
+      <>
+        <path d="M5 18l19-9 19 9-19 9z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M13 22.5V32c0 3 5 6 11 6s11-3 11-6v-9.5" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M43 18v10" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      </>
+    ),
   },
   {
-    key: 'engage',
-    label: 'Engage',
-    title: 'Events & Conversations',
-    text: 'Workshops, panels, and forums where the Principles meet real questions.',
-    href: '/get-involved',
+    to: '/get-involved',
+    label: 'Events',
+    sub: 'Calendar',
+    icon: (
+      <>
+        <rect x="8" y="11" width="32" height="29" rx="3" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M8 19h32M16 7v8M32 7v8" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <circle cx="17" cy="27" r="1.8" fill="currentColor" />
+        <circle cx="24" cy="27" r="1.8" fill="currentColor" />
+        <circle cx="31" cy="27" r="1.8" fill="currentColor" />
+      </>
+    ),
   },
   {
-    key: 'explore',
-    label: 'Explore',
-    title: 'Ideas & Resources',
-    text: 'Curated reading and updates on AI ethics, delivered weekly.',
-    href: '/news',
+    to: '/news',
+    label: 'News',
+    sub: 'Updates & Newsletters',
+    icon: (
+      <>
+        <path d="M8 12h24v26H11a3 3 0 0 1-3-3z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M32 17h6v18a3 3 0 0 1-6 0z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M13 18h14M13 24h14M13 30h9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      </>
+    ),
   },
 ]
 
-// A circle that reads as just an arrow until hovered/focused, when it
-// stretches into a pill and a second "panel" slides out of it with the
-// fuller description — the arrow rotates from pointing in (down-left) to
-// pointing out (right) to sell the same motion.
-function PracticeCircle({ item }) {
-  return (
-    <Link className="practice-circle" to={item.href} data-reveal>
-      <span className="practice-circle__pill">
-        <span className="practice-circle__arrow" aria-hidden="true">
-          &rarr;
-        </span>
-        <span className="practice-circle__detail">
-          <span className="practice-circle__detail-title">{item.title}</span>
-          <span className="practice-circle__detail-text">{item.text}</span>
-        </span>
-      </span>
-      <span className="practice-circle__label">{item.label}</span>
-    </Link>
-  )
-}
+const NEWS = [
+  {
+    ph: 'photo · classroom',
+    cat: 'Teaching',
+    title: 'Six departments adopt the new syllabus toolkit',
+    excerpt:
+      'Instructors now have shared language for setting fair, transparent expectations around AI use.',
+  },
+  {
+    ph: 'photo · research',
+    cat: 'Research',
+    title: 'Student researchers map AI use across 40 courses',
+    excerpt: 'A first look at how generative tools are actually showing up in coursework this term.',
+  },
+  {
+    ph: 'photo · panel',
+    cat: 'Community',
+    title: 'Recap: our spring panel on academic integrity',
+    excerpt: 'Faculty and students traded hard questions about disclosure, fairness, and trust.',
+  },
+]
 
 export default function Home() {
   return (
     <>
-      {/* Section 1 — Cinematic opening. .home-open is what tells Layout.jsx
-          to render the nav light-on-dark for this stretch of the page. */}
-      <section className="home-open" data-screen-label="Opening">
-        {OPENING_BEATS.map((text) => (
-          <OpeningBeat key={text} text={text} />
-        ))}
+      {/* HERO: carousel + condensed calendar */}
+      <section className="hero home-hero" data-screen-label="Home hero">
+        <div className="wrap hero-grid">
+          <Carousel />
+          <aside className="hero-aside" aria-label="Upcoming events">
+            <div className="hero-aside__head">
+              <h3>Upcoming</h3>
+              <p className="kicker">Next few weeks</p>
+            </div>
+            <UpcomingEvents limit={4} />
+            <div className="hero-aside__foot">
+              <Link className="link-more" to="/get-involved">
+                Full events calendar<span className="arrow">&rarr;</span>
+              </Link>
+            </div>
+          </aside>
+        </div>
       </section>
 
-      {/* Finale — pinned in place while the background fades completely to
-          white, then "You do." fades in on that same spot (see Finale
-          above / cinema-sequence.css for the mechanics). */}
-      <Finale />
+      {/* SYMBOL LINK BAR — mirrors the main nav */}
+      <nav className="symbar symbar--4" aria-label="Sections">
+        <div className="wrap symbar__grid">
+          {TILES.map((t) => (
+            <Link className="symbar__item" to={t.to} key={t.to}>
+              <svg className="symbar__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                {t.icon}
+              </svg>
+              <span className="symbar__label">{t.label}</span>
+              <span className="symbar__sub">{t.sub}</span>
+            </Link>
+          ))}
+        </div>
+      </nav>
 
-      {/* Mission — lands immediately after "You do.": the AI → human
-          agency pivot leads straight into the initiative's Christlike,
-          BYU-centered identity before the pivot/Principles sections. Pinned
-          in place (see Mission above), plain white. */}
-      <Mission />
-
-      {/* Section 2 — The pivot: plain, static navy — white → navy is a
-          hard cut right at this section boundary. */}
-      <Pivot />
-
-      {/* Section 4 — Put the Principles into practice */}
-      <section className="practice" data-screen-label="Practice">
+      {/* MISSION */}
+      <section className="mission" data-screen-label="Mission">
         <div className="wrap">
-          <div className="practice__head">
-            <p className="kicker" data-reveal>In practice</p>
-            <h2 data-reveal>Put the Principles into practice</h2>
+          <div className="mission__inner">
+            <p className="kicker">Our mission</p>
+            <p className="mission__statement">
+              We develop Christlike leaders who treat artificial intelligence{' '}
+              <em>as a stewardship</em> &mdash; harnessing it ethically for people, communities, and
+              the world.
+            </p>
+            <div className="mission__actions">
+              <Link className="btn btn--accent" to="/principles">
+                Explore our guiding principles<span className="arrow">&rarr;</span>
+              </Link>
+            </div>
           </div>
-          <div className="practice-circles reveal-stagger">
-            {PRACTICE_CIRCLES.map((item) => (
-              <PracticeCircle item={item} key={item.key} />
+        </div>
+        <p className="mission__caption">George Inness, Peace and Plenty, 1865</p>
+      </section>
+
+      {/* FEATURED */}
+      <section className="section" data-screen-label="Featured">
+        <div className="wrap">
+          <div className="feature-split" data-reveal>
+            <div className="ph ph--navy">
+              <span>cover · ai constitution competition</span>
+            </div>
+            <div className="feature-split__body">
+              <p className="kicker">Featured</p>
+              <h2>AI Constitution Competition</h2>
+              <p className="lead">
+                Using the principles in our AI Stewardship handbook, write your own rules for using
+                generative AI, then submit your constitution and a short video explaining it.
+              </p>
+              <Link className="link-more" to="/ai-constitution-competition">
+                Enter the competition<span className="arrow">&rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LATEST NEWS */}
+      <section className="section section--tight home-news" data-screen-label="Latest news">
+        <div className="wrap">
+          <div className="section-head">
+            <div>
+              <p className="kicker">Latest</p>
+              <h2>News &amp; announcements</h2>
+            </div>
+            <Link className="link-more" to="/news">
+              All news<span className="arrow">&rarr;</span>
+            </Link>
+          </div>
+          <div className="grid cols-3" data-reveal>
+            {NEWS.map((n) => (
+              <Link className="card" to="/news" key={n.title}>
+                <div className="card__media ph">
+                  <span>{n.ph}</span>
+                </div>
+                <div className="card__body">
+                  <span className="card__cat">{n.cat}</span>
+                  <h3 className="card__title">{n.title}</h3>
+                  <p className="card__excerpt">{n.excerpt}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5 — Reflective break */}
-      <section className="reflect" data-screen-label="Reflective break">
-        <div className="wrap reveal-stagger">
-          <p className="reflect__line" data-reveal>AI can help you do more.</p>
-          <p className="reflect__line reflect__line--pause" data-reveal>
-            But who is it helping you become?
-          </p>
+      {/* SECONDARY FEATURE BLOCKS (room for the team to fill) */}
+      <section className="section" data-screen-label="Highlights">
+        <div className="wrap">
+          <div className="grid cols-2" data-reveal>
+            <Link className="card home-highlight" to="/principles">
+              <div className="card__body">
+                <p className="kicker">Start here</p>
+                <h3 className="card__title">The Principles of Ethical AI Use</h3>
+                <p className="card__excerpt">Tag-line for the principles</p>
+                <span className="link-more">
+                  <span className="uline">Read the Principles</span>
+                  <span className="arrow">&rarr;</span>
+                </span>
+              </div>
+            </Link>
+            <Link className="card home-highlight" to="/newsletter">
+              <div className="card__body">
+                <p className="kicker">Stay in the loop</p>
+                <h3 className="card__title">The AI Ethics Newsletter</h3>
+                <p className="card__excerpt">Tag-line for the principles</p>
+                <span className="link-more">
+                  <span className="uline">Subscribe now</span>
+                  <span className="arrow">&rarr;</span>
+                </span>
+              </div>
+            </Link>
+          </div>
         </div>
       </section>
-
     </>
   )
 }

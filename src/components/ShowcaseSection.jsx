@@ -1,65 +1,120 @@
 import { useEffect, useRef, useState } from 'react'
+import { useForm, ValidationError } from '@formspree/react'
 import { SHOWCASE, SHARE_EMAIL } from '../data/showcase.js'
 import '../showcase.css'
 
 const VISIBLE_COUNT = 2
 const EMPTY = { title: '', tool: '', how: '', name: '' }
 
-// There's no backend, so "submitting" composes an email to the Initiative
-// with the fields filled in; the team adds approved ideas to data/showcase.js.
+// Formspree form that receives Ethical AI Showcase ideas. The team reviews
+// them in the Formspree inbox and adds approved ideas to data/showcase.js.
+const FORMSPREE_FORM_ID = 'mppwybak'
+
+// Only the submit button sends the form. Enter in a single-line field would
+// normally submit it, so that is switched off; Enter in a textarea still adds
+// a new line, and Enter/Space on the focused button still works for keyboard users.
+const blockEnterSubmit = (e) => {
+  if (e.key === 'Enter' && e.target instanceof HTMLInputElement && !e.nativeEvent.isComposing) {
+    e.preventDefault()
+  }
+}
+
 function SubmitForm() {
   const [form, setForm] = useState(EMPTY)
-  const [sent, setSent] = useState(false)
+  const [state, handleSubmit, reset] = useForm(FORMSPREE_FORM_ID)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    const subject = `Showcase idea: ${form.title}`
-    const body = `Title: ${form.title}\nAI tool: ${form.tool}\nHow it works:\n${form.how}\n\nSubmitted by: ${form.name || '(anonymous)'}`
-    window.location.href = `mailto:${SHARE_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSent(true)
+  const startOver = () => {
+    setForm(EMPTY)
+    reset()
   }
 
+  const formFailed = (state.errors?.getFormErrors().length ?? 0) > 0
+
+  // The <form> element always stays mounted and its className never changes:
+  // the scroll-reveal observer adds .is-revealed to it directly, and a new
+  // className from React would wipe that and leave the box faded out. The
+  // sent state is marked with data-sent instead.
   return (
-    <form className="sc-form" onSubmit={onSubmit} data-reveal>
-      <h3>Share your own idea</h3>
-      <p className="sc-form__lead">
-        Do you use AI in a way that supports learning instead of replacing it? Tell us how.
-      </p>
-      <div className="sc-form__row">
+    <form
+      className="sc-form"
+      onSubmit={handleSubmit}
+      onKeyDown={blockEnterSubmit}
+      data-sent={state.succeeded || undefined}
+      data-reveal
+    >
+      {/* Fields stay in place (hidden) after sending so the box keeps its full
+          size at any screen width; the thank-you note sits on top of them. */}
+      <div className="sc-form__body" inert={state.succeeded} aria-hidden={state.succeeded || undefined}>
+        <h3>Share your own idea</h3>
+        <p className="sc-form__lead">
+          Do you use AI in a way that supports learning instead of replacing it? Tell us how.
+        </p>
+        <div className="sc-form__row">
+          <label>
+            Title
+            <input
+              name="title"
+              required
+              value={form.title}
+              onChange={set('title')}
+              placeholder="e.g. Foreign Language Practice"
+            />
+            <ValidationError field="title" prefix="Title" errors={state.errors} className="sc-form__error" />
+          </label>
+          <label>
+            AI tool
+            <input name="ai_tool" required value={form.tool} onChange={set('tool')} placeholder="e.g. ChatGPT" />
+            <ValidationError field="ai_tool" prefix="AI tool" errors={state.errors} className="sc-form__error" />
+          </label>
+        </div>
         <label>
-          Title
-          <input required value={form.title} onChange={set('title')} placeholder="e.g. Foreign Language Practice" />
+          How does it work?
+          <textarea
+            name="how_it_works"
+            required
+            rows={4}
+            value={form.how}
+            onChange={set('how')}
+            placeholder="Explain the steps so someone else could try it."
+          />
+          <ValidationError field="how_it_works" prefix="This" errors={state.errors} className="sc-form__error" />
         </label>
         <label>
-          AI tool
-          <input required value={form.tool} onChange={set('tool')} placeholder="e.g. ChatGPT" />
+          Your name (optional)
+          <input name="name" value={form.name} onChange={set('name')} autoComplete="name" />
+          <ValidationError field="name" prefix="Name" errors={state.errors} className="sc-form__error" />
         </label>
+
+        <input type="hidden" name="_subject" value={`Showcase idea: ${form.title}`} />
+        {/* Honeypot for spam bots; hidden from people. */}
+        <input type="text" name="_gotcha" className="sc-form__hp" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+
+        <div className="sc-form__actions">
+          <button type="submit" className="btn btn--accent" disabled={state.submitting}>
+            {state.submitting ? 'Sending…' : 'Submit idea'}
+            {!state.submitting && <span className="arrow">&rarr;</span>}
+          </button>
+          {formFailed && (
+            <span className="sc-form__error" role="alert">
+              Something went wrong sending your idea. Please try again, or email us at {SHARE_EMAIL}.
+            </span>
+          )}
+        </div>
       </div>
-      <label>
-        How does it work?
-        <textarea
-          required
-          rows={4}
-          value={form.how}
-          onChange={set('how')}
-          placeholder="Explain the steps so someone else could try it."
-        />
-      </label>
-      <label>
-        Your name (optional)
-        <input value={form.name} onChange={set('name')} />
-      </label>
-      <div className="sc-form__actions">
-        <button type="submit" className="btn btn--accent">
-          Submit idea<span className="arrow">&rarr;</span>
-        </button>
-        {sent && (
-          <span className="sc-form__note">
-            Your email app should have opened with your idea ready to send. If not, email us at {SHARE_EMAIL}.
-          </span>
-        )}
-      </div>
+      {state.succeeded && (
+          <div className="sc-form__done" role="status">
+            <h3>Thanks for sharing your idea!</h3>
+            <p className="sc-form__lead">
+              We got it. The team reviews every submission before adding it to the showcase.
+            </p>
+            <div className="sc-form__actions">
+              <button type="button" className="btn btn--ghost" onClick={startOver} autoFocus>
+                Share another idea
+              </button>
+            </div>
+          </div>
+      )}
     </form>
   )
 }
