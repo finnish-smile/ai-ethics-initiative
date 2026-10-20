@@ -158,7 +158,7 @@ export default function Home() {
                 Using the principles in our AI Stewardship handbook, write your own rules for using
                 generative AI, then submit your constitution and a short video explaining it.
               </p>
-              <Link className="link-more" to="/ai-constitution-competition">
+              <Link className="link-more" to="/constitution">
                 Enter the competition<span className="arrow">&rarr;</span>
               </Link>
             </div>

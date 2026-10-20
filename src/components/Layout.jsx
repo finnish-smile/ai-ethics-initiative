@@ -68,6 +68,9 @@ export function SiteFooter() {
                 <Link to="/kickstart">Learn</Link>
               </li>
               <li>
+                <Link to="/constitution">Build your constitution</Link>
+              </li>
+              <li>
                 <Link to="/principles">Principles of Ethical AI Use</Link>
               </li>
               <li>
@@ -222,76 +225,6 @@ export default function Layout() {
       </main>
 
       {!onPrinciples && <SiteFooter />}
-      <footer className="foot">
-        <div className="wrap">
-          <div className="foot__cols">
-            <div className="foot__contact">
-              <h4 className="foot__h">Contact</h4>
-              <p>
-                Email: <a href="mailto:ai-ethics@byu.edu">ai-ethics@byu.edu</a>
-              </p>
-              <p>Office hours: Mon&ndash;Fri, 8&ndash;5</p>
-            </div>
-            <div>
-              <h4 className="foot__h">Explore</h4>
-              <ul>
-                <li>
-                  <Link to="/kickstart">Learn</Link>
-                </li>
-                <li>
-                  <Link to="/constitution">Build your constitution</Link>
-                </li>
-                <li>
-                  <Link to="/principles">Principles of Ethical AI Use</Link>
-                </li>
-                <li>
-                  <Link to="/get-involved">Events Calendar</Link>
-                </li>
-                <li>
-                  <Link to="/news">News &amp; Newsletter</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="foot__h">Resources</h4>
-              <ul>
-                <li>
-                  <a href="mailto:ai-ethics@byu.edu">Request a Workshop</a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="foot__h">Connect</h4>
-              <div className="foot__social">
-                <Link to="/news#newsletter" aria-label="Newsletter">
-                  <MailIcon />
-                </Link>
-                <Link to="/news" aria-label="News">
-                  <NewsIcon />
-                </Link>
-                <Link to="/get-involved" aria-label="Recordings">
-                  <PlayIcon />
-                </Link>
-              </div>
-              <ul>
-                <li>
-                  <Link to="/news#newsletter">Join the mailing list</Link>
-                </li>
-                <li>
-                  <Link to="/get-involved">Upcoming events</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="foot__band">
-          <div className="foot__wordmark">BYU Marriott AI &amp; Ethics Initiative</div>
-          <p className="foot__fine">
-            &copy; {new Date().getFullYear()} AI Ethics Initiative &nbsp;|&nbsp; <a href="#">Privacy Notice</a>{' '}
-            &nbsp;&middot;&nbsp; <a href="#">Accessibility</a>
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }
