@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PRINCIPLES } from '../data/kickstart/principles.js'
 import '../showcase.css'
-import '../logo-competition.css'
+import '../ai-constitution-competition.css'
 import '../build-constitution.css'
 
 // DRAFT OUTLINE. Rubric weights and the submission destination are still
@@ -39,14 +39,14 @@ const ARTICLE_PROMPTS = {
   integrity: 'When and how will you disclose AI help, and what lines will you not cross even unseen?',
 }
 
-// Draft rubric: one criterion per principle plus the cross-cutting ones.
-// Points are placeholders until the rubric is finalized.
+// Draft rubric: one combined criterion for the five articles plus the cross-cutting ones.
+// Points other than the articles row are placeholders until the rubric is finalized.
 const RUBRIC = [
-  ...PRINCIPLES.map((p, i) => ({
-    criterion: `Article ${ROMAN[i]}: ${p.title}`,
-    lookFor: ARTICLE_PROMPTS[p.id],
-    points: '—',
-  })),
+  {
+    criterion: 'The five articles',
+    lookFor: `One article for each principle (${PRINCIPLES.map((p) => p.title).join(', ')}), each answering the question set out for it above.`,
+    points: 40,
+  },
   {
     criterion: 'Usable as a harness',
     lookFor:
