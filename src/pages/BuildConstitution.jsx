@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PRINCIPLES } from '../data/kickstart/principles.js'
 import '../showcase.css'
-import '../logo-competition.css'
+import '../ai-constitution-competition.css'
 import '../build-constitution.css'
 
 // DRAFT OUTLINE. Rubric weights and the submission destination are still
