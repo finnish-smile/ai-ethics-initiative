@@ -22,12 +22,18 @@ export default function News() {
 
   return (
     <>
-      <header className="phead phead--paper">
+      <header className="phead phead--painting">
+        <img
+          className="phead__painting"
+          src={`${import.meta.env.BASE_URL}images/village-politicians-leibl.jpg`}
+          alt="Wilhelm Leibl, The Village Politicians, a painting of five village men on a bench leaning in to read a newspaper together"
+        />
         <div className="wrap">
           <p className="kicker">News &amp; newsletter</p>
           <h1>News Something-or-other</h1>
           <p>Tag-line for the news feed and newsletter</p>
         </div>
+        <p className="phead__caption">Wilhelm Leibl, The Village Politicians, 1877</p>
       </header>
 
       <section className="section" data-screen-label="Featured">

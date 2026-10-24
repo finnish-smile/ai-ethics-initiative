@@ -386,6 +386,59 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 .phead--paper h1 { color: var(--ink); font-size: 34px; }
 .phead--paper p { color: var(--muted); }
 
+/* Painting variant (News page): full-bleed artwork behind the header, same
+   recipe as the Learn page's .ks-hero--painting — dark fade for legibility,
+   Stewardship-style title, credit line in the bottom-left corner. Not
+   .phead--paper, so Layout's dark-band check turns the nav white over it. */
+.phead--painting {
+  position: relative;
+  overflow: hidden;
+  min-height: min(78vh, 760px);
+  display: flex;
+  align-items: flex-end;
+  background: #2a2118; /* shows while the image loads */
+}
+.phead__painting {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%; /* keep the faces and the newspaper in frame */
+}
+.phead--painting::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(20, 15, 10, 0.45) 0%, rgba(20, 15, 10, 0) 22%),
+    linear-gradient(to top, rgba(20, 15, 10, 0.82) 0%, rgba(20, 15, 10, 0.4) 40%, rgba(20, 15, 10, 0) 64%);
+  pointer-events: none;
+}
+.phead--painting .wrap { position: relative; z-index: 1; width: 100%; }
+.phead--painting .kicker { color: rgba(255, 255, 255, 0.75); }
+.phead--painting h1 {
+  color: #F4F0E8;
+  font-weight: 400;
+  letter-spacing: 0.075em;
+  text-shadow: 0 2px 18px rgba(20, 17, 12, 0.55);
+}
+.phead--painting p { color: rgba(255, 255, 255, 0.85); }
+/* .phead .phead__caption (not just .phead__caption) so it outranks the
+   generic `.phead p` size/colour/margin rules above. */
+.phead .phead__caption {
+  position: absolute;
+  max-width: none;
+  left: 20px;
+  bottom: 14px;
+  z-index: 1;
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
 /* utility */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .center { text-align: center; }
