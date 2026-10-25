@@ -17,6 +17,11 @@ const filesContaining = (needle) =>
     .map((p) => relative(SRC, p).split(sep).join('/'))
 
 describe('submissions structure', () => {
+  it('7.1: the old Formspree constitution form is gone; one submission form remains', () => {
+    expect(filesContaining('formspree.io/f/xrpbkgbn')).toEqual([])
+    expect(filesContaining('function SubmissionForm')).toEqual(['pages/BuildConstitution.jsx'])
+  })
+
   it('7.2: only src/lib/submissions.js uses the script URL', () => {
     expect(filesContaining('VITE_SUBMIT_URL')).toEqual(['lib/submissions.js'])
     expect(filesContaining('script.google.com')).toEqual([])

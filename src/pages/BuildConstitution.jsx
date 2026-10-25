@@ -383,6 +383,14 @@ function SubmissionForm() {
 }
 
 export default function BuildConstitution() {
+  // Links like /constitution#submit: jump to the section after the layout's
+  // scroll-to-top on navigation has run.
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (!id) return undefined
+    const t = setTimeout(() => document.getElementById(id)?.scrollIntoView(), 0)
+    return () => clearTimeout(t)
+  }, [])
   return (
     <div className="bc">
       {/* Hero */}
