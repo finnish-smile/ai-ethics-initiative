@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PRINCIPLES } from '../data/kickstart/principles.js'
 import {
@@ -12,7 +12,10 @@ import {
   checkVideo,
   formatDuration,
   formatSize,
+  isByuEmail,
+  BYU_EMAIL_MESSAGE,
 } from '../lib/validation.js'
+import { CONTACT_EMAIL, submitEntry } from '../lib/submissions.js'
 import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
@@ -72,7 +75,7 @@ const RUBRIC = [
 
 const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate student']
 
-function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra }) {
+function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra, locked }) {
   const input = useRef(null)
   const onChange = async (e) => {
     const chosen = e.target.files && e.target.files[0]
@@ -84,13 +87,16 @@ function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra 
       <span className="lc-file__label" id={`${id}-label`}>
         {label}
       </span>
-      <label className={`lc-drop${error ? ' lc-drop--error' : ''}${file ? ' lc-drop--ready' : ''}`}>
+      <label
+        className={`lc-drop${error ? ' lc-drop--error' : ''}${file ? ' lc-drop--ready' : ''}${locked ? ' lc-drop--locked' : ''}`}
+      >
         <input
           ref={input}
           className="lc-drop__input"
           type="file"
           accept={accept}
           onChange={onChange}
+          disabled={locked || undefined}
           aria-labelledby={`${id}-label`}
           aria-describedby={`${id}-help`}
         />
@@ -121,14 +127,85 @@ function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra 
   )
 }
 
+// Shown under the button once submissions are open, as "Due <this>.".
+// Hidden while empty; fill in when the student deadline is set.
+const STUDENT_DEADLINE = ''
+
+const FAILED_MESSAGE = 'Something went wrong sending your entry. Please try again in a moment.'
+
+function formatReceived(date) {
+  return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
+
+function Confirmation({ sent }) {
+  return (
+    <div className="sc-form lc-form bc-done" role="status">
+      <span className="bc-done__mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5 12.5l4.5 4.5L19 7.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <p className="kicker">Received &middot; {formatReceived(sent.receivedAt)}</p>
+      <h3>Thanks, your constitution is in.</h3>
+      <ul className="bc-files">
+        <li>
+          <b>{sent.doc.name}</b>
+          <span>{formatSize(sent.doc.size)}</span>
+        </li>
+        <li>
+          <b>{sent.video.name}</b>
+          <span>
+            {formatSize(sent.video.size)}
+            {sent.videoSeconds ? ` · ${formatDuration(sent.videoSeconds)}` : ''}
+          </span>
+        </li>
+      </ul>
+      <p>
+        We sent a receipt to <strong>{sent.email}</strong>. Keep it as your record.
+      </p>
+      <p>
+        Need to change something? Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </div>
+  )
+}
+
 function SubmissionForm() {
   const [form, setForm] = useState({ name: '', email: '', major: '', year: '' })
+  const [emailError, setEmailError] = useState('')
   const [doc, setDoc] = useState(null)
   const [docError, setDocError] = useState('')
   const [video, setVideo] = useState(null)
   const [videoError, setVideoError] = useState('')
   const [videoSeconds, setVideoSeconds] = useState(null)
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  // idle | sending | failed | limit | done
+  const [status, setStatus] = useState('idle')
+  const [progress, setProgress] = useState({ sent: 0, total: 0 })
+  const [sent, setSent] = useState(null)
+  const sending = status === 'sending'
+
+  const set = (k) => (e) => {
+    setForm({ ...form, [k]: e.target.value })
+    if (k === 'email') {
+      setEmailError('')
+      if (status === 'limit') setStatus('idle')
+    }
+  }
+
+  // Ask before leaving mid-upload.
+  useEffect(() => {
+    if (!sending) return undefined
+    const warn = (e) => e.preventDefault()
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [sending])
 
   const pickDoc = async (file) => {
     const err = file ? checkDoc(file) : null
@@ -144,17 +221,51 @@ function SubmissionForm() {
     return !error
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // Destination not connected yet (see SUBMISSIONS_OPEN).
+    if (!SUBMISSIONS_OPEN || sending) return
+    let ok = true
+    if (!isByuEmail(form.email)) {
+      setEmailError(BYU_EMAIL_MESSAGE)
+      ok = false
+    }
+    if (!doc) {
+      setDocError(docError || 'Please attach your written constitution.')
+      ok = false
+    }
+    if (!video) {
+      setVideoError(videoError || 'Please attach your video.')
+      ok = false
+    }
+    if (!ok) return
+
+    setStatus('sending')
+    setProgress({ sent: 0, total: doc.size + video.size })
+    try {
+      const { receivedAt } = await submitEntry({
+        fields: form,
+        doc,
+        video,
+        onProgress: (s, total) => setProgress({ sent: s, total }),
+      })
+      setSent({ receivedAt, doc, video, videoSeconds, email: form.email.trim() })
+      setStatus('done')
+    } catch (err) {
+      setStatus(err.code === 'limit' ? 'limit' : 'failed')
+    }
   }
+
+  if (status === 'done') return <Confirmation sent={sent} />
+
+  const pct = progress.total ? Math.round((progress.sent / progress.total) * 100) : 0
+  const mb = (bytes) => bytes / 1024 / 1024
 
   return (
     <form className="sc-form lc-form" onSubmit={onSubmit}>
       <div className="sc-form__row">
         <label>
           Your name
-          <input required value={form.name} onChange={set('name')} autoComplete="name" />
+          <input required value={form.name} onChange={set('name')} autoComplete="name" disabled={sending || undefined} />
         </label>
         <label>
           Email
@@ -165,17 +276,32 @@ function SubmissionForm() {
             onChange={set('email')}
             placeholder="you@byu.edu"
             autoComplete="email"
+            className={emailError ? 'lc-input--error' : undefined}
+            aria-invalid={emailError ? true : undefined}
+            aria-describedby={emailError ? 'bc-email-error' : undefined}
+            disabled={sending || undefined}
           />
+          {emailError && (
+            <span className="lc-error" id="bc-email-error" role="alert">
+              {emailError}
+            </span>
+          )}
         </label>
       </div>
       <div className="sc-form__row">
         <label>
           Major
-          <input required value={form.major} onChange={set('major')} placeholder="e.g. Marketing" />
+          <input
+            required
+            value={form.major}
+            onChange={set('major')}
+            placeholder="e.g. Marketing"
+            disabled={sending || undefined}
+          />
         </label>
         <label>
           Year in school
-          <select required value={form.year} onChange={set('year')}>
+          <select required value={form.year} onChange={set('year')} disabled={sending || undefined}>
             <option value="" disabled>
               Choose one
             </option>
@@ -195,6 +321,7 @@ function SubmissionForm() {
         file={doc}
         error={docError}
         onPick={pickDoc}
+        locked={sending}
       />
       <DropZone
         id="bc-video"
@@ -206,13 +333,50 @@ function SubmissionForm() {
         error={videoError}
         onPick={pickVideo}
         extra={videoSeconds ? ` · ${formatDuration(videoSeconds)}` : null}
+        locked={sending}
       />
 
+      {sending && (
+        <div className="bc-progress" role="status" aria-live="polite">
+          <div className="bc-progress__top">
+            <span>Sending your entry…</span>
+            <span>
+              {Math.round(mb(progress.sent))} of {mb(progress.total).toFixed(1)} MB &middot; {pct}%
+            </span>
+          </div>
+          <div className="bc-bar">
+            <i style={{ width: `${pct}%` }} />
+          </div>
+          <p>Keep this tab open until it finishes. Large videos can take a few minutes.</p>
+        </div>
+      )}
+      {status === 'failed' && (
+        <div className="bc-alert" role="alert">
+          <p className="sc-form__error">{FAILED_MESSAGE}</p>
+        </div>
+      )}
+      {status === 'limit' && (
+        <div className="bc-alert" role="alert">
+          <p className="sc-form__error">
+            You&rsquo;ve already submitted twice. To make a change, reach out to{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          </p>
+        </div>
+      )}
+
       <div className="sc-form__actions">
-        <button type="submit" className="btn btn--accent" disabled={!SUBMISSIONS_OPEN}>
-          Submit my constitution <span className="arrow">&rarr;</span>
+        <button
+          type="submit"
+          className="btn btn--accent"
+          disabled={!SUBMISSIONS_OPEN || sending || status === 'limit'}
+        >
+          {sending ? 'Sending…' : status === 'failed' ? 'Try again' : 'Submit my constitution'}{' '}
+          <span className="arrow">&rarr;</span>
         </button>
         {!SUBMISSIONS_OPEN && <span className="bc-closed">Submissions open soon.</span>}
+        {SUBMISSIONS_OPEN && !sending && STUDENT_DEADLINE && (
+          <span className="bc-closed">Due {STUDENT_DEADLINE}.</span>
+        )}
       </div>
     </form>
   )

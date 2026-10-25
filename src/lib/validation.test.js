@@ -76,6 +76,14 @@ describe('checkVideo (2.5)', () => {
   })
 })
 
+describe('checkVideo when the length cannot be read', () => {
+  it('accepts the file without a length instead of rejecting "Infinity seconds"', async () => {
+    for (const d of [null, Infinity, NaN]) {
+      expect(await checkVideo(fakeFile('v.webm', MB, WEBM_HEAD), seconds(d))).toEqual({ error: null, seconds: null })
+    }
+  })
+})
+
 describe('checkVideo first-bytes check (2.8)', () => {
   it('rejects a renamed non-video file', async () => {
     const zipAsMp4 = fakeFile('v.mp4', MB, [0x50, 0x4b, 0x03, 0x04])

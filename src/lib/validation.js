@@ -75,7 +75,8 @@ export async function checkVideo(file, { getDuration = readDuration } = {}) {
     return { error: 'That file is not a valid MP4, MOV, or WebM video. Please export it in one of those formats.' }
   }
   const seconds = await getDuration(file)
-  if (seconds == null) return { error: null, seconds: null } // browser can't read this format; checked on review
+  // Browser can't read the length (or reports Infinity, as Chrome can for WebM): checked on review instead.
+  if (seconds == null || !Number.isFinite(seconds)) return { error: null, seconds: null }
   if (seconds < VIDEO_MIN_S || seconds > VIDEO_MAX_S) {
     return {
       error: `Your video is ${Math.round(seconds)} seconds. It needs to be between ${VIDEO_MIN_S} and ${VIDEO_MAX_S} seconds.`,
