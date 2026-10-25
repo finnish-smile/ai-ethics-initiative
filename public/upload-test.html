@@ -20,6 +20,9 @@
 <label for="url">Apps Script web app URL (ends in /exec)</label>
 <input id="url" type="text" placeholder="https://script.google.com/macros/s/.../exec">
 
+<label for="email">Test email (any @byu.edu address; each address can enter twice)</label>
+<input id="email" type="text" value="test1@byu.edu">
+
 <label for="doc">Constitution file</label>
 <input id="doc" type="file" accept=".pdf,.doc,.docx,.txt,.md">
 
@@ -56,6 +59,7 @@ function mimeOf(file) {
 async function upload(file, kind, onProgress) {
   const { uploadUrl } = await callScript({
     action: 'start', kind, name: file.name, mimeType: mimeOf(file), size: file.size, origin: location.origin,
+    email: $('email').value.trim(),
   })
   for (let start = 0; start < file.size; start += CHUNK) {
     const end = Math.min(start + CHUNK, file.size)
@@ -87,10 +91,10 @@ $('go').onclick = async () => {
     const videoId = await upload(video, 'video', (n) => { $('bar').value = (doc.size + n) / total })
     log('Logging the entry and emailing the club…')
     await callScript({
-      action: 'finish', docId, videoId,
-      fields: { name: 'TEST ENTRY', email: 'test@byu.edu', major: 'Test', year: 'Senior' },
+      action: 'finish', docId, videoId, docName: doc.name, videoName: video.name,
+      fields: { name: 'TEST ENTRY', email: $('email').value.trim(), major: 'Test', year: 'Senior' },
     })
-    log(`Done in ${((Date.now() - t0) / 1000).toFixed(0)} s. Check the Drive folder, the Sheet and the club inbox.`)
+    log(`Done in ${((Date.now() - t0) / 1000).toFixed(0)} s. Check the Submissions folder, the Sheet and the club inbox.`)
   } catch (err) {
     log('FAILED: ' + err.message)
     if (err instanceof TypeError) log('A TypeError here usually means the browser blocked the request (CORS). Tell Claude.')
