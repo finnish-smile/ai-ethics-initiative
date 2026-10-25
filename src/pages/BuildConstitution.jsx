@@ -5,13 +5,11 @@ import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
 
-// DRAFT OUTLINE. Rubric weights and the submission destination are still
-// to be decided, so the submit button stays disabled until they are.
+// The submission destination is still being connected, so the submit
+// button stays disabled until it is.
 // Note: Formspree (used by the logo competition) caps uploads well below
 // typical video sizes, so video needs a different destination.
 const SUBMISSIONS_OPEN = false
-
-const ROMAN = ['I', 'II', 'III', 'IV', 'V']
 
 // The three cards along the bottom of the first screen.
 const WHAT_WHY_HOW = [
@@ -29,39 +27,35 @@ const WHAT_WHY_HOW = [
   },
 ]
 
-// What each article of a student's constitution should address. Draft
-// wording, to be refined together with the rubric.
-const ARTICLE_PROMPTS = {
-  agency: 'Which decisions will you always keep for yourself, and where may AI only advise?',
-  becoming: 'Which skills are you here to build, and how will you keep AI from doing that growing for you?',
-  fellowship: 'How will your AI use point you toward people — classmates, mentors, family — rather than away?',
-  discernment: 'How will you check what AI tells you before you trust it, repeat it, or submit it?',
-  integrity: 'When and how will you disclose AI help, and what lines will you not cross even unseen?',
-}
-
-// Draft rubric: one combined criterion for the five articles plus the cross-cutting ones.
-// Points other than the articles row are placeholders until the rubric is finalized.
+// Rubric, 100 points total.
 const RUBRIC = [
-  {
-    criterion: 'The five articles',
-    lookFor: `One article for each principle (${PRINCIPLES.map((p) => p.title).join(', ')}), each answering the question set out for it above.`,
-    points: 40,
-  },
   {
     criterion: 'Usable as a harness',
     lookFor:
       'Written as clear, specific rules you could paste into an AI tool’s custom instructions and it would change how the tool behaves.',
-    points: '—',
+    points: 10,
   },
   {
-    criterion: 'Personal & specific',
+    criterion: 'Structure & format',
+    lookFor:
+      'Clearly organized and easy to read, in a format others could pick up and apply to their own AI use.',
+    points: 10,
+  },
+  {
+    criterion: 'Personal input',
     lookFor: 'Grounded in your own courses, goals, and habits — not generic statements anyone could sign.',
-    points: '—',
+    points: 10,
   },
   {
-    criterion: 'Video explanation',
-    lookFor: '30–120 seconds on why you wrote your constitution and how you built it.',
-    points: '—',
+    criterion: 'The five principles',
+    lookFor: `How you implemented each of the five principles (${PRINCIPLES.map((p) => p.title).join(', ')}) in your constitution.`,
+    points: 40,
+  },
+  {
+    criterion: 'Video: What, why, and how?',
+    lookFor:
+      'A 30–120 second video on what your constitution says, why you wrote it, and how you built it, including how you used AI to create it.',
+    points: 30,
   },
 ]
 
@@ -288,7 +282,7 @@ export default function BuildConstitution() {
             </p>
           </div>
           <div className="bc-hero__actions">
-            <a className="btn btn--primary" href="#articles">
+            <a className="btn btn--primary" href="#rubric">
               Read the guidelines <span className="arrow">&rarr;</span>
             </a>
             <a className="btn btn--ghost" href="#submit">
@@ -337,7 +331,7 @@ export default function BuildConstitution() {
                 <span className="bc-deliverable__num">2</span>
                 <div>
                   <h3>Video explanation</h3>
-                  <p>A 30–120 second video on why you wrote your constitution and how you built it.</p>
+                  <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
                 </div>
               </div>
             </div>
@@ -350,40 +344,16 @@ export default function BuildConstitution() {
         </div>
       </section>
 
-      {/* The five articles */}
-      <section className="section bc-articles" id="articles" data-screen-label="The five articles">
-        <div className="wrap">
-          <div className="bc-section-head" data-reveal>
-            <p className="kicker">Guidelines</p>
-            <h2>Five articles, five principles</h2>
-            <p>
-              Your constitution is built on the five guiding principles of the{' '}
-              <Link to="/principles">Stewardship of AI</Link>. Write one article for each.
-            </p>
-          </div>
-          <ol className="bc-article-list reveal-stagger">
-            {PRINCIPLES.map((p, i) => (
-              <li className="bc-article" key={p.id} data-reveal>
-                <span className="bc-article__num">Article {ROMAN[i]}</span>
-                <h3>{p.title}</h3>
-                <p className="bc-article__pause">“{p.pause}”</p>
-                <p className="bc-article__def">{p.definition}</p>
-                <p className="bc-article__ask">
-                  <span>Your article should answer:</span> {ARTICLE_PROMPTS[p.id]}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       {/* Rubric */}
       <section className="section bc-rubric" id="rubric" data-screen-label="Rubric">
         <div className="wrap">
           <div className="bc-section-head" data-reveal>
             <p className="kicker">Rubric</p>
             <h2>What a strong constitution includes</h2>
-            <p className="lc-pending">Draft rubric — criteria and point values are still being finalized.</p>
+            <p>
+              Your constitution is built on the five guiding principles of the Stewardship of AI.{' '}
+              <Link to="/principles">Read the Stewardship of AI principles &rarr;</Link>
+            </p>
           </div>
           <div className="bc-table-wrap" data-reveal>
             <table className="bc-table">
