@@ -259,7 +259,8 @@
 .lc-drop--locked { cursor: default; opacity: .7; }
 
 .bc-progress { display: grid; gap: 8px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
-.bc-progress__top { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--navy); font-weight: 600; }
+.bc-progress__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 14px; color: var(--navy); font-weight: 600; }
+.bc-progress__top span { white-space: nowrap; }
 .bc-progress__top span:last-child { font-variant-numeric: tabular-nums; }
 .bc-bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .bc-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
