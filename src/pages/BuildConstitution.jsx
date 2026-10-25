@@ -1,6 +1,18 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PRINCIPLES } from '../data/kickstart/principles.js'
+import {
+  DOC_ACCEPT,
+  DOC_MAX_MB,
+  VIDEO_ACCEPT,
+  VIDEO_MAX_MB,
+  VIDEO_MAX_S,
+  VIDEO_MIN_S,
+  checkDoc,
+  checkVideo,
+  formatDuration,
+  formatSize,
+} from '../lib/validation.js'
 import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
@@ -61,59 +73,6 @@ const RUBRIC = [
 
 const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate student']
 
-const DOC_MAX_MB = 10
-const DOC_EXT = ['pdf', 'docx', 'doc', 'txt', 'md']
-const DOC_ACCEPT = '.pdf,.docx,.doc,.txt,.md'
-
-const VIDEO_MAX_MB = 300
-const VIDEO_EXT = ['mp4', 'mov', 'webm', 'm4v']
-const VIDEO_ACCEPT = 'video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm,.m4v'
-const VIDEO_MIN_S = 30
-const VIDEO_MAX_S = 120
-
-const ext = (name) => name.split('.').pop().toLowerCase()
-
-function formatSize(bytes) {
-  return bytes < 1024 * 1024 ? `${Math.round(bytes / 1024)} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`
-}
-
-function checkDoc(file) {
-  if (!DOC_EXT.includes(ext(file.name))) return 'Please upload a PDF, Word document, or plain-text file.'
-  if (file.size > DOC_MAX_MB * 1024 * 1024) return `That file is larger than ${DOC_MAX_MB} MB.`
-  if (file.size === 0) return 'That file appears to be empty.'
-  return null
-}
-
-// Reads the video's duration from its metadata so length is checked
-// before upload, not after.
-function readDuration(file) {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file)
-    const v = document.createElement('video')
-    v.preload = 'metadata'
-    v.onloadedmetadata = () => {
-      URL.revokeObjectURL(url)
-      resolve(v.duration)
-    }
-    v.onerror = () => {
-      URL.revokeObjectURL(url)
-      resolve(null)
-    }
-    v.src = url
-  })
-}
-
-async function checkVideo(file) {
-  if (!VIDEO_EXT.includes(ext(file.name))) return 'Please upload an MP4, MOV, or WebM video.'
-  if (file.size > VIDEO_MAX_MB * 1024 * 1024) return `That video is larger than ${VIDEO_MAX_MB} MB.`
-  const seconds = await readDuration(file)
-  if (seconds == null) return null // browser can't read this format; length is checked on review instead
-  if (seconds < VIDEO_MIN_S || seconds > VIDEO_MAX_S) {
-    return `Your video is ${Math.round(seconds)} seconds. It needs to be between ${VIDEO_MIN_S} and ${VIDEO_MAX_S} seconds.`
-  }
-  return null
-}
-
 function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra }) {
   const input = useRef(null)
   const onChange = async (e) => {
@@ -169,6 +128,7 @@ function SubmissionForm() {
   const [docError, setDocError] = useState('')
   const [video, setVideo] = useState(null)
   const [videoError, setVideoError] = useState('')
+  const [videoSeconds, setVideoSeconds] = useState(null)
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
   const pickDoc = async (file) => {
@@ -178,10 +138,11 @@ function SubmissionForm() {
     return !err
   }
   const pickVideo = async (file) => {
-    const err = file ? await checkVideo(file) : null
-    setVideoError(err || '')
-    setVideo(err ? null : file)
-    return !err
+    const { error, seconds } = file ? await checkVideo(file) : { error: null, seconds: null }
+    setVideoError(error || '')
+    setVideo(error ? null : file)
+    setVideoSeconds(error ? null : seconds)
+    return !error
   }
 
   const onSubmit = (e) => {
@@ -245,6 +206,7 @@ function SubmissionForm() {
         file={video}
         error={videoError}
         onPick={pickVideo}
+        extra={videoSeconds ? ` · ${formatDuration(videoSeconds)}` : null}
       />
 
       <div className="sc-form__actions">
