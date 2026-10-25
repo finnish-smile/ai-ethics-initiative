@@ -17,11 +17,10 @@ import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
 
-// The submission destination is still being connected, so the submit
-// button stays disabled until it is.
-// Note: Formspree (used by the logo competition) caps uploads well below
-// typical video sizes, so video needs a different destination.
-const SUBMISSIONS_OPEN = false
+// Release flag: submissions stay off (disabled button, "Submissions open soon.")
+// unless VITE_SUBMISSIONS_OPEN=true at build time. The Apps Script has its own
+// switch (script property SUBMISSIONS_OPEN), which is the real lock.
+export const SUBMISSIONS_OPEN = import.meta.env.VITE_SUBMISSIONS_OPEN === 'true'
 
 // The three cards along the bottom of the first screen.
 const WHAT_WHY_HOW = [
@@ -350,7 +349,7 @@ export default function BuildConstitution() {
             <h2>Submit your constitution</h2>
             <p>Upload your written constitution and your video explanation together.</p>
             <ol className="lc-steps">
-              <li>Fill in your name and email.</li>
+              <li>Fill in your details.</li>
               <li>Attach your written constitution.</li>
               <li>Attach your 30–120 second video.</li>
             </ol>
