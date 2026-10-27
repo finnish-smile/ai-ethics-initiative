@@ -7,7 +7,7 @@ export const spotlights = [
     blurb:
       'Using the principles in our AI Stewardship handbook, write your own rules for using generative AI, then submit your constitution and a short video explaining it.',
     cta: 'Enter the competition',
-    href: '/ai-constitution-competition',
+    href: '/constitution',
     ph: 'cover · ai constitution competition',
     tone: 'navy',
   },
@@ -17,7 +17,7 @@ export const spotlights = [
     blurb:
       "A simple framework for self-governing your own AI use — write down your principles, set your own limits, and hold yourself to using these tools ethically, every time.",
     cta: 'Read More',
-    href: '/news',
+    href: '/constitution',
     ph: 'cover · ai constitution',
     tone: 'navy',
   },
@@ -54,7 +54,7 @@ export const events = [
     title: 'AI Constitution Competition',
     type: 'Competition',
     slug: 'ai-constitution-competition',
-    href: '/ai-constitution-competition',
+    href: '/constitution',
   },
   {
     date: '2026-11-05',

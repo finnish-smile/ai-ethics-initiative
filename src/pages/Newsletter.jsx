@@ -1,26 +1,13 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { latestIssue, longDate } from '../data/news.js'
+import NewsletterSignup from '../components/NewsletterSignup.jsx'
 
 export default function Newsletter() {
-  const [subscribed, setSubscribed] = useState(false)
-  const [emailError, setEmailError] = useState(false)
   const iss = latestIssue
-
-  const onSubmit = (e) => {
-    e.preventDefault()
-    const email = e.target.elements.email.value
-    if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-      setEmailError(true)
-      return
-    }
-    setEmailError(false)
-    setSubscribed(true)
-  }
 
   return (
     <>
-      <header className="phead">
+      <header className="phead phead--paper">
         <div className="wrap">
           <p className="kicker">The newsletter &middot; No. {iss.no}</p>
           <h1>{iss.title}</h1>
@@ -109,26 +96,8 @@ export default function Newsletter() {
             <div className="nl-sub">
               <h3>Subscribe</h3>
               <p>One concise issue a week. No noise, unsubscribe anytime.</p>
-              {subscribed ? (
-                <p className="nl-ok">Thanks &mdash; you&rsquo;re on the list.</p>
-              ) : (
-                <>
-                  <form className="nl-form" onSubmit={onSubmit} noValidate>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="you@byu.edu"
-                      aria-label="Email address"
-                      required
-                      style={emailError ? { borderColor: '#A3082A' } : undefined}
-                    />
-                    <button className="btn btn--accent" type="submit">
-                      Subscribe
-                    </button>
-                  </form>
-                  <p className="nl-note">We use your email only for this newsletter.</p>
-                </>
-              )}
+              <NewsletterSignup source="Newsletter page" />
+              <p className="nl-note">We use your email only for this newsletter.</p>
             </div>
           </div>
         </div>

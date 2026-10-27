@@ -31,7 +31,7 @@ export default function Articles() {
 
   return (
     <>
-      <header className="phead">
+      <header className="phead phead--paper">
         <div className="wrap">
           <p className="kicker">(EXAMPLE TEXT) The feed</p>
           <h1>AI Ethics News</h1>

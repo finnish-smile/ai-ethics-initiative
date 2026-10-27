@@ -4,7 +4,7 @@ import { issues, longDate } from '../data/news.js'
 export default function NewsletterArchive() {
   return (
     <>
-      <header className="phead">
+      <header className="phead phead--paper">
         <div className="wrap">
           <p className="kicker">The archive</p>
           <h1>Past issues of the newsletter</h1>

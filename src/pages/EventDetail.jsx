@@ -8,7 +8,7 @@ export default function EventDetail() {
 
   return (
     <>
-      <header className="phead">
+      <header className="phead phead--paper">
         <div className="wrap">
           <p className="kicker">{ev.type}</p>
           <h1>{ev.title}</h1>

@@ -68,6 +68,9 @@ export function SiteFooter() {
                 <Link to="/kickstart">Learn</Link>
               </li>
               <li>
+                <Link to="/constitution">Build your constitution</Link>
+              </li>
+              <li>
                 <Link to="/principles">Principles of Ethical AI Use</Link>
               </li>
               <li>
@@ -162,6 +165,7 @@ export default function Layout() {
       // pivot/principles/practice run, the reflective break), any of which
       // can be sitting directly under the nav at a given scroll position.
       // .mission-band is plain white and deliberately excluded.
+      // .newsletter is the navy subscribe band on the News pages.
       // .cinema-finale-dark-zone only exists in the DOM while the finale's
       // pinned crossfade (see Home.jsx) is mostly navy, so nav text
       // switches partway through that fade rather than staying white into
@@ -170,7 +174,7 @@ export default function Layout() {
       // pinned fade — see Home.jsx/homepage.css), so it's watched via that
       // class rather than unconditionally like the sections after it.
       const darkEls = document.querySelectorAll(
-        '.phead:not(.phead--paper), .ks-hero--painting, .home-open, .cinema-finale-dark-zone, .mission, .pivot--in, .principles-framework, .practice, .reflect',
+        '.phead:not(.phead--paper), .ks-hero--painting, .newsletter, .home-open, .cinema-finale-dark-zone, .mission, .pivot--in, .principles-framework, .practice, .reflect',
       )
       const isDark = Array.from(darkEls).some((el) => {
         const r = el.getBoundingClientRect()
@@ -221,76 +225,6 @@ export default function Layout() {
       </main>
 
       {!onPrinciples && <SiteFooter />}
-      <footer className="foot">
-        <div className="wrap">
-          <div className="foot__cols">
-            <div className="foot__contact">
-              <h4 className="foot__h">Contact</h4>
-              <p>
-                Email: <a href="mailto:ai-ethics@byu.edu">ai-ethics@byu.edu</a>
-              </p>
-              <p>Office hours: Mon&ndash;Fri, 8&ndash;5</p>
-            </div>
-            <div>
-              <h4 className="foot__h">Explore</h4>
-              <ul>
-                <li>
-                  <Link to="/kickstart">Learn</Link>
-                </li>
-                <li>
-                  <Link to="/constitution">Build your constitution</Link>
-                </li>
-                <li>
-                  <Link to="/principles">Principles of Ethical AI Use</Link>
-                </li>
-                <li>
-                  <Link to="/get-involved">Events Calendar</Link>
-                </li>
-                <li>
-                  <Link to="/news">News &amp; Newsletter</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="foot__h">Resources</h4>
-              <ul>
-                <li>
-                  <a href="mailto:ai-ethics@byu.edu">Request a Workshop</a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="foot__h">Connect</h4>
-              <div className="foot__social">
-                <Link to="/news#newsletter" aria-label="Newsletter">
-                  <MailIcon />
-                </Link>
-                <Link to="/news" aria-label="News">
-                  <NewsIcon />
-                </Link>
-                <Link to="/get-involved" aria-label="Recordings">
-                  <PlayIcon />
-                </Link>
-              </div>
-              <ul>
-                <li>
-                  <Link to="/news#newsletter">Join the mailing list</Link>
-                </li>
-                <li>
-                  <Link to="/get-involved">Upcoming events</Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="foot__band">
-          <div className="foot__wordmark">BYU Marriott AI &amp; Ethics Initiative</div>
-          <p className="foot__fine">
-            &copy; {new Date().getFullYear()} AI Ethics Initiative &nbsp;|&nbsp; <a href="#">Privacy Notice</a>{' '}
-            &nbsp;&middot;&nbsp; <a href="#">Accessibility</a>
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }
