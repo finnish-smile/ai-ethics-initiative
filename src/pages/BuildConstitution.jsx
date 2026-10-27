@@ -278,9 +278,16 @@ function SubmissionForm() {
             autoComplete="email"
             className={emailError ? 'lc-input--error' : undefined}
             aria-invalid={emailError ? true : undefined}
-            aria-describedby={emailError ? 'bc-email-error' : undefined}
+            aria-describedby={emailError ? 'bc-email-error' : 'bc-email-hint'}
             disabled={sending || undefined}
           />
+          {/* Usability test, Oct 26: a classmate typed a non-BYU email first; the
+              placeholder disappears once you type, so the rule stays visible here. */}
+          {!emailError && (
+            <span className="bc-hint" id="bc-email-hint">
+              Use your @byu.edu email address.
+            </span>
+          )}
           {emailError && (
             <span className="lc-error" id="bc-email-error" role="alert">
               {emailError}
