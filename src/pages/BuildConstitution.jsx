@@ -1,17 +1,29 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PRINCIPLES } from '../data/kickstart/principles.js'
+import {
+  DOC_ACCEPT,
+  DOC_MAX_MB,
+  VIDEO_ACCEPT,
+  VIDEO_MAX_MB,
+  VIDEO_MAX_S,
+  VIDEO_MIN_S,
+  checkDoc,
+  checkVideo,
+  formatDuration,
+  formatSize,
+  isByuEmail,
+  BYU_EMAIL_MESSAGE,
+} from '../lib/validation.js'
+import { CONTACT_EMAIL, submitEntry } from '../lib/submissions.js'
 import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
 
-// DRAFT OUTLINE. Rubric weights and the submission destination are still
-// to be decided, so the submit button stays disabled until they are.
-// Note: Formspree (used by the logo competition) caps uploads well below
-// typical video sizes, so video needs a different destination.
-const SUBMISSIONS_OPEN = false
-
-const ROMAN = ['I', 'II', 'III', 'IV', 'V']
+// Release flag: submissions stay off (disabled button, "Submissions open soon.")
+// unless VITE_SUBMISSIONS_OPEN=true at build time. The Apps Script has its own
+// switch (script property SUBMISSIONS_OPEN), which is the real lock.
+export const SUBMISSIONS_OPEN = import.meta.env.VITE_SUBMISSIONS_OPEN === 'true'
 
 // The three cards along the bottom of the first screen.
 const WHAT_WHY_HOW = [
@@ -29,98 +41,41 @@ const WHAT_WHY_HOW = [
   },
 ]
 
-// What each article of a student's constitution should address. Draft
-// wording, to be refined together with the rubric.
-const ARTICLE_PROMPTS = {
-  agency: 'Which decisions will you always keep for yourself, and where may AI only advise?',
-  becoming: 'Which skills are you here to build, and how will you keep AI from doing that growing for you?',
-  fellowship: 'How will your AI use point you toward people — classmates, mentors, family — rather than away?',
-  discernment: 'How will you check what AI tells you before you trust it, repeat it, or submit it?',
-  integrity: 'When and how will you disclose AI help, and what lines will you not cross even unseen?',
-}
-
-// Draft rubric: one combined criterion for the five articles plus the cross-cutting ones.
-// Points other than the articles row are placeholders until the rubric is finalized.
+// Rubric, 100 points total.
 const RUBRIC = [
-  {
-    criterion: 'The five articles',
-    lookFor: `One article for each principle (${PRINCIPLES.map((p) => p.title).join(', ')}), each answering the question set out for it above.`,
-    points: 40,
-  },
   {
     criterion: 'Usable as a harness',
     lookFor:
       'Written as clear, specific rules you could paste into an AI tool’s custom instructions and it would change how the tool behaves.',
-    points: '—',
+    points: 10,
   },
   {
-    criterion: 'Personal & specific',
+    criterion: 'Structure & format',
+    lookFor:
+      'Clearly organized and easy to read, in a format others could pick up and apply to their own AI use.',
+    points: 10,
+  },
+  {
+    criterion: 'Personal input',
     lookFor: 'Grounded in your own courses, goals, and habits — not generic statements anyone could sign.',
-    points: '—',
+    points: 10,
   },
   {
-    criterion: 'Video explanation',
-    lookFor: '30–120 seconds on why you wrote your constitution and how you built it.',
-    points: '—',
+    criterion: 'The five principles',
+    lookFor: `How you implemented each of the five principles (${PRINCIPLES.map((p) => p.title).join(', ')}) in your constitution.`,
+    points: 40,
+  },
+  {
+    criterion: 'Video: What, why, and how?',
+    lookFor:
+      'A 30–120 second video on what your constitution says, why you wrote it, and how you built it, including how you used AI to create it.',
+    points: 30,
   },
 ]
 
 const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate student']
 
-const DOC_MAX_MB = 10
-const DOC_EXT = ['pdf', 'docx', 'doc', 'txt', 'md']
-const DOC_ACCEPT = '.pdf,.docx,.doc,.txt,.md'
-
-const VIDEO_MAX_MB = 300
-const VIDEO_EXT = ['mp4', 'mov', 'webm', 'm4v']
-const VIDEO_ACCEPT = 'video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm,.m4v'
-const VIDEO_MIN_S = 30
-const VIDEO_MAX_S = 120
-
-const ext = (name) => name.split('.').pop().toLowerCase()
-
-function formatSize(bytes) {
-  return bytes < 1024 * 1024 ? `${Math.round(bytes / 1024)} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`
-}
-
-function checkDoc(file) {
-  if (!DOC_EXT.includes(ext(file.name))) return 'Please upload a PDF, Word document, or plain-text file.'
-  if (file.size > DOC_MAX_MB * 1024 * 1024) return `That file is larger than ${DOC_MAX_MB} MB.`
-  if (file.size === 0) return 'That file appears to be empty.'
-  return null
-}
-
-// Reads the video's duration from its metadata so length is checked
-// before upload, not after.
-function readDuration(file) {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file)
-    const v = document.createElement('video')
-    v.preload = 'metadata'
-    v.onloadedmetadata = () => {
-      URL.revokeObjectURL(url)
-      resolve(v.duration)
-    }
-    v.onerror = () => {
-      URL.revokeObjectURL(url)
-      resolve(null)
-    }
-    v.src = url
-  })
-}
-
-async function checkVideo(file) {
-  if (!VIDEO_EXT.includes(ext(file.name))) return 'Please upload an MP4, MOV, or WebM video.'
-  if (file.size > VIDEO_MAX_MB * 1024 * 1024) return `That video is larger than ${VIDEO_MAX_MB} MB.`
-  const seconds = await readDuration(file)
-  if (seconds == null) return null // browser can't read this format; length is checked on review instead
-  if (seconds < VIDEO_MIN_S || seconds > VIDEO_MAX_S) {
-    return `Your video is ${Math.round(seconds)} seconds. It needs to be between ${VIDEO_MIN_S} and ${VIDEO_MAX_S} seconds.`
-  }
-  return null
-}
-
-function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra }) {
+function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra, locked }) {
   const input = useRef(null)
   const onChange = async (e) => {
     const chosen = e.target.files && e.target.files[0]
@@ -132,13 +87,16 @@ function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra 
       <span className="lc-file__label" id={`${id}-label`}>
         {label}
       </span>
-      <label className={`lc-drop${error ? ' lc-drop--error' : ''}${file ? ' lc-drop--ready' : ''}`}>
+      <label
+        className={`lc-drop${error ? ' lc-drop--error' : ''}${file ? ' lc-drop--ready' : ''}${locked ? ' lc-drop--locked' : ''}`}
+      >
         <input
           ref={input}
           className="lc-drop__input"
           type="file"
           accept={accept}
           onChange={onChange}
+          disabled={locked || undefined}
           aria-labelledby={`${id}-label`}
           aria-describedby={`${id}-help`}
         />
@@ -169,13 +127,85 @@ function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra 
   )
 }
 
+// Shown under the button once submissions are open, as "Due <this>.".
+// Hidden while empty; fill in when the student deadline is set.
+const STUDENT_DEADLINE = ''
+
+const FAILED_MESSAGE = 'Something went wrong sending your entry. Please try again in a moment.'
+
+function formatReceived(date) {
+  return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
+
+function Confirmation({ sent }) {
+  return (
+    <div className="sc-form lc-form bc-done" role="status">
+      <span className="bc-done__mark">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M5 12.5l4.5 4.5L19 7.5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+      <p className="kicker">Received &middot; {formatReceived(sent.receivedAt)}</p>
+      <h3>Thanks, your constitution is in.</h3>
+      <ul className="bc-files">
+        <li>
+          <b>{sent.doc.name}</b>
+          <span>{formatSize(sent.doc.size)}</span>
+        </li>
+        <li>
+          <b>{sent.video.name}</b>
+          <span>
+            {formatSize(sent.video.size)}
+            {sent.videoSeconds ? ` · ${formatDuration(sent.videoSeconds)}` : ''}
+          </span>
+        </li>
+      </ul>
+      <p>
+        We sent a receipt to <strong>{sent.email}</strong>. Keep it as your record.
+      </p>
+      <p>
+        Need to change something? Email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+      </p>
+    </div>
+  )
+}
+
 function SubmissionForm() {
   const [form, setForm] = useState({ name: '', email: '', major: '', year: '' })
+  const [emailError, setEmailError] = useState('')
   const [doc, setDoc] = useState(null)
   const [docError, setDocError] = useState('')
   const [video, setVideo] = useState(null)
   const [videoError, setVideoError] = useState('')
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
+  const [videoSeconds, setVideoSeconds] = useState(null)
+  // idle | sending | failed | limit | done
+  const [status, setStatus] = useState('idle')
+  const [progress, setProgress] = useState({ sent: 0, total: 0 })
+  const [sent, setSent] = useState(null)
+  const sending = status === 'sending'
+
+  const set = (k) => (e) => {
+    setForm({ ...form, [k]: e.target.value })
+    if (k === 'email') {
+      setEmailError('')
+      if (status === 'limit') setStatus('idle')
+    }
+  }
+
+  // Ask before leaving mid-upload.
+  useEffect(() => {
+    if (!sending) return undefined
+    const warn = (e) => e.preventDefault()
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [sending])
 
   const pickDoc = async (file) => {
     const err = file ? checkDoc(file) : null
@@ -184,23 +214,58 @@ function SubmissionForm() {
     return !err
   }
   const pickVideo = async (file) => {
-    const err = file ? await checkVideo(file) : null
-    setVideoError(err || '')
-    setVideo(err ? null : file)
-    return !err
+    const { error, seconds } = file ? await checkVideo(file) : { error: null, seconds: null }
+    setVideoError(error || '')
+    setVideo(error ? null : file)
+    setVideoSeconds(error ? null : seconds)
+    return !error
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
-    // Destination not connected yet (see SUBMISSIONS_OPEN).
+    if (!SUBMISSIONS_OPEN || sending) return
+    let ok = true
+    if (!isByuEmail(form.email)) {
+      setEmailError(BYU_EMAIL_MESSAGE)
+      ok = false
+    }
+    if (!doc) {
+      setDocError(docError || 'Please attach your written constitution.')
+      ok = false
+    }
+    if (!video) {
+      setVideoError(videoError || 'Please attach your video.')
+      ok = false
+    }
+    if (!ok) return
+
+    setStatus('sending')
+    setProgress({ sent: 0, total: doc.size + video.size })
+    try {
+      const { receivedAt } = await submitEntry({
+        fields: form,
+        doc,
+        video,
+        onProgress: (s, total) => setProgress({ sent: s, total }),
+      })
+      setSent({ receivedAt, doc, video, videoSeconds, email: form.email.trim() })
+      setStatus('done')
+    } catch (err) {
+      setStatus(err.code === 'limit' ? 'limit' : 'failed')
+    }
   }
+
+  if (status === 'done') return <Confirmation sent={sent} />
+
+  const pct = progress.total ? Math.round((progress.sent / progress.total) * 100) : 0
+  const mb = (bytes) => bytes / 1024 / 1024
 
   return (
     <form className="sc-form lc-form" onSubmit={onSubmit}>
       <div className="sc-form__row">
         <label>
           Your name
-          <input required value={form.name} onChange={set('name')} autoComplete="name" />
+          <input required value={form.name} onChange={set('name')} autoComplete="name" disabled={sending || undefined} />
         </label>
         <label>
           Email
@@ -211,17 +276,32 @@ function SubmissionForm() {
             onChange={set('email')}
             placeholder="you@byu.edu"
             autoComplete="email"
+            className={emailError ? 'lc-input--error' : undefined}
+            aria-invalid={emailError ? true : undefined}
+            aria-describedby={emailError ? 'bc-email-error' : undefined}
+            disabled={sending || undefined}
           />
+          {emailError && (
+            <span className="lc-error" id="bc-email-error" role="alert">
+              {emailError}
+            </span>
+          )}
         </label>
       </div>
       <div className="sc-form__row">
         <label>
           Major
-          <input required value={form.major} onChange={set('major')} placeholder="e.g. Marketing" />
+          <input
+            required
+            value={form.major}
+            onChange={set('major')}
+            placeholder="e.g. Marketing"
+            disabled={sending || undefined}
+          />
         </label>
         <label>
           Year in school
-          <select required value={form.year} onChange={set('year')}>
+          <select required value={form.year} onChange={set('year')} disabled={sending || undefined}>
             <option value="" disabled>
               Choose one
             </option>
@@ -241,6 +321,7 @@ function SubmissionForm() {
         file={doc}
         error={docError}
         onPick={pickDoc}
+        locked={sending}
       />
       <DropZone
         id="bc-video"
@@ -251,19 +332,65 @@ function SubmissionForm() {
         file={video}
         error={videoError}
         onPick={pickVideo}
+        extra={videoSeconds ? ` · ${formatDuration(videoSeconds)}` : null}
+        locked={sending}
       />
 
+      {sending && (
+        <div className="bc-progress" role="status" aria-live="polite">
+          <div className="bc-progress__top">
+            <span>Sending your entry…</span>
+            <span>
+              {Math.round(mb(progress.sent))} of {mb(progress.total).toFixed(1)} MB &middot; {pct}%
+            </span>
+          </div>
+          <div className="bc-bar">
+            <i style={{ width: `${pct}%` }} />
+          </div>
+          <p>Keep this tab open until it finishes. Large videos can take a few minutes.</p>
+        </div>
+      )}
+      {status === 'failed' && (
+        <div className="bc-alert" role="alert">
+          <p className="sc-form__error">{FAILED_MESSAGE}</p>
+        </div>
+      )}
+      {status === 'limit' && (
+        <div className="bc-alert" role="alert">
+          <p className="sc-form__error">
+            You&rsquo;ve already submitted twice. To make a change, reach out to{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          </p>
+        </div>
+      )}
+
       <div className="sc-form__actions">
-        <button type="submit" className="btn btn--accent" disabled={!SUBMISSIONS_OPEN}>
-          Submit my constitution <span className="arrow">&rarr;</span>
+        <button
+          type="submit"
+          className="btn btn--accent"
+          disabled={!SUBMISSIONS_OPEN || sending || status === 'limit'}
+        >
+          {sending ? 'Sending…' : status === 'failed' ? 'Try again' : 'Submit my constitution'}{' '}
+          <span className="arrow">&rarr;</span>
         </button>
         {!SUBMISSIONS_OPEN && <span className="bc-closed">Submissions open soon.</span>}
+        {SUBMISSIONS_OPEN && !sending && STUDENT_DEADLINE && (
+          <span className="bc-closed">Due {STUDENT_DEADLINE}.</span>
+        )}
       </div>
     </form>
   )
 }
 
 export default function BuildConstitution() {
+  // Links like /constitution#submit: jump to the section after the layout's
+  // scroll-to-top on navigation has run.
+  useEffect(() => {
+    const id = window.location.hash.slice(1)
+    if (!id) return undefined
+    const t = setTimeout(() => document.getElementById(id)?.scrollIntoView(), 0)
+    return () => clearTimeout(t)
+  }, [])
   return (
     <div className="bc">
       {/* Hero */}
@@ -288,7 +415,7 @@ export default function BuildConstitution() {
             </p>
           </div>
           <div className="bc-hero__actions">
-            <a className="btn btn--primary" href="#articles">
+            <a className="btn btn--primary" href="#rubric">
               Read the guidelines <span className="arrow">&rarr;</span>
             </a>
             <a className="btn btn--ghost" href="#submit">
@@ -337,7 +464,7 @@ export default function BuildConstitution() {
                 <span className="bc-deliverable__num">2</span>
                 <div>
                   <h3>Video explanation</h3>
-                  <p>A 30–120 second video on why you wrote your constitution and how you built it.</p>
+                  <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
                 </div>
               </div>
             </div>
@@ -350,40 +477,16 @@ export default function BuildConstitution() {
         </div>
       </section>
 
-      {/* The five articles */}
-      <section className="section bc-articles" id="articles" data-screen-label="The five articles">
-        <div className="wrap">
-          <div className="bc-section-head" data-reveal>
-            <p className="kicker">Guidelines</p>
-            <h2>Five articles, five principles</h2>
-            <p>
-              Your constitution is built on the five guiding principles of the{' '}
-              <Link to="/principles">Stewardship of AI</Link>. Write one article for each.
-            </p>
-          </div>
-          <ol className="bc-article-list reveal-stagger">
-            {PRINCIPLES.map((p, i) => (
-              <li className="bc-article" key={p.id} data-reveal>
-                <span className="bc-article__num">Article {ROMAN[i]}</span>
-                <h3>{p.title}</h3>
-                <p className="bc-article__pause">“{p.pause}”</p>
-                <p className="bc-article__def">{p.definition}</p>
-                <p className="bc-article__ask">
-                  <span>Your article should answer:</span> {ARTICLE_PROMPTS[p.id]}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
       {/* Rubric */}
       <section className="section bc-rubric" id="rubric" data-screen-label="Rubric">
         <div className="wrap">
           <div className="bc-section-head" data-reveal>
             <p className="kicker">Rubric</p>
             <h2>What a strong constitution includes</h2>
-            <p className="lc-pending">Draft rubric — criteria and point values are still being finalized.</p>
+            <p>
+              Your constitution is built on the five guiding principles of the Stewardship of AI.{' '}
+              <Link to="/principles">Read the Stewardship of AI principles &rarr;</Link>
+            </p>
           </div>
           <div className="bc-table-wrap" data-reveal>
             <table className="bc-table">
@@ -418,7 +521,7 @@ export default function BuildConstitution() {
             <h2>Submit your constitution</h2>
             <p>Upload your written constitution and your video explanation together.</p>
             <ol className="lc-steps">
-              <li>Fill in your name and email.</li>
+              <li>Fill in your details.</li>
               <li>Attach your written constitution.</li>
               <li>Attach your 30–120 second video.</li>
             </ol>

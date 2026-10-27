@@ -249,3 +249,35 @@
 .bc-optional { font-weight: 400; color: var(--muted); }
 .bc-closed { font-size: 14px; color: var(--muted); }
 .bc .lc-submit .lc-file + .lc-file { margin-top: 4px; }
+
+/* ---- Submission states (from the Oct 24 mockup, .mockups/flow) ---- */
+.lc-form .sc-form__row { align-items: start; }
+.sc-form label.lc-drop--ready { border-style: solid; border-color: var(--accent); }
+.sc-form label.lc-drop--error { border-color: #a3082a; background: #a3082a0a; }
+.sc-form .lc-input--error { border-color: #a3082a; }
+.sc-form input[disabled], .sc-form select[disabled] { background: var(--card); color: var(--muted); }
+.lc-drop--locked { cursor: default; opacity: .7; }
+
+.bc-progress { display: grid; gap: 8px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.bc-progress__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; font-size: 14px; color: var(--navy); font-weight: 600; }
+.bc-progress__top span { white-space: nowrap; }
+.bc-progress__top span:last-child { font-variant-numeric: tabular-nums; }
+.bc-bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bc-bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+.bc-progress p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+.bc-alert { display: grid; gap: 4px; padding: 12px 14px; border-left: 3px solid #a3082a; background: #a3082a0d; border-radius: var(--radius); }
+.bc-alert a { color: var(--accent-ink); font-weight: 600; }
+
+.bc-done { display: grid; gap: 18px; justify-items: start; }
+.bc-done__mark { width: 44px; height: 44px; border-radius: 50%; background: var(--accent-wash); color: var(--accent); display: grid; place-items: center; }
+.bc-done h3 { margin: 0; font-family: var(--font-display); font-weight: var(--display-weight); font-size: 30px; color: var(--navy); line-height: 1.15; }
+.bc-done p { margin: 0; color: var(--muted); max-width: 52ch; }
+.bc-done p strong { color: var(--ink); font-weight: 600; }
+.bc-done a { color: var(--accent-ink); font-weight: 600; }
+.bc-files { list-style: none; margin: 0; padding: 0; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); }
+.bc-files li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 12px 14px; font-size: 14px; }
+.bc-files li + li { border-top: 1px solid var(--line); }
+.bc-files b { color: var(--navy); font-weight: 600; overflow-wrap: anywhere; }
+.bc-files span { color: var(--muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .bc-bar i { transition: none; } }
