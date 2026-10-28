@@ -22,7 +22,7 @@ export default function Articles() {
       const topicOk = selected.size === 0 || a.topics.some((t) => selected.has(t))
       const searchOk =
         !q ||
-        `${a.title} ${a.source} ${a.excerpt} ${a.topics.join(' ')}`.toLowerCase().includes(q)
+        `${a.title} ${a.source} ${a.excerpt ?? ''} ${a.topics.join(' ')}`.toLowerCase().includes(q)
       return topicOk && searchOk
     })
   }, [search, selected])
@@ -111,30 +111,38 @@ export default function Articles() {
 
             <div className="feed-list">
               {filtered.map((a) => {
-                const d = parseDate(a.date)
+                // Date, excerpt, tags and the New badge are optional; each is
+                // left out (not shown empty) when an article doesn't have it.
+                const d = a.date ? parseDate(a.date) : null
+                const hasTags = a.topics.length > 0 || a.isNew
                 return (
                   <a
                     className="feed-row"
                     href={a.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    key={a.title}
+                    key={a.href}
+                    data-nodate={d ? undefined : ''}
                   >
-                    <span className="feed-date">
-                      <span className="feed-mon">{MON[d.getMonth()]}</span>
-                      <span className="feed-day">{d.getDate()}</span>
-                    </span>
-                    <span className="feed-main">
-                      <span className="feed-tags">
-                        {a.topics.map((t) => (
-                          <span className="topic-tag" key={t}>
-                            {t}
-                          </span>
-                        ))}
-                        {a.isNew && <span className="feed-new">New</span>}
+                    {d && (
+                      <span className="feed-date">
+                        <span className="feed-mon">{MON[d.getMonth()]}</span>
+                        <span className="feed-day">{d.getDate()}</span>
                       </span>
+                    )}
+                    <span className="feed-main">
+                      {hasTags && (
+                        <span className="feed-tags">
+                          {a.topics.map((t) => (
+                            <span className="topic-tag" key={t}>
+                              {t}
+                            </span>
+                          ))}
+                          {a.isNew && <span className="feed-new">New</span>}
+                        </span>
+                      )}
                       <span className="feed-title">{a.title}</span>
-                      <span className="feed-excerpt">{a.excerpt}</span>
+                      {a.excerpt && <span className="feed-excerpt">{a.excerpt}</span>}
                       <span className="feed-source">
                         {a.source}
                         <span className="feed-ext" aria-hidden="true">

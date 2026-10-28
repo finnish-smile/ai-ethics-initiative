@@ -403,6 +403,9 @@
 .feed-source { font-size: 13px; color: var(--faint); font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
 .feed-ext { font-size: 13px; transition: color .14s ease; }
 @media (max-width: 520px) { .feed-row { grid-template-columns: 46px 1fr; } }
+/* Rows for articles without a date (Articles.jsx sets data-nodate) skip the
+   date column instead of leaving it empty. */
+.feed-row[data-nodate] { grid-template-columns: 1fr; }
 
 .feed-empty { color: var(--muted); padding: 40px 8px; border-top: 1px solid var(--line); }
 

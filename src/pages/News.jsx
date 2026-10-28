@@ -18,8 +18,9 @@ function TagList({ topics, isNew }) {
 
 export default function News() {
 
-  const lead = articles[0]
-  const side = articles.slice(1, 4)
+  // The top three approved articles. The big card on the left is the
+  // featured-article placeholder, so the list starts at the first article.
+  const side = articles.slice(0, 3)
 
   return (
     <>
@@ -79,16 +80,17 @@ export default function News() {
             <div className="news-side-col">
               <div className="news-side reveal-stagger">
                 {side.map((a) => (
-                  <article className="news-item" key={a.title} data-reveal>
-                    <TagList topics={a.topics} isNew={a.isNew} />
+                  <article className="news-item" key={a.href} data-reveal>
+                    {(a.topics.length > 0 || a.isNew) && <TagList topics={a.topics} isNew={a.isNew} />}
                     <h3>
                       <a href={a.href} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
                         {a.title}
                       </a>
                     </h3>
-                    <p>{a.excerpt}</p>
+                    {a.excerpt && <p>{a.excerpt}</p>}
                     <span className="news-item__meta">
-                      {a.source} &middot; {longDate(a.date)}
+                      {a.source}
+                      {a.date && <> &middot; {longDate(a.date)}</>}
                     </span>
                   </article>
                 ))}

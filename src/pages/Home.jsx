@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { articles } from '../data/news.js'
 import Carousel from '../components/Carousel.jsx'
 import UpcomingEvents from '../components/UpcomingEvents.jsx'
 import '../home.css'
@@ -65,27 +66,9 @@ const TILES = [
   },
 ]
 
-const NEWS = [
-  {
-    ph: 'photo · classroom',
-    cat: 'Teaching',
-    title: 'Six departments adopt the new syllabus toolkit',
-    excerpt:
-      'Instructors now have shared language for setting fair, transparent expectations around AI use.',
-  },
-  {
-    ph: 'photo · research',
-    cat: 'Research',
-    title: 'Student researchers map AI use across 40 courses',
-    excerpt: 'A first look at how generative tools are actually showing up in coursework this term.',
-  },
-  {
-    ph: 'photo · panel',
-    cat: 'Community',
-    title: 'Recap: our spring panel on academic integrity',
-    excerpt: 'Faculty and students traded hard questions about disclosure, fairness, and trust.',
-  },
-]
+// Latest news cards: the top three approved articles from data/news.js
+// (the same three the News page lists).
+const NEWS = articles.slice(0, 3)
 
 export default function Home() {
   return (
@@ -180,16 +163,16 @@ export default function Home() {
           </div>
           <div className="grid cols-3" data-reveal>
             {NEWS.map((n) => (
-              <Link className="card" to="/news" key={n.title}>
+              <a className="card" href={n.href} target="_blank" rel="noopener noreferrer" key={n.href}>
                 <div className="card__media ph">
-                  <span>{n.ph}</span>
+                  <span>photo &middot; article</span>
                 </div>
                 <div className="card__body">
-                  <span className="card__cat">{n.cat}</span>
+                  {n.topics[0] && <span className="card__cat">{n.topics[0]}</span>}
                   <h3 className="card__title">{n.title}</h3>
-                  <p className="card__excerpt">{n.excerpt}</p>
+                  <p className="card__excerpt">{n.source}</p>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
