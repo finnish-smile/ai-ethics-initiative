@@ -118,7 +118,7 @@ export default function News() {
         </div>
       </section>
 
-      <section className="section" id="suggest" style={{ scrollMarginTop: 84 }} data-screen-label="Suggest an article">
+      <section className="section section--tight news-suggest" id="suggest" style={{ scrollMarginTop: 84 }} data-screen-label="Suggest an article">
         <div className="wrap">
           <ArticleSuggestForm />
         </div>

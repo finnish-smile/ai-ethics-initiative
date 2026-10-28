@@ -62,6 +62,14 @@
   .home-hero .hero-aside { height: auto; }
 }
 
+/* On phones the slide stacks image-over-text, so the fixed desktop height
+   (--hero-box) would clip the button on the longest slide. Let each slide
+   size to its content; the slides share one grid cell, so the slideshow
+   takes the height of the tallest one and doesn't jump between slides. */
+@media (max-width: 720px) {
+  .home-hero .hero-slide { height: auto; }
+}
+
 /* Navy placeholder for the featured image — same treatment the carousel
    uses for its navy slides, until real artwork is dropped in. */
 .ph--navy {

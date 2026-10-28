@@ -39,6 +39,10 @@
   .hero-slide { transition: opacity .25s ease; transform: none !important; }
 }
 .hero-slide__media { min-height: 240px; }
+/* Painting slides: the image fills the media box, cropped via object-position
+   (each slide's `focus` in data/events.js). */
+.hero-slide__media--img { position: relative; overflow: hidden; background: var(--navy); }
+.hero-slide__media--img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .hero-slide__media--navy {
   background-color: var(--navy);
   background-image: repeating-linear-gradient(-45deg, transparent, transparent 9px, rgba(255,255,255,0.05) 9px, rgba(255,255,255,0.05) 18px);
@@ -288,6 +292,11 @@
 .news-side-col { display: flex; flex-direction: column; }
 .news-side-col .page-actions { margin-top: auto; }
 @media (max-width: 860px) { .news-lead .nl-lead-actions, .news-side-col .page-actions { margin-top: 22px; } }
+
+/* "Suggest an article" box (components/ArticleSuggestForm.jsx) on the News
+   page: centered and a little tighter than the shared .sc-form defaults in
+   showcase.css, which the Showcase, Professors and Constitution forms keep. */
+.news-suggest .sc-form { margin: 0 auto; padding: 22px; gap: 12px; }
 
 /* newsletter subscribe banner (news overview) */
 .nl-banner { display: flex; align-items: center; justify-content: space-between; gap: 24px 56px; flex-wrap: wrap; }

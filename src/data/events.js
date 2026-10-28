@@ -1,45 +1,43 @@
 // Content data shared by the home hero carousel and the events pages.
 
+// Home + Events slideshow. Each slide shows the painting from the page it
+// links to (smaller copies in public/images/slideshow/ so the homepage loads
+// fast — the pages themselves keep the full-size originals). No painting
+// credit here: the destination page already credits it. `focus` is the CSS
+// object-position used to crop the painting into the slide's image box.
 export const spotlights = [
   {
     cat: 'Competition',
     title: 'AI Constitution Competition',
     blurb:
-      'Using the principles in our AI Stewardship handbook, write your own rules for using generative AI, then submit your constitution and a short video explaining it.',
+      "Every nation’s founders wrote down what they believed before they had to act on it. Now it’s your turn: write your own constitution for how you’ll use AI.",
     cta: 'Enter the competition',
     href: '/constitution',
-    ph: 'cover · ai constitution competition',
-    tone: 'navy',
+    img: 'images/slideshow/school-of-athens.jpg',
+    alt: 'Raphael, The School of Athens',
+    focus: '50% 50%',
   },
   {
-    cat: 'New Resource',
-    title: 'Personal AI Constitution',
+    cat: 'The Guidebook',
+    title: 'The Stewardship of AI',
     blurb:
-      "A simple framework for self-governing your own AI use — write down your principles, set your own limits, and hold yourself to using these tools ethically, every time.",
-    cta: 'Read More',
-    href: '/constitution',
-    ph: 'cover · ai constitution',
-    tone: 'navy',
+      'Who are you growing into with AI? Explore five principles for using these tools as a steward, not a servant.',
+    cta: 'Explore the principles',
+    href: '/principles',
+    img: 'images/slideshow/lackawanna-valley.jpg',
+    alt: 'George Inness, The Lackawanna Valley',
+    focus: '50% 50%',
   },
   {
-    cat: 'Most Used',
-    title: 'The AI Ethics Newsletter',
+    cat: 'News',
+    title: 'The Inchworm Dispatch',
     blurb:
-      'A free, weekly newsletter that aims to provide updates on AI regulation, cases of concern, and other topics relating to AI Ethics.',
-    cta: 'Read More',
-    href: '/news#newsletter',
-    ph: 'photo · newsletter',
-    tone: 'image',
-  },
-  {
-    cat: 'Feedback',
-    title: 'Student Survey',
-    blurb:
-      'Tell us about your experience! If you have any questions, concerns, or ideas for us, fill out this survey to be a part of the growing initiative for the ethical use of AI.',
-    cta: 'Go to the survey',
+      'The week’s AI ethics news, gathered in one place. Catch up in a few minutes, or get it in your inbox every Friday.',
+    cta: 'Read this week’s news',
     href: '/news',
-    ph: 'screenshot · students',
-    tone: 'navy',
+    img: 'images/slideshow/village-politicians.jpg',
+    alt: 'Wilhelm Leibl, The Village Politicians',
+    focus: '50% 30%',
   },
 ]
 
