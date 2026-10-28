@@ -31,12 +31,18 @@ export default function Articles() {
 
   return (
     <>
-      <header className="phead phead--paper">
+      <header className="phead phead--painting">
+        <img
+          className="phead__painting"
+          src={`${import.meta.env.BASE_URL}images/village-politicians-leibl.jpg`}
+          alt="Wilhelm Leibl, The Village Politicians, a painting of five village men on a bench leaning in to read a newspaper together"
+        />
         <div className="wrap">
-          <p className="kicker">(EXAMPLE TEXT) The feed</p>
-          <h1>AI Ethics News</h1>
-          <p>News feed tag-line</p>
+          <p className="kicker">News</p>
+          <h1>The Inchworm Archive</h1>
+          <p>All our collected articles on AI Ethics</p>
         </div>
+        <p className="phead__caption">Wilhelm Leibl, The Village Politicians, 1877</p>
       </header>
 
       <section className="section" data-screen-label="Article browser">

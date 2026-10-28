@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { articles, longDate } from '../data/news.js'
 import NewsletterSignup from '../components/NewsletterSignup.jsx'
+import ArticleSuggestForm from '../components/ArticleSuggestForm.jsx'
 
 function TagList({ topics, isNew }) {
   return (
@@ -114,6 +115,12 @@ export default function News() {
             </div>
             <NewsletterSignup source="News page" />
           </div>
+        </div>
+      </section>
+
+      <section className="section" id="suggest" style={{ scrollMarginTop: 84 }} data-screen-label="Suggest an article">
+        <div className="wrap">
+          <ArticleSuggestForm />
         </div>
       </section>
     </>
