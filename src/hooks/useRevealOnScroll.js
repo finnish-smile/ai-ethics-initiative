@@ -1,10 +1,16 @@
 import { useEffect } from 'react'
 
-// Adds a "revealed" class to every [data-reveal] element once it scrolls
-// into view, and removes it again if scrolled back out — matching the
-// fade/slide-in-as-you-scroll treatment used throughout the reference
+// Adds a "revealed" class to every [data-reveal] element the first time it
+// scrolls into view, then stops watching it so it stays visible — matching
+// the fade/slide-in-as-you-scroll treatment used throughout the reference
 // design. Re-scans on route change since each page mounts its own set of
-// [data-reveal] elements.
+// [data-reveal] elements, so items fade in again after a page change or a
+// refresh.
+//
+// Revealing only once matters: a hidden item is shifted 30px down
+// (reveal.css), so if items were hidden again on the way out, one sitting at
+// the top edge of the screen would shift back into view, reveal, shift out,
+// hide, and keep flickering on its own.
 export default function useRevealOnScroll(deps = []) {
   useEffect(() => {
     const els = Array.from(document.querySelectorAll('[data-reveal]'))
@@ -18,7 +24,9 @@ export default function useRevealOnScroll(deps = []) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          entry.target.classList.toggle('is-revealed', entry.isIntersecting)
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-revealed')
+          observer.unobserve(entry.target)
         })
       },
       { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
