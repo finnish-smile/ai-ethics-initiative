@@ -400,18 +400,21 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 }
 .phead__painting {
   position: absolute;
-  inset: 0;
+  /* Start 40px down (about halfway into the 79px fixed nav) so the painting's
+     top edge is mostly clear of it; the band's dark background fills the strip
+     above. The band's bottom edge is unchanged, so the extra crop comes off
+     the bottom. */
+  inset: 40px 0 0 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 40px);
   object-fit: cover;
-  object-position: 50% 30%; /* keep the faces and the newspaper in frame */
+  object-position: 50% 0%; /* show the top of the painting in full */
 }
 .phead--painting::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(20, 15, 10, 0.45) 0%, rgba(20, 15, 10, 0) 22%),
     linear-gradient(to top, rgba(20, 15, 10, 0.82) 0%, rgba(20, 15, 10, 0.4) 40%, rgba(20, 15, 10, 0) 64%);
   pointer-events: none;
 }

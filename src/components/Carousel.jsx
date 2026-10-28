@@ -49,8 +49,14 @@ export default function Carousel() {
           const state = i === current ? 'is-active' : i === leaving ? 'is-leaving' : ''
           return (
             <article className={`hero-slide ${state}`} key={s.title}>
-              <div className={`hero-slide__media ph${s.tone === 'navy' ? ' hero-slide__media--navy' : ''}`}>
-                <span>{s.ph}</span>
+              <div className="hero-slide__media hero-slide__media--img">
+                <img
+                  src={`${import.meta.env.BASE_URL}${s.img}`}
+                  alt={s.alt}
+                  style={{ objectPosition: s.focus }}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
               </div>
               <div className="hero-slide__body">
                 <p className="kicker">{s.cat}</p>
