@@ -194,10 +194,10 @@ p { text-wrap: pretty; }
    ========================================================================= */
 /* Sits just under the nav, always pinned to the viewport top. Content
    scrolling past underneath blurs out progressively (heaviest right under
-   the header, fading to nothing by ~130px down) so it reads as dissolving
+   the header, fading to nothing ~52px below it) so it reads as dissolving
    away instead of visibly colliding with the transparent header. */
 .nav-fade {
-  position: fixed; top: 0; left: 0; right: 0; height: 130px; z-index: 39;
+  position: fixed; top: 0; left: 0; right: 0; height: calc(var(--nav-cur) + 52px); z-index: 39;
   pointer-events: none;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -213,15 +213,6 @@ p { text-wrap: pretty; }
      Legibility comes from adaptive text color + shadow via data-over. */
   background: transparent;
 }
-.nav[data-over="dark"] .nav__links a:not([aria-current="page"]) {
-  color: #FFFFFF;
-  text-shadow: 0 1px 5px rgba(0, 46, 93, 0.55);
-}
-.nav[data-over="dark"] .nav__toggle span {
-  background: #FFFFFF;
-  box-shadow: 0 1px 4px rgba(0, 46, 93, 0.4);
-}
-.nav .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 24px; position: relative; }
 /* Reserve the header's height before chrome.js injects it, so content doesn't jump (no load flash) */
 #site-header { min-height: 79px; background: #fff; border-bottom: 1px solid var(--line); }
 #site-header:has(.nav) { min-height: 0; border-bottom: 0; } /* once the real header is in, drop the placeholder strip */
@@ -262,59 +253,127 @@ p { text-wrap: pretty; }
 .scroll-logo__and { display: inline-block; }
 .scroll-logo__amp { display: inline-block; position: absolute; left: 0; top: 0; }
 
-.nav__links { display: flex; align-items: center; gap: 6px; }
+/* ---- Header layout ------------------------------------------------------
+   Layout.jsx measures the full name, the short name and the link row with
+   the real fonts and sets data-mode on the header:
+     wide   — full name + links fit on one line: always one row; the name
+              still telescopes to the short form as you scroll.
+     mid    — only the short name fits beside the links: at the top of the
+              page the links sit on a line under the full name, then slide
+              up beside it as the name telescopes on scroll.
+     narrow — not even the short name fits: short name + menu button that
+              opens a floating card.
+   Custom properties it sets on <html> on every scroll frame:
+     --nav-qx   0 → 1  (mid) link row slides from under the name to the right
+     --nav-qy   0 → 1  (mid) link row rises into the name's line
+     --nav-cur         current header height (79px, or up to 119px in mid)
+     --nav-h-open      header height at the top of the page — page tops use
+                       it for clearance (119px in mid, otherwise 79px)
+     --links-shift     how far right the link row sits (measured, px)
+   The :root values below are only the first-paint defaults. */
+:root { --nav-qx: 1; --nav-qy: 1; --nav-cur: 79px; --nav-h-open: 79px; --links-shift: 0px; }
+@media (min-width: 860px) { :root { --nav-h-open: 119px; } }
+
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; min-height: 78px; gap: 24px; position: relative; }
+
+/* Links: bold (no shape) marks the current page; royal underline on hover. */
+.nav__links { align-items: center; gap: 6px; }
 .nav__links a {
-  position: relative; color: var(--ink); font-weight: 600; font-size: 15.5px;
-  padding: 10px 14px; border-radius: 999px; letter-spacing: 0.005em;
+  position: relative; color: var(--ink); font-weight: 500; font-size: 15.5px;
+  padding: 10px 14px; letter-spacing: 0.005em; white-space: nowrap;
   transition: color .28s ease;
 }
-.nav__label { position: relative; z-index: 2; }
-/* Filled rounded rectangle (active page) — static fill, present on page load, no grow animation */
-.nav__links a::before {
-  content: ""; position: absolute; inset: 0; z-index: 1;
-  background: var(--accent); border-radius: 999px;
-  opacity: 0;
-}
-/* Hover underline — grows from the bottom-left corner, retracts back to it */
+.nav__label { position: relative; }
 .nav__links a::after {
-  content: ""; position: absolute; left: 12px; right: 12px; bottom: 5px; height: 2px; z-index: 1;
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 5px; height: 2px;
   background: var(--accent); border-radius: 2px;
   transform: scaleX(0); transform-origin: left center;
   transition: transform .28s cubic-bezier(.4,0,.2,1);
 }
 .nav__links a:hover { text-decoration: none; }
 .nav__links a:hover::after { transform: scaleX(1); }
+.nav__links a[aria-current="page"] { font-weight: 700; }
+.nav__links a[aria-current="page"]::after { display: none; }
+.nav[data-over="dark"] .nav__links a {
+  color: #FFFFFF;
+  text-shadow: 0 1px 5px rgba(0, 46, 93, 0.55);
+}
+.nav[data-over="dark"] .nav__toggle span {
+  background: #FFFFFF;
+  box-shadow: 0 1px 4px rgba(0, 46, 93, 0.4);
+}
 
-/* Active page: filled rectangle (static resting state), inverted text */
-.nav__links a[aria-current="page"] { color: #fff; }
-.nav__links a[aria-current="page"]::before { opacity: 1; }
-.nav__links a[aria-current="page"]:hover::after { transform: scaleX(0); } /* no underline under the filled pill */
-.nav__cta { margin-left: 8px; white-space: nowrap; }
-.nav__toggle { display: none; }
+/* Off-screen copies of the name (full + short) and the link row, used only
+   to measure which layout fits. Fixed so they never widen the page. */
+.nav-measure {
+  position: fixed; top: 0; left: 0; height: 0; overflow: hidden;
+  visibility: hidden; pointer-events: none;
+}
+.nav-measure > * { width: max-content; }
+.nav-measure .nav__links { display: flex; }
 
-/* Hamburger + dropdown nav at every width, not just narrow ones — the
-   same toggle/panel pattern that used to be mobile-only now applies
-   everywhere, so there's just one nav interaction to maintain. */
-.nav__links, .nav__cta { display: none; }
+/* ---- Wide + mid: links shown in the bar --------------------------------- */
+.nav:not([data-mode="narrow"]) .wrap { align-items: flex-start; height: var(--nav-cur); min-height: 0; }
+.nav:not([data-mode="narrow"]) .brand { height: 78px; }
+.nav:not([data-mode="narrow"]) .nav__links {
+  display: flex;
+  position: absolute; top: 0; left: var(--gutter); height: 78px;
+  /* Ends right-aligned on the name's line. In mid it starts 14px left (so
+     the first link's text lines up under the name) and one line (40px)
+     lower; in wide --nav-qx/--nav-qy stay at 1, so it never moves. */
+  transform: translate(
+    calc(var(--links-shift) * var(--nav-qx) - 14px * (1 - var(--nav-qx))),
+    calc(40px * (1 - var(--nav-qy)))
+  );
+  will-change: transform;
+}
+.nav:not([data-mode="narrow"]) .nav__toggle { display: none; }
+
+/* ---- Narrow: menu button + floating card ------------------------------- */
 .nav__toggle {
   display: inline-flex; flex-direction: column; gap: 5px; background: none; border: 0;
-  padding: 10px; cursor: pointer;
+  padding: 10px; margin-right: -10px; cursor: pointer; position: relative; z-index: 2;
 }
-.nav__toggle span { width: 24px; height: 2px; background: var(--navy); border-radius: 2px; transition: background .25s ease; }
-.nav[data-open="true"] .nav__links {
+.nav__toggle span {
+  width: 24px; height: 2px; background: var(--navy); border-radius: 2px;
+  transition: transform .3s ease, opacity .2s ease, background .25s ease;
+}
+/* three lines → ✕ */
+.nav[data-open="true"] .nav__toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav[data-open="true"] .nav__toggle span:nth-child(2) { opacity: 0; }
+.nav[data-open="true"] .nav__toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav[data-mode="narrow"] .nav__links { display: none; }
+.nav[data-mode="narrow"] .brand { position: relative; z-index: 2; }
+/* While the menu is open the bar turns solid white so the name and ✕ read
+   clearly over paintings, and the page behind dims and blurs. */
+.nav[data-open="true"] { background: #fff; box-shadow: 0 1px 0 var(--line); }
+.nav[data-open="true"] .nav__toggle span { background: var(--navy); box-shadow: none; }
+.nav-scrim {
+  position: fixed; inset: 0; z-index: 39; border: 0; padding: 0; cursor: default;
+  background: rgba(0, 27, 56, 0.28);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+}
+.nav[data-mode="narrow"][data-open="true"] .nav__links {
   display: flex; flex-direction: column; align-items: stretch; gap: 2px;
-  position: absolute; left: 0; right: 0; top: 100%;
-  background: #fff; border-bottom: 1px solid var(--line); padding: 12px var(--gutter) 20px;
+  position: absolute; top: calc(100% + 8px); left: 12px; right: 12px;
+  padding: 10px; border: 1px solid var(--line); border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 28px 56px -20px rgba(0, 46, 93, 0.45), 0 2px 6px rgba(0, 46, 93, 0.08);
 }
-/* The open dropdown is always an opaque white panel, regardless of
-   whether the page behind the header is currently dark — its links need
-   dark text even when data-over="dark" is still set for the (now
-   hidden) collapsed header state. */
-.nav[data-open="true"] .nav__links a:not([aria-current="page"]) {
-  color: var(--ink);
-  text-shadow: none;
+.nav[data-open="true"] .nav__links a {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 19px; color: var(--ink); text-shadow: none;
+  padding: 14px 16px; border-radius: 10px;
 }
-.nav[data-open="true"] .nav__cta { display: inline-flex; margin: 8px var(--gutter) 0; }
+.nav[data-open="true"] .nav__links a[aria-current="page"] { color: var(--navy); }
+.nav[data-open="true"] .nav__links a:hover { background: var(--accent-wash); }
+/* the hover underline becomes a royal arrow on each row */
+.nav[data-open="true"] .nav__links a::after,
+.nav[data-open="true"] .nav__links a[aria-current="page"]::after {
+  display: block; content: "\2192"; position: static; height: auto;
+  background: none; transform: none; color: var(--accent); font-weight: 400;
+}
 .util__brand { display: none; }
 
 /* =========================================================================
@@ -372,7 +431,7 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 .phead { background: var(--navy); color: #fff; }
 /* The fixed nav floats over this band's top edge now — pad enough extra
    room up top so the kicker/title clear it instead of sitting underneath. */
-.phead .wrap { padding-top: calc(79px + clamp(40px, 6vw, 72px)); padding-bottom: clamp(56px, 8vw, 96px); }
+.phead .wrap { padding-top: calc(var(--nav-h-open) + clamp(40px, 6vw, 72px)); padding-bottom: clamp(56px, 8vw, 96px); }
 .phead .kicker { color: rgba(255,255,255,0.7); }
 .phead h1 { font-size: clamp(38px, 6vw, 66px); margin: 14px 0 0; color: #fff; }
 .phead p { color: rgba(255,255,255,0.82); font-size: clamp(17px, 2vw, 20px); max-width: 60ch; margin: 20px 0 0; }

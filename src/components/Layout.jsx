@@ -1,18 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import ScrollLogo from './ScrollLogo.jsx'
 import useRevealOnScroll from '../hooks/useRevealOnScroll.js'
 import '../reveal.css'
 
-// Build your constitution sits right after Home as the current call to
-// action; Principles follows — it's the intellectual center of the
-// initiative, not one option among equals. Kickstart keeps its existing
-// route but surfaces under the "Learn" label so it doesn't read as the
-// primary product; "Calendar" is relabeled "Events" to match the homepage's
-// language for the same page.
+// The site's main pillars. Principles comes right after Home — it's the
+// intellectual center of the initiative, not one option among equals.
+// Kickstart keeps its existing route but surfaces under the "Learn" label;
+// "Calendar" is relabeled "Events" to match the homepage. Build your
+// constitution is an event, not a pillar, so it's reached from the
+// homepage, the Events page, and the footer rather than the main menu.
 const NAV = [
   { to: '/', label: 'Home' },
-  { to: '/constitution', label: 'Build your constitution' },
   { to: '/principles', label: 'Principles' },
   { to: '/kickstart', label: 'Learn' },
   { to: '/get-involved', label: 'Events' },
@@ -83,21 +82,115 @@ export function SiteFooter() {
   )
 }
 
+// Header geometry (mirrored in isaac-site.css, --nav-*). The header picks
+// one of three layouts by measuring what fits (see the measuring effect):
+//   wide   — full name + links on one 79px row (the name still telescopes)
+//   mid    — only the short name fits beside the links: at the top of the
+//            page the links sit on their own line under the full name
+//            (adding NAV_EXTRA), then merge into one row on scroll
+//   narrow — short name + menu button
 const NAV_HEIGHT = 79
+const NAV_EXTRA = 40
+// Minimum space kept between the name and the first link.
+const NAV_GAP = 24
+// Scroll distance over which the name telescopes / the header collapses.
+const COLLAPSE_PX = 100
+
+function ease(t) {
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2
+}
+function ramp(p, start, end) {
+  return Math.max(0, Math.min(1, (p - start) / (end - start)))
+}
 
 export default function Layout() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [onDark, setOnDark] = useState(false)
   const location = useLocation()
+  const [mode, setMode] = useState(() => (window.innerWidth < 860 ? 'narrow' : 'mid'))
+  const modeRef = useRef(mode)
+  modeRef.current = mode
+  const wrapRef = useRef(null)
+  const fullNameRef = useRef(null)
+  const shortNameRef = useRef(null)
+  const measureLinksRef = useRef(null)
   // Principles renders the footer inside its own scrolling frame instead.
+  // Its content scrolls inside an iframe, so the window never scrolls there
+  // and the header would never collapse; it's shown collapsed on that page.
   const onPrinciples = location.pathname.replace(/\/+$/, '') === '/principles'
+
+  // Header progress for the current scroll position: 0 = top of the page
+  // (full name), 1 = collapsed (short name). Narrow and Principles are
+  // always collapsed.
+  const progressNow = () =>
+    modeRef.current === 'narrow' || onPrinciples ? 1 : Math.max(0, Math.min(1, window.scrollY / COLLAPSE_PX))
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    setScrollProgress(window.matchMedia('(max-width: 640px)').matches ? 1 : 0)
+    setScrollProgress(progressNow())
     setMenuOpen(false)
-  }, [location.pathname])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, onPrinciples])
+
+  // Switching layout (window resized across a breakpoint): recompute the
+  // name's state, and close the menu if the button is no longer shown.
+  useEffect(() => {
+    setScrollProgress(progressNow())
+    if (mode !== 'narrow') setMenuOpen(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode])
+
+  // Push the header's state into CSS custom properties (isaac-site.css).
+  // In mid, the link row slides right first (qx), then rises into the
+  // name's line (qy), so it never crosses the name while that telescopes;
+  // in wide and narrow the row never moves. --nav-cur is the header's live
+  // height (blur strip, sticky bars); --nav-h-open is its height at the
+  // top of the page (page-top clearance).
+  useLayoutEffect(() => {
+    const mid = mode === 'mid'
+    const qx = mid ? ease(ramp(scrollProgress, 0, 0.6)) : 1
+    const qy = mid ? ease(ramp(scrollProgress, 0.4, 1)) : 1
+    const root = document.documentElement.style
+    root.setProperty('--nav-qx', String(qx))
+    root.setProperty('--nav-qy', String(qy))
+    root.setProperty('--nav-cur', `${NAV_HEIGHT + NAV_EXTRA * (1 - qy)}px`)
+    root.setProperty('--nav-h-open', `${mid ? NAV_HEIGHT + NAV_EXTRA : NAV_HEIGHT}px`)
+  }, [scrollProgress, mode])
+
+  // Pick the layout by measuring hidden copies of the full name, the short
+  // name and the link row (with the real fonts) against the header's inner
+  // width, and set how far right the link row sits. Re-measured on resize
+  // and once the webfonts have loaded.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const wrap = wrapRef.current
+      const linksEl = measureLinksRef.current
+      if (!wrap || !linksEl || !fullNameRef.current || !shortNameRef.current) return
+      const cs = getComputedStyle(wrap)
+      const inner = wrap.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+      const links = linksEl.offsetWidth
+      const full = fullNameRef.current.offsetWidth
+      const short = shortNameRef.current.offsetWidth
+      document.documentElement.style.setProperty('--links-shift', `${Math.max(0, inner - links)}px`)
+      setMode(full + NAV_GAP + links <= inner ? 'wide' : short + NAV_GAP + links <= inner ? 'mid' : 'narrow')
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ;[wrapRef, fullNameRef, shortNameRef, measureLinksRef].forEach((r) => r.current && ro.observe(r.current))
+    document.fonts?.ready.then(measure)
+    return () => ro.disconnect()
+  }, [])
+
+  // Close the small-screen menu with Escape.
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   // Links to a section of a page (e.g. /news#newsletter, /kickstart#share-idea):
   // once the page has rendered and the scroll-to-top above has run, jump to
@@ -123,14 +216,11 @@ export default function Layout() {
   useRevealOnScroll([location.pathname])
 
   useEffect(() => {
-    // Below the mobile nav breakpoint there's no room for the full wordmark
-    // next to the hamburger toggle — the full-width logo pushes the toggle
-    // button off-screen. Keep the logo permanently in its short/collapsed
-    // state on narrow viewports, regardless of scroll position.
-    const mq = window.matchMedia('(max-width: 640px)')
+    // In the narrow layout there's no room for the full wordmark next to the
+    // menu button, so the logo stays in its short/collapsed state there
+    // regardless of scroll position (and on Principles, see above).
     const onScroll = () => {
-      const p = mq.matches ? 1 : Math.max(0, Math.min(1, window.scrollY / 100))
-      setScrollProgress(p)
+      setScrollProgress(progressNow())
 
       // The header is a translucent glass strip now — tint and text color
       // adapt to whether a dark hero/band or the plain white page is
@@ -156,32 +246,60 @@ export default function Layout() {
       const darkEls = document.querySelectorAll(
         '.phead:not(.phead--paper), .ks-hero--painting, .newsletter, .home-open, .cinema-finale-dark-zone, .mission, .pivot--in, .principles-framework, .practice, .reflect',
       )
+      // Compare against the header's live height (taller at the top of the
+      // page on wide screens, while the links sit on their own line).
+      const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-cur')) || NAV_HEIGHT
       const isDark = Array.from(darkEls).some((el) => {
         const r = el.getBoundingClientRect()
-        return r.top < NAV_HEIGHT && r.bottom > 0
+        return r.top < navH && r.bottom > 0
       })
       setOnDark(isDark)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    mq.addEventListener('change', onScroll)
     onScroll()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      mq.removeEventListener('change', onScroll)
-    }
-  }, [location.pathname])
+    return () => window.removeEventListener('scroll', onScroll)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, onPrinciples])
+
+  // On the dark/painting bands the header text turns white — except while
+  // the small-screen menu is open, when the bar itself is solid white.
+  const darkHeader = onDark && !menuOpen
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div className="nav-fade" aria-hidden="true" />
-      <header className="nav" data-open={menuOpen} data-over={onDark ? 'dark' : 'light'}>
-        <div className="wrap">
+      {menuOpen && (
+        <button className="nav-scrim" type="button" aria-label="Close menu" tabIndex={-1} onClick={() => setMenuOpen(false)} />
+      )}
+      {/* Hidden copies used only to measure which header layout fits. */}
+      <div className="nav-measure" aria-hidden="true">
+        <div ref={fullNameRef}>
+          <ScrollLogo progress={0} />
+        </div>
+        <div ref={shortNameRef}>
+          <ScrollLogo progress={1} />
+        </div>
+        <div className="nav__links" ref={measureLinksRef}>
+          {NAV.map((n) => (
+            <a key={n.to} aria-current={location.pathname === n.to ? 'page' : undefined}>
+              <span className="nav__label">{n.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      <header className="nav" data-mode={mode} data-open={menuOpen} data-over={darkHeader ? 'dark' : 'light'}>
+        <div className="wrap" ref={wrapRef}>
           <Link className="brand" to="/" aria-label="AI & Ethics Initiative — home">
-            <ScrollLogo progress={scrollProgress} light={onDark} />
+            <ScrollLogo progress={scrollProgress} light={darkHeader} />
           </Link>
           <nav className="nav__links" aria-label="Primary">
             {NAV.map((n) => (
-              <Link key={n.to} to={n.to} aria-current={location.pathname === n.to ? 'page' : undefined}>
+              <Link
+                key={n.to}
+                to={n.to}
+                aria-current={location.pathname === n.to ? 'page' : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
                 <span className="nav__label">{n.label}</span>
               </Link>
             ))}
@@ -189,7 +307,7 @@ export default function Layout() {
           <button
             className="nav__toggle"
             type="button"
-            aria-label="Menu"
+            aria-label={menuOpen ? 'Close menu' : 'Menu'}
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
           >

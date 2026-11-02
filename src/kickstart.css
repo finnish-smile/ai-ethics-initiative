@@ -13,7 +13,7 @@
 .ks-hero .wrap {
   /* Same clearance as .phead — the fixed transparent header floats over
      the top of the page, so content needs real room below it. */
-  padding-top: calc(79px + clamp(40px, 6vw, 72px));
+  padding-top: calc(var(--nav-h-open) + clamp(40px, 6vw, 72px));
   padding-bottom: clamp(48px, 7vw, 84px);
 }
 .ks-hero p.lead {
@@ -312,7 +312,7 @@
 .ksl {
   display: grid;
   grid-template-columns: 260px 1fr;
-  padding-top: 79px;
+  padding-top: var(--nav-h-open);
 }
 @media (max-width: 860px) {
   .ksl {
@@ -323,7 +323,7 @@
 .ksl__topbar {
   grid-column: 1 / -1;
   position: sticky;
-  top: 79px;
+  top: var(--nav-cur);
   z-index: 5;
   background: rgba(244, 240, 232, 0.92);
   backdrop-filter: blur(8px);

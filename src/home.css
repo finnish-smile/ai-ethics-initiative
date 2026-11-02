@@ -6,12 +6,12 @@
    ========================================================================= */
 
 /* The fixed, see-through nav floats over the top of the page, so the hero
-   needs room above it (same 79px clearance .phead uses). .hero and
+   needs room above it (same --nav-h-open clearance .phead uses). .hero and
    .hero-grid each add their own vertical padding — on the homepage the
    grid supplies it, so .hero's is dropped to avoid doubling up. */
 .home-hero {
   padding-block: 0;
-  padding-top: 79px;
+  padding-top: var(--nav-h-open);
   background: linear-gradient(170deg, var(--accent-wash), var(--paper) 55%);
 }
 
