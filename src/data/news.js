@@ -59,16 +59,21 @@ export const MOST_USED = [
 // top of the News page and the archive). Only fields the approved list
 // provides are filled in; `date`, `excerpt` and `isNew` are optional and the
 // pages hide them when they are missing.
+// `image` (also optional) is the photo for the home page's Latest news tiles,
+// a path under public/; tiles without one show the grey placeholder.
 export const articles = [
   { source: "ewtnnews.com", href: "https://www.ewtnnews.com/world/us/ai-catholic-colleges-guided-magnifica-humanitas",
     topics: ["AI in Education", "AI Governance", "Vatican"],
-    title: "AI at Catholic colleges: Institutions map policies guided by Magnifica Humanitas" },
+    title: "AI at Catholic colleges: Institutions map policies guided by Magnifica Humanitas",
+    image: "images/news-georgetown-campus.jpg" },
   { source: "Cnet", href: "https://www.cnet.com/tech/services-and-software/ai-detectors-are-being-used-to-discipline-students-i-tested-whether-they-should-be/",
     topics: ["AI in Education", "AI Accountability", "AI Detection"],
-    title: "AI Detectors Are Being Used to Discipline Students. I Tested Whether They Should Be" },
+    title: "AI Detectors Are Being Used to Discipline Students. I Tested Whether They Should Be",
+    image: "images/news-student-laptop.jpg" },
   { source: "cacm.acm.org", href: "https://cacm.acm.org/practice/ai-literacy-as-experimental-practice-students-as-investigators/",
     topics: ["AI in Education", "Responsible AI"],
-    title: "AI Literacy as Experimental Practice: Students as Investigators" },
+    title: "AI Literacy as Experimental Practice: Students as Investigators",
+    image: "images/news-group-project.jpg" },
   { source: "chinadaily.com.cn", href: "https://www.chinadaily.com.cn/a/202608/27/WS6a8f98c3e4b06d4aa055ab5b.html",
     topics: ["AI Ethics", "AI and Human Rights"],
     title: "AI must serve people, not diminish human agency" },
@@ -244,6 +249,19 @@ export const articles = [
     topics: ["AI Governance", "G20"],
     title: "Why the G20 must lead the world’s AI governance agenda" },
 ]
+
+// The article in the big "Featured" card on the News page. It must also be in
+// `articles` above (matched by `href`); the card takes its headline from that
+// entry. `source` here is the display name used on the card only.
+export const featured = {
+  href: "https://www.psychologytoday.com/us/blog/the-digital-self/202608/cognitive-selfhood-the-last-human-right",
+  source: "Psychology Today",
+  date: "2026-08-26",
+  summary: "As AI takes on more thinking, what happens to the self doing the thinking?",
+  image: "images/thinker-rodin-cleveland.jpg",
+  imageAlt: "Auguste Rodin's bronze sculpture The Thinker: a seated man leaning forward with his chin resting on his hand",
+  imageCredit: "Auguste Rodin, The Thinker · Cleveland Museum of Art",
+}
 
 // Newsletter issues (newest first; [0] is the current issue).
 export const issues = [

@@ -165,7 +165,11 @@ export default function Home() {
             {NEWS.map((n) => (
               <a className="card" href={n.href} target="_blank" rel="noopener noreferrer" key={n.href}>
                 <div className="card__media ph">
-                  <span>photo &middot; article</span>
+                  {n.image ? (
+                    <img className="card__img" src={`${import.meta.env.BASE_URL}${n.image}`} alt="" />
+                  ) : (
+                    <span>photo &middot; article</span>
+                  )}
                 </div>
                 <div className="card__body">
                   {n.topics[0] && <span className="card__cat">{n.topics[0]}</span>}

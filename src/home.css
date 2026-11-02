@@ -47,6 +47,8 @@
   border-block: 1px solid var(--line);
 }
 .home-news .card { background: #fff; }
+/* Article photo filling the tile's 16:10 photo area (see data/news.js `image`). */
+.home-news .card__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* Highlight cards (Principles / Newsletter) */
 .home-highlight .card__body { padding: 32px; }
