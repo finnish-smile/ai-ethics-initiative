@@ -38,6 +38,8 @@ function SubmitForm() {
   return (
     <form
       className="sc-form"
+      id="share-idea"
+      style={{ scrollMarginTop: 84 }}
       onSubmit={handleSubmit}
       onKeyDown={blockEnterSubmit}
       data-sent={state.succeeded || undefined}

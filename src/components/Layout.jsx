@@ -19,32 +19,6 @@ const NAV = [
   { to: '/news', label: 'News' },
 ]
 
-function MailIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M3 5h18v14H3z" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M3 6l9 7 9-7" fill="none" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  )
-}
-function NewsIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="4" width="14" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M17 8h4v9a3 3 0 0 1-3 3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M6 8h8M6 12h8M6 16h5" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  )
-}
-function PlayIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
-      <path d="M10 9l5 3-5 3z" fill="currentColor" />
-    </svg>
-  )
-}
-
 // The site footer. Exported so the Principles page can render this same
 // footer inside its embedded outline (see pages/Principles.jsx): that page
 // scrolls inside an iframe, so a footer outside it would sit pinned under
@@ -65,9 +39,6 @@ export function SiteFooter() {
             <h4 className="foot__h">Explore</h4>
             <ul>
               <li>
-                <Link to="/kickstart">Learn</Link>
-              </li>
-              <li>
                 <Link to="/constitution">Build your constitution</Link>
               </li>
               <li>
@@ -76,32 +47,21 @@ export function SiteFooter() {
               <li>
                 <Link to="/get-involved">Events Calendar</Link>
               </li>
-              <li>
-                <Link to="/news">News &amp; Newsletter</Link>
-              </li>
             </ul>
           </div>
           <div>
             <h4 className="foot__h">Resources</h4>
             <ul>
               <li>
-                <a href="mailto:ai-ethics@byu.edu">Request a Workshop</a>
+                <Link to="/kickstart">Learn</Link>
+              </li>
+              <li>
+                <Link to="/news">News</Link>
               </li>
             </ul>
           </div>
           <div>
             <h4 className="foot__h">Connect</h4>
-            <div className="foot__social">
-              <Link to="/news#newsletter" aria-label="Newsletter">
-                <MailIcon />
-              </Link>
-              <Link to="/news" aria-label="News">
-                <NewsIcon />
-              </Link>
-              <Link to="/get-involved" aria-label="Recordings">
-                <PlayIcon />
-              </Link>
-            </div>
             <ul>
               <li>
                 <Link to="/news#newsletter">Join the mailing list</Link>
@@ -109,16 +69,15 @@ export function SiteFooter() {
               <li>
                 <Link to="/get-involved">Upcoming events</Link>
               </li>
+              <li>
+                <Link to="/kickstart#share-idea">Suggest a use-case</Link>
+              </li>
             </ul>
           </div>
         </div>
       </div>
       <div className="foot__band">
         <div className="foot__wordmark">BYU Marriott AI &amp; Ethics Initiative</div>
-        <p className="foot__fine">
-          &copy; {new Date().getFullYear()} AI Ethics Initiative &nbsp;|&nbsp; <a href="#">Privacy Notice</a>{' '}
-          &nbsp;&middot;&nbsp; <a href="#">Accessibility</a>
-        </p>
       </div>
     </footer>
   )
@@ -139,6 +98,27 @@ export default function Layout() {
     setScrollProgress(window.matchMedia('(max-width: 640px)').matches ? 1 : 0)
     setMenuOpen(false)
   }, [location.pathname])
+
+  // Links to a section of a page (e.g. /news#newsletter, /kickstart#share-idea):
+  // once the page has rendered and the scroll-to-top above has run, jump to
+  // the element with that id. Keyed on location.key too, so clicking the same
+  // section link again (or one on the page you're already on) still works.
+  // The position comes from offsetTop (which ignores CSS transforms) rather
+  // than scrollIntoView, because scroll-reveal blocks start shifted down and
+  // would otherwise land ~30px too high once they finish animating in.
+  useEffect(() => {
+    const id = decodeURIComponent(location.hash.slice(1))
+    if (!id) return undefined
+    const t = setTimeout(() => {
+      const el = document.getElementById(id)
+      if (!el) return
+      let top = 0
+      for (let n = el; n; n = n.offsetParent) top += n.offsetTop
+      const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+      window.scrollTo(0, top - margin)
+    }, 0)
+    return () => clearTimeout(t)
+  }, [location.pathname, location.hash, location.key])
 
   useRevealOnScroll([location.pathname])
 

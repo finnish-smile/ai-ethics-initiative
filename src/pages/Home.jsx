@@ -18,7 +18,7 @@ const TILES = [
   {
     to: '/principles',
     label: 'Principles',
-    sub: 'Ethical AI use',
+    sub: 'Ethical AI Use',
     icon: (
       <>
         <path d="M24 6l14 6v10c0 9-6 15-14 18-8-3-14-9-14-18V12z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
@@ -29,7 +29,7 @@ const TILES = [
   {
     to: '/kickstart',
     label: 'Learn',
-    sub: 'Coursework & materials',
+    sub: 'Public Resources',
     icon: (
       <>
         <path d="M5 18l19-9 19 9-19 9z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
@@ -55,7 +55,7 @@ const TILES = [
   {
     to: '/news',
     label: 'News',
-    sub: 'Updates & Newsletters',
+    sub: 'Featured Articles',
     icon: (
       <>
         <path d="M8 12h24v26H11a3 3 0 0 1-3-3z" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="round" />
@@ -190,20 +190,20 @@ export default function Home() {
               <div className="card__body">
                 <p className="kicker">Start here</p>
                 <h3 className="card__title">The Principles of Ethical AI Use</h3>
-                <p className="card__excerpt">Tag-line for the principles</p>
+                <p className="card__excerpt">A Guidebook for the Wise and Ethical Stewardship of AI</p>
                 <span className="link-more">
                   <span className="uline">Read the Principles</span>
                   <span className="arrow">&rarr;</span>
                 </span>
               </div>
             </Link>
-            <Link className="card home-highlight" to="/newsletter">
+            <Link className="card home-highlight" to="/news">
               <div className="card__body">
                 <p className="kicker">Stay in the loop</p>
-                <h3 className="card__title">The AI Ethics Newsletter</h3>
-                <p className="card__excerpt">Tag-line for the principles</p>
+                <h3 className="card__title">The Inchworm Dispatch</h3>
+                <p className="card__excerpt">The week’s AI ethics news, gathered in one place.</p>
                 <span className="link-more">
-                  <span className="uline">Subscribe now</span>
+                  <span className="uline">Browse now</span>
                   <span className="arrow">&rarr;</span>
                 </span>
               </div>
