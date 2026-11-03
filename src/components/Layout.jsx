@@ -139,6 +139,9 @@ export default function Layout() {
   // solid white, so the page scrolling past never shows through behind it —
   // as when the guidebook sat below the header in its own frame.
   const [solidHeader, setSolidHeader] = useState(false)
+  // A painting header (Principles, Learn, News, Events) is under the header:
+  // the header sits on a see-through dark band over it (isaac-site.css).
+  const [onPainting, setOnPainting] = useState(false)
   const location = useLocation()
   const [mode, setMode] = useState(() => (window.innerWidth < 860 ? 'narrow' : 'mid'))
   const modeRef = useRef(mode)
@@ -281,8 +284,9 @@ export default function Layout() {
       // once .pivot--in is added (a plain CSS color transition, not a
       // pinned fade — see Home.jsx/homepage.css), so it's watched via that
       // class rather than unconditionally like the sections after it.
+      // .stew-hero-content is the Principles guidebook's painting header.
       const darkEls = document.querySelectorAll(
-        '.phead:not(.phead--paper), .ks-hero--painting, .newsletter, .home-open, .cinema-finale-dark-zone, .mission, .pivot--in, .principles-framework, .practice, .reflect',
+        '.phead:not(.phead--paper), .ks-hero--painting, .stew-hero-content, .newsletter, .home-open, .cinema-finale-dark-zone, .mission, .pivot--in, .principles-framework, .practice, .reflect',
       )
       // Compare against the header's live height (taller at the top of the
       // page on wide screens, while the links sit on their own line).
@@ -298,6 +302,15 @@ export default function Layout() {
       const pinned = !!bar && bar.getBoundingClientRect().top - barShift <= navH + 0.5
       setSolidHeader(pinned)
       setOnDark(isDark && !pinned)
+      // The painting band shows while a painting header fills the strip
+      // behind the header (and not once you've scrolled past it).
+      const painting = Array.from(
+        document.querySelectorAll('.ks-hero--painting, .phead--painting, .stew-hero-content'),
+      ).some((el) => {
+        const r = el.getBoundingClientRect()
+        return r.top < navH && r.bottom > navH
+      })
+      setOnPainting(painting && !pinned)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -337,6 +350,7 @@ export default function Layout() {
         data-open={menuOpen}
         data-over={darkHeader ? 'dark' : 'light'}
         data-solid={solidHeader || undefined}
+        data-band={onPainting && !menuOpen ? 'painting' : undefined}
       >
         <div className="wrap" ref={wrapRef}>
           <Link className="brand" to="/" aria-label="AI & Ethics Initiative — home">

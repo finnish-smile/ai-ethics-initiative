@@ -96,10 +96,12 @@ export default function News() {
   return (
     <>
       <header className="phead phead--painting">
+        {/* Keep the heads and newspaper in frame; lift the dark interior a little. */}
         <img
           className="phead__painting"
           src={`${import.meta.env.BASE_URL}images/village-politicians-leibl.jpg`}
           alt="Wilhelm Leibl, The Village Politicians, a painting of five village men on a bench leaning in to read a newspaper together"
+          style={{ objectPosition: '50% 25%', filter: 'brightness(1.12)' }}
         />
         <div className="wrap">
           <p className="kicker">News</p>

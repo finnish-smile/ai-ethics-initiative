@@ -308,6 +308,15 @@ p { text-wrap: pretty; }
   box-shadow: 0 2px 0 #fff;
 }
 :has(> .nav[data-solid="true"]) > .nav-fade { display: none; }
+/* Over a painting header (Principles, Learn, News, Events) the header sits on
+   a see-through dark band laid across the top of the painting, so the white
+   name and links read clearly while the painting still shows through. The
+   blur strip is dropped there so it doesn't smear the painting under it. */
+.nav[data-band="painting"] {
+  background: rgba(24, 19, 12, 0.45);
+  transition: background .3s ease;
+}
+:has(> .nav[data-band="painting"]) > .nav-fade { display: none; }
 .nav[data-over="dark"] .nav__toggle span {
   background: #FFFFFF;
   box-shadow: 0 1px 4px rgba(0, 46, 93, 0.4);
@@ -450,36 +459,37 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 .phead--paper h1 { color: var(--ink); font-size: 34px; }
 .phead--paper p { color: var(--muted); }
 
-/* Painting variant (News page): full-bleed artwork behind the header, same
-   recipe as the Learn page's .ks-hero--painting — dark fade for legibility,
+/* Painting variant (News, Events): full-bleed artwork behind the header, same
+   recipe as the Learn page's .ks-hero--painting — subtle bottom fade,
    Stewardship-style title, credit line in the bottom-left corner. Not
-   .phead--paper, so Layout's dark-band check turns the nav white over it. */
+   .phead--paper, so Layout turns the nav white over it and lays the
+   see-through .nav[data-band] strip across the top of the painting. */
 .phead--painting {
   position: relative;
   overflow: hidden;
-  min-height: min(78vh, 760px);
+  /* Grow with the screen width on wide monitors (up to 88% of the screen
+     height) so squarish paintings aren't cropped to a thin horizontal slice. */
+  min-height: max(min(78vh, 760px), min(88vh, 46vw));
   display: flex;
   align-items: flex-end;
   background: #2a2118; /* shows while the image loads */
 }
 .phead__painting {
   position: absolute;
-  /* Start 40px down (about halfway into the 79px fixed nav) so the painting's
-     top edge is mostly clear of it; the band's dark background fills the strip
-     above. The band's bottom edge is unchanged, so the extra crop comes off
-     the bottom. */
-  inset: 40px 0 0 0;
+  /* Runs to the very top, under the nav's see-through band. Each page sets
+     its own object-position (and any zoom) inline to frame its painting. */
+  inset: 0;
   width: 100%;
-  height: calc(100% - 40px);
+  height: 100%;
   object-fit: cover;
-  object-position: 50% 0%; /* show the top of the painting in full */
+  object-position: 50% 25%;
 }
+/* Subtle fade along the bottom only (no darkening at the top). */
 .phead--painting::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(to top, rgba(20, 15, 10, 0.82) 0%, rgba(20, 15, 10, 0.4) 40%, rgba(20, 15, 10, 0) 64%);
+  background: linear-gradient(to top, rgba(20, 15, 10, 0.55) 0%, rgba(20, 15, 10, 0.22) 32%, rgba(20, 15, 10, 0) 52%);
   pointer-events: none;
 }
 .phead--painting .wrap { position: relative; z-index: 1; width: 100%; }
@@ -502,7 +512,7 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
   margin: 0;
   font-size: 11px;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.3); /* credit line: 70% transparent */
   white-space: nowrap;
 }
 
