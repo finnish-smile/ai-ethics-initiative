@@ -494,19 +494,34 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="05 Integrity"] .agency-painting-box { height:auto !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-painting-box img { height:auto !important; }
 .stew .stew-content-panel > section:first-of-type { height:auto !important; min-height:0 !important; padding-top:72px !important; }
-.stew .stew-hero-content > div:first-child { top:79dvh !important; transform:translateY(-50%) !important; gap:10px !important; }
-.stew .stew-hero-content .stew-morph-title { color:#141414 !important; text-shadow:none !important; font-size:clamp(40px, 7vw, 104px) !important; }
-.stew .stew-hero-content > div:first-child span, .stew .stew-hero-content > div:first-child p { color:#141414 !important; text-shadow:none !important; }
-.stew .stew-hero-content .stew-hero-rule { background:rgba(20,20,20,0.25) !important; }
-.stew .stew-hero-content > div:first-child span[onmouseenter] p, .stew .stew-hero-content > div:first-child span > p { border-bottom-color:rgba(20,20,20,0.45) !important; color:#0047BA !important; }
-.stew .stew-hero-content .stew-menuitem:hover { color:#0047BA !important; }
-.stew .stew-verse-pop { position:absolute !important; top:auto !important; bottom:calc(42dvh + 28px) !important; background:rgba(20,17,12,0.45) !important; border-color:rgba(255,255,255,0.2) !important; backdrop-filter:blur(6px) !important; }
-.stew .stew-verse-pop p { color:#FFFFFF !important; text-shadow:0 1px 8px rgba(20,17,12,0.6) !important; }
-.stew .stew-hero-caption { color:rgba(255,255,255,0.85) !important; text-shadow:0 1px 6px rgba(20,17,12,0.6); }
+/* ---- Painting header (home view) — matches the Learn, News and Events headers:
+     the painting runs to the top under the nav's see-through band, the title sits
+     bottom-left on it, and D&C 136:27 is written out just below (.stew-epigraph).
+     --stew-hero-h is shared by .stew-hero-fixed (set in StewardshipGuide's
+     _paintHeroZoom), .stew-hero-content and .stew-hero-spacer. It grows with the
+     screen width so the painting isn't cropped to a slice on wide monitors. ---- */
+.stew { --stew-hero-h: max(calc(58dvh + 79px), min(90vh, 52vw)); }
+.stew .stew-hero-head { position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(56px, 8vw, 96px); }
+.stew .stew-hero-kicker { margin:0; font-family:'IBM Plex Sans',system-ui,sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.75); }
+.stew .stew-hero-content .stew-morph-title { margin:14px 0 0; font-family:'Newsreader',Georgia,serif; font-size:clamp(38px, 6vw, 66px); line-height:1.08; font-weight:400; letter-spacing:.075em; text-transform:uppercase; color:#F4F0E8; text-shadow:0 2px 18px rgba(20,17,12,0.55); }
+/* the lightest bottom-only fade, on the home view only (on a principle's page the
+   same element holds the white "paper" cover, which must stay clean) */
+.stew:has(.stew-hero-content) .stew-hero-fixed::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(to top, rgba(20,15,10,0.35) 0%, rgba(20,15,10,0.12) 30%, rgba(20,15,10,0) 48%); }
+/* credit line: 70% transparent */
+.stew .stew-hero-caption { color:rgba(255,255,255,0.3) !important; text-shadow:none; }
+/* D&C 136:27, written out just below the painting */
+.stew .stew-epigraph { padding:64px max(32px, calc((100% - 1320px)/2)) 0; }
+.stew .stew-epigraph blockquote { margin:0; max-width:760px; border-left:2px solid rgba(20,20,20,0.18); padding-left:24px; }
+.stew .stew-epigraph p { margin:0; font-family:'Newsreader',Georgia,serif; font-style:italic; font-size:clamp(20px, 2vw, 28px); line-height:1.5; color:#2a2620; text-wrap:pretty; }
+.stew .stew-epigraph cite { display:block; margin-top:12px; font-family:'IBM Plex Sans',system-ui,sans-serif; font-style:normal; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#0047BA; }
+.stew .stew-content-panel > .stew-epigraph + section:first-of-type { padding-top:48px !important; }
 /* ---- Phone layout (added for the site): the desktop design is a sticky
      side rail + wide columns, which squeezes text to one word per line on a
      narrow screen, so below 700px it becomes a single plain column. ---- */
 @media (max-width: 700px) {
+/* the title wraps to two lines: give it more room so the seated figure stays below it */
+.stew .stew-hero-head { padding-bottom:130px; }
+.stew .stew-epigraph { padding:40px 20px 0; }
 /* clip (not hidden): hides sideways overflow without turning body into the scroller */
 .stew { overflow-x:clip !important; }
 /* Intro ("Stewardship" + Principle/Pause/Practice legend) and the five-principle picker */

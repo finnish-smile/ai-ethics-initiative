@@ -213,7 +213,7 @@ export default class StewardshipGuide extends Component {
         return;
       }
       if (!this.state.scripturePinned) return;
-      if (t && t.closest && t.closest('.agency-ref-btn, .stew-ref, .a-verse.is-open, .agency-scripture.is-open, .stew-verse-pop')) return;
+      if (t && t.closest && t.closest('.agency-ref-btn, .a-verse.is-open, .agency-scripture.is-open')) return;
       this.setState({ scripturePinned: null });
     };
     this._onScriptureEsc = (e) => {
@@ -280,13 +280,11 @@ export default class StewardshipGuide extends Component {
       fixed.style.opacity = '1';
       fixed.style.position = 'absolute';
       fixed.style.top = '0';
-      fixed.style.height = '58dvh';
+      // Same height as the title area and the spacer (--stew-hero-h in
+      // stewardship.css): the title now sits on the painting, so the spacer no
+      // longer needs measuring to clear a title below it.
+      fixed.style.height = 'var(--stew-hero-h)';
       fixed.style.borderBottom = 'none';
-      {
-        const tb = document.querySelector('.stew-hero-content > div:first-child');
-        const sp = document.querySelector('.stew-hero-spacer');
-        if (tb && sp) { const h = Math.ceil(Math.max(tb.getBoundingClientRect().bottom + window.scrollY + 24, window.innerHeight)) + 'px'; if (sp.style.height !== h) sp.style.height = h; }
-      }
       if (img) img.style.transition = this._justReturnedHome ? 'transform .5s ease, object-position .5s ease' : 'none';
       const fades = document.querySelectorAll('.stew-hero-fade');
       const title = document.querySelector('.stew-morph-title');
@@ -299,7 +297,10 @@ export default class StewardshipGuide extends Component {
       // image keeps zooming for the whole scroll
       const homeScale = 1;
       this._imgScale = homeScale; this._imgPos = [50, 100];
-      if (img) { img.style.transform = 'none'; img.style.objectPosition = '50% 62%'; }
+      // 50% 45% drops the seated figure in the foreground (≈37% across, 84%
+      // down the painting) into the open space just under the title, from
+      // phones up to 2560px-wide screens.
+      if (img) { img.style.transform = 'none'; img.style.objectPosition = '50% 45%'; }
       // surrounding hero text is fully gone well before the next section
       const fadeOut = 1;
       fades.forEach((el) => { el.style.opacity = '1'; });
@@ -756,7 +757,6 @@ export default class StewardshipGuide extends Component {
     const isIntegrityScriptureOpen = this.state.scriptureOpen === 'integrity';
     const onIntegrityScriptureEnter = () => this.hoverScripture('integrity');
     const onIntegrityScriptureLeave = () => this.leaveScripture();
-    const isStewardshipScriptureOpen = this.state.scripturePinned === 'stewardship';
     const cardOn = this.state.cardOn;
     const cardEnter = (k) => () => { if (this.state.cardOn !== k) this.setState({ cardOn: k }); };
     const onCardLeave = () => { if (this.state.cardOn) this.setState({ cardOn: null }); };
@@ -772,10 +772,6 @@ export default class StewardshipGuide extends Component {
     const cardIntegrityClass = cardOn === 'Integrity' ? 'is-on' : '';
     const cardIndex = { Agency: 1, Becoming: 2, Fellowship: 3, Discernment: 4, Integrity: 5 };
     const cardRowClass = cardOn ? 'has-on on-' + cardIndex[cardOn] : '';
-    const onStewardshipScriptureEnter = () => {};
-    const onStewardshipScriptureLeave = () => {};
-    const onStewardshipScriptureToggle = () => this.toggleScripturePin('stewardship');
-    const onStewardshipScriptureKey = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggleScripturePin('stewardship'); } };
     const goToAgencyFn1 = (e) => this.goToFootnote('agency', 'fn-agency-1', e);
     const goToAgencyFn2 = (e) => this.goToFootnote('agency', 'fn-agency-2', e);
     const goToAgencyFn3 = (e) => this.goToFootnote('agency', 'fn-agency-3', e);
@@ -989,7 +985,6 @@ export default class StewardshipGuide extends Component {
       isIntegrityScriptureOpen,
       onIntegrityScriptureEnter,
       onIntegrityScriptureLeave,
-      isStewardshipScriptureOpen,
       onCardAgencyEnter,
       onCardBecomingEnter,
       onCardFellowshipEnter,
@@ -1002,10 +997,6 @@ export default class StewardshipGuide extends Component {
       cardDiscernmentClass,
       cardIntegrityClass,
       cardRowClass,
-      onStewardshipScriptureEnter,
-      onStewardshipScriptureLeave,
-      onStewardshipScriptureToggle,
-      onStewardshipScriptureKey,
       kickerStyle: { position: 'absolute', top: this.state.kickerPos.y, left: this.state.kickerPos.x, maxWidth: '260px', textAlign: 'left', cursor: 'grab', userSelect: 'none', zIndex: 50, background: 'rgba(20,17,12,0.45)', padding: '10px 14px', borderRadius: '4px' },
       onKickerDragStart: this.onKickerDragStart,
       goToAgencyFn1,

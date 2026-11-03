@@ -10,49 +10,29 @@ export default function HomeView({ V }) {
   return (
     <>
     <div className="view" style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-      <div className="stew-hero-content" style={{ position: 'absolute', left: '0', right: '0', top: '0', height: '100dvh', zIndex: '1' }}>
-        <div style={{ position: 'absolute', left: '0', right: '0', top: '50%', transform: 'translateY(-50%)', textAlign: 'center', padding: '0 4vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(8px,1.1vw,20px)' }}>
-          <div className="stew-hero-fade">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', margin: '0 auto', width: 'min(1025px, 92vw)' }}>
-              <span className="stew-hero-rule" style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.6)' }} />
-              <span style={{ fontFamily: "'Newsreader',Georgia,serif", fontStyle: 'italic', fontWeight: '400', fontSize: 'clamp(20px,2.4vw,40px)', color: '#FFFFFF', whiteSpace: 'nowrap' }}>
-                A Guidebook for the Wise and Ethical
-              </span>
-              <span className="stew-hero-rule" style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.6)' }} />
-            </div>
-          </div>
-          <h1 className="stew-morph-title" style={{ fontFamily: "'Newsreader',Georgia,serif", display: 'inline-block', transformOrigin: 'left top', willChange: 'transform', fontSize: 'clamp(40px, 9vw, 130px)', lineHeight: '1', fontWeight: '400', letterSpacing: '.075em', textTransform: 'uppercase', margin: '0.05em 0 -0.23em', color: '#FFFFFF', textShadow: '0 2px 18px rgba(20,17,12,0.55)' }}>
-            Stewardship
-          </h1>
-          <div className="stew-hero-fade">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', margin: '0 auto', width: 'min(1025px, 92vw)' }}>
-              <span className="stew-hero-rule" style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.6)' }} />
-              <span style={{ fontFamily: "'Newsreader',Georgia,serif", fontStyle: 'italic', fontWeight: '400', fontSize: 'clamp(20px,2.4vw,40px)', color: '#FFFFFF' }}>
-                &nbsp;of AI&nbsp;
-              </span>
-              <span className="stew-hero-rule" style={{ flex: '1', height: '1px', background: 'rgba(255,255,255,0.6)' }} />
-            </div>
-            <span className="stew-ref" role="button" tabIndex="0" onClick={V.onStewardshipScriptureToggle} onKeyDown={V.onStewardshipScriptureKey} onMouseEnter={V.onStewardshipScriptureEnter} onMouseLeave={V.onStewardshipScriptureLeave} style={{ position: 'relative', display: 'inline-block', cursor: 'pointer', marginTop: '2.2vw' }}>
-              {" "}
-              <p style={{ fontFamily: "'Newsreader',Georgia,serif", fontSize: 'clamp(14px,1.5vw,20px)', letterSpacing: '.14em', color: '#FFFFFF', margin: '0', whiteSpace: 'nowrap', borderBottom: '1px dotted rgba(255,255,255,0.6)', paddingBottom: '2px' }}>
-                D&amp;C 136:27
-              </p>
-              {" "}
-            </span>
+      {/* Painting header: the title sits bottom-left on the painting, matching
+          the Learn, News and Events headers. Its height (--stew-hero-h, in
+          stewardship.css) is shared with .stew-hero-fixed and the spacer, so
+          the three always line up. */}
+      <div className="stew-hero-content" style={{ position: 'absolute', left: '0', right: '0', top: '0', height: 'var(--stew-hero-h)', zIndex: '1' }}>
+        <div className="stew-hero-head">
+          <div className="wrap">
+            <p className="stew-hero-fade stew-hero-kicker">A guidebook for the wise and ethical</p>
+            <h1 className="stew-morph-title">Stewardship of AI</h1>
           </div>
         </div>
-        {V.isStewardshipScriptureOpen ? (
-          <>
-            <div className="stew-verse-pop" style={{ position: 'fixed', left: '50%', top: '70%', transform: 'translate(-50%,0)', width: 'min(860px, 84vw)', background: 'rgba(20,17,12,0.3)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)', border: '1px solid rgba(255,255,255,0.22)', borderRadius: '6px', padding: '32px 40px', zIndex: '10', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', overflow: 'hidden', boxSizing: 'border-box' }}>
-              <p style={{ fontSize: '24px', lineHeight: '1.5', color: '#FFFFFF', fontStyle: 'normal', margin: '0', textShadow: '0 1px 8px rgba(20,17,12,0.6)' }}>
-                "Thou shalt be diligent in preserving what thou hast, that thou mayest be a wise steward; for it is the free gift of the Lord thy God, and thou art his steward."
-              </p>
-            </div>
-          </>
-        ) : null}
       </div>
-      <div className="stew-hero-spacer" style={{ height: '100dvh', width: '100%' }} />
+      <div className="stew-hero-spacer" style={{ height: 'var(--stew-hero-h)', width: '100%' }} />
       <div className={`stew-content-panel ${V.homeReturnClass ?? ''}`} style={{ position: 'relative', zIndex: '1', display: 'block', background: 'transparent' }}>
+        <div className="stew-epigraph">
+          <blockquote>
+            <p>
+              &ldquo;Thou shalt be diligent in preserving what thou hast, that thou mayest be a wise steward; for it is the
+              free gift of the Lord thy God, and thou art his steward.&rdquo;
+            </p>
+            <cite>D&amp;C 136:27</cite>
+          </blockquote>
+        </div>
         <section style={{ width: '100%', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(22px,4vh,44px)', padding: 'clamp(36px,6vh,80px) max(32px, calc((100% - 1320px)/2))', boxSizing: 'border-box' }}>
           <h1 className="stew-title-target" style={{ fontFamily: "'Newsreader',Georgia,serif", position: 'relative', zIndex: '1', fontSize: 'clamp(30px,min(3.6vw,6vh),56px)', fontWeight: '400', letterSpacing: '.075em', textTransform: 'uppercase', margin: '0', color: '#141414' }}>
             Stewardship
