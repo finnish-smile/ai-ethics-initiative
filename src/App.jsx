@@ -40,7 +40,7 @@ function App() {
         <Route element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="constitution" element={<BuildConstitution />} />
-          <Route path="principles" element={<Principles />} />
+          <Route path="principles/:slug?" element={<Principles />} />
           <Route path="get-involved" element={<GetInvolved />} />
           <Route path="events/:slug" element={<EventDetail />} />
           <Route path="news" element={<News />} />

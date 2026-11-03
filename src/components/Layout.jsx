@@ -115,10 +115,14 @@ export default function Layout() {
   const fullNameRef = useRef(null)
   const shortNameRef = useRef(null)
   const measureLinksRef = useRef(null)
-  // Principles renders the footer inside its own scrolling frame instead.
-  // Its content scrolls inside an iframe, so the window never scrolls there
-  // and the header would never collapse; it's shown collapsed on that page.
-  const onPrinciples = location.pathname.replace(/\/+$/, '') === '/principles'
+  // The Principles guidebook (/principles and /principles/<principle>). Its
+  // header is shown collapsed for now, while the guidebook is being rebuilt.
+  const onPrinciples = /^\/principles(\/|$)/.test(location.pathname)
+  // The menu link for the section you're in (Principles stays marked on
+  // each principle's own page).
+  const isCurrent = (to) =>
+    location.pathname === to || (to === '/principles' && onPrinciples)
+  const prevPathRef = useRef(location.pathname)
 
   // Header progress for the current scroll position: 0 = top of the page
   // (full name), 1 = collapsed (short name). Narrow and Principles are
@@ -127,7 +131,11 @@ export default function Layout() {
     modeRef.current === 'narrow' || onPrinciples ? 1 : Math.max(0, Math.min(1, window.scrollY / COLLAPSE_PX))
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    // Moving within the guidebook (between its home and a principle), the
+    // guide handles scrolling itself, as part of its transitions.
+    const withinGuide = /^\/principles(\/|$)/.test(prevPathRef.current) && onPrinciples
+    prevPathRef.current = location.pathname
+    if (!withinGuide) window.scrollTo(0, 0)
     setScrollProgress(progressNow())
     setMenuOpen(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -281,7 +289,7 @@ export default function Layout() {
         </div>
         <div className="nav__links" ref={measureLinksRef}>
           {NAV.map((n) => (
-            <a key={n.to} aria-current={location.pathname === n.to ? 'page' : undefined}>
+            <a key={n.to} aria-current={isCurrent(n.to) ? 'page' : undefined}>
               <span className="nav__label">{n.label}</span>
             </a>
           ))}
@@ -297,7 +305,7 @@ export default function Layout() {
               <Link
                 key={n.to}
                 to={n.to}
-                aria-current={location.pathname === n.to ? 'page' : undefined}
+                aria-current={isCurrent(n.to) ? 'page' : undefined}
                 onClick={() => setMenuOpen(false)}
               >
                 <span className="nav__label">{n.label}</span>
@@ -322,7 +330,7 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      {!onPrinciples && <SiteFooter />}
+      <SiteFooter />
     </div>
   )
 }
