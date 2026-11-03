@@ -314,7 +314,25 @@ export default function Layout() {
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    // Also re-check when the page's content changes without a scroll — e.g.
+    // the Principles guidebook swapping its home view (painting header) for a
+    // principle's page — so the header doesn't keep the painting band and
+    // white text over a white page until the first scroll.
+    let raf = 0
+    const main = document.querySelector('main')
+    const mo = new MutationObserver(() => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        onScroll()
+      })
+    })
+    if (main) mo.observe(main, { childList: true, subtree: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      mo.disconnect()
+      cancelAnimationFrame(raf)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, onPrinciples])
 
