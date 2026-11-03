@@ -6,7 +6,8 @@
 // follows the page address, and the guide's fonts load while it's on screen.
 import { Component } from 'react'
 import HomeView from './HomeView.jsx'
-import { asset, cssToObj, GUIDE_FONTS } from './util.js'
+import AgencyView from './AgencyView.jsx'
+import { asset, GUIDE_FONTS } from './util.js'
 import { slugForView } from '../../data/stewardship.js'
 
 // The shell every view shares: image preloads and the painting behind the
@@ -35,6 +36,7 @@ function GuideShell({ V }) {
         <img className="stew-hero-img" src={asset('stewardship-lackawanna-valley.jpg')} alt="George Inness, The Lackawanna Valley, a pastoral painting of a valley with a train winding through fields" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 100%', display: 'block', transformOrigin: '50% 100%', willChange: 'transform' }} />
       </div>
       {V.isHome ? <HomeView V={V} /> : null}
+      {V.isPurpose ? <AgencyView V={V} /> : null}
     </div>
   )
 }
@@ -942,8 +944,8 @@ export default class StewardshipGuide extends Component {
     // Principles" land on the five cards; opening Principles fresh (the
     // menu, a link) starts at the top.
     const landing = this.props.navigationType === 'POP' ? 'cards' : this.props.landing
-    if (landing === 'top') this._showView('home')
-    else this._returnHome()
+    if (landing === 'cards') this._returnHome()
+    else this._showView('home')
   }
   // In its own frame the guide ended the page, so returning home (which
   // scrolls two screens down) stopped at the bottom of the home view, on the

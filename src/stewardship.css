@@ -634,3 +634,10 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view .principles-back { left:20px !important; top:20px !important; }
 .stew .view .agency-step.first { padding-top:84px !important; }
 }
+
+/* ---- Watch & Learn video carousel (from VideoCarousel.dc.html) ---------- */
+.stew .vc-frame:hover + .vc-quotebelow { max-height: 400px !important; opacity: 1 !important; }
+
+/* ---- Hover styles (the original template's style-hover attributes) ------ */
+/* Agency: hover styles from the original template */
+.stew .stew-agency-hv0:hover { background:rgba(20,20,20,0.04) !important;color:#0047BA !important; }
