@@ -7,18 +7,17 @@ export default function GetInvolved() {
   return (
     <>
       <header className="phead phead--painting">
-        {/* Framed on the lanterns and trees at the top of the painting, with
-            the crowd below — calmer behind the title than the busy full scene. */}
+        {/* Zoomed 5% to crop off the dotted border Seurat painted around the canvas. */}
         <img
           className="phead__painting"
-          src={`${import.meta.env.BASE_URL}images/bal-du-moulin-renoir.jpg`}
-          alt="Pierre-Auguste Renoir, Bal du moulin de la Galette, a painting of a crowd dancing and talking at an open-air dance hall under the trees"
-          style={{ objectPosition: '50% 0%', transform: 'scale(1.25)', transformOrigin: '45% 0%' }}
+          src={`${import.meta.env.BASE_URL}images/grande-jatte-seurat.jpg`}
+          alt="Georges Seurat, A Sunday on La Grande Jatte, a painting of people relaxing together on a sunny riverbank park"
+          style={{ objectPosition: '50% 50%', transform: 'scale(1.05)', transformOrigin: '50% 50%' }}
         />
         <div className="wrap">
           <h1>Events and Activities</h1>
         </div>
-        <p className="phead__caption">Pierre-Auguste Renoir, Bal du moulin de la Galette, 1876</p>
+        <p className="phead__caption">Georges Seurat, A Sunday on La Grande Jatte, 1884–86</p>
       </header>
 
       <div className="gi-panel">
