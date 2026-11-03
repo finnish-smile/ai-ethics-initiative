@@ -641,3 +641,11 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 /* ---- Hover styles (the original template's style-hover attributes) ------ */
 /* Agency: hover styles from the original template */
 .stew .stew-agency-hv0:hover { background:rgba(20,20,20,0.04) !important;color:#0047BA !important; }
+/* Becoming: hover styles from the original template */
+.stew .stew-becoming-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }
+/* Fellowship: hover styles from the original template */
+.stew .stew-fellowship-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }
+/* Discernment: hover styles from the original template */
+.stew .stew-discernment-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }
+/* Integrity: hover styles from the original template */
+.stew .stew-integrity-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }

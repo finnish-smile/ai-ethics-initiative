@@ -7,6 +7,10 @@
 import { Component } from 'react'
 import HomeView from './HomeView.jsx'
 import AgencyView from './AgencyView.jsx'
+import BecomingView from './BecomingView.jsx'
+import FellowshipView from './FellowshipView.jsx'
+import DiscernmentView from './DiscernmentView.jsx'
+import IntegrityView from './IntegrityView.jsx'
 import { asset, GUIDE_FONTS } from './util.js'
 import { slugForView } from '../../data/stewardship.js'
 
@@ -37,6 +41,10 @@ function GuideShell({ V }) {
       </div>
       {V.isHome ? <HomeView V={V} /> : null}
       {V.isPurpose ? <AgencyView V={V} /> : null}
+      {V.isIdentity ? <BecomingView V={V} /> : null}
+      {V.isRelationships ? <FellowshipView V={V} /> : null}
+      {V.isGrowth ? <DiscernmentView V={V} /> : null}
+      {V.isAction ? <IntegrityView V={V} /> : null}
     </div>
   )
 }
