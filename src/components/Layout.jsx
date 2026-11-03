@@ -318,20 +318,24 @@ export default function Layout() {
     // the Principles guidebook swapping its home view (painting header) for a
     // principle's page — so the header doesn't keep the painting band and
     // white text over a white page until the first scroll.
-    let raf = 0
+    // (A short timer rather than requestAnimationFrame: rAF can be paused —
+    // e.g. in a background or embedded tab — which would leave the check
+    // pending, while a timer always runs. Batches a burst of changes into
+    // one check.)
+    let timer = 0
     const main = document.querySelector('main')
     const mo = new MutationObserver(() => {
-      if (raf) return
-      raf = requestAnimationFrame(() => {
-        raf = 0
+      if (timer) return
+      timer = setTimeout(() => {
+        timer = 0
         onScroll()
-      })
+      }, 50)
     })
     if (main) mo.observe(main, { childList: true, subtree: true })
     return () => {
       window.removeEventListener('scroll', onScroll)
       mo.disconnect()
-      cancelAnimationFrame(raf)
+      clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, onPrinciples])
