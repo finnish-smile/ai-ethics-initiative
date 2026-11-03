@@ -14,6 +14,10 @@ import IntegrityView from './IntegrityView.jsx'
 import { asset } from './util.js'
 import { slugForView } from '../../data/stewardship.js'
 
+// The principle pages' scripture references (hover opens these; the guidebook
+// home's verse opens on click only).
+const HOVER_VERSES = new Set(['agency', 'agency2', 'becoming', 'becoming2', 'fellowship', 'fellowship2', 'fellowship3', 'discernment', 'integrity']);
+
 // The site header's current height. The guide used to sit below the header in
 // its own frame; now it's on the page, so jumps to a section of a principle
 // page (the step rail, footnote links) stop below the header too.
@@ -57,7 +61,7 @@ function GuideShell({ V }) {
 }
 
 export default class StewardshipGuide extends Component {
-  state = { view: 'home', agencyShown: false, homeReturnPending: false, todoChecked: null, todoOpen: true, scriptureOpen: null, scripturePinned: null, footnotesOpen: {}, practiceTab: { agency: 0, becoming: 0, fellowship: 0, discernment: 0, action: 0 }, kickerPos: { x: 120, y: 130 } };
+  state = { view: 'home', agencyShown: false, homeReturnPending: false, todoChecked: null, todoOpen: true, scriptureOpen: null, scripturePinned: null, verseShown: {}, verseSwapping: {}, footnotesOpen: {}, practiceTab: { agency: 0, becoming: 0, fellowship: 0, discernment: 0, action: 0 }, kickerPos: { x: 120, y: 130 } };
   toggleFootnotes(page) { this.setState(s => ({ footnotesOpen: { ...s.footnotesOpen, [page]: !s.footnotesOpen[page] } })); }
 
   onKickerDragStart = (e) => {
@@ -200,16 +204,41 @@ export default class StewardshipGuide extends Component {
     // than a scripture reference or the open verse itself, or pressing
     // Escape, closes it.
     this._onScriptureAway = (e) => {
-      if (!this.state.scripturePinned) return;
       const t = e.target;
-      if (t && t.closest && t.closest('.agency-ref-btn, .stew-ref, .a-verse.is-open, .stew-verse-pop')) return;
+      const inVerse = t && t.closest && t.closest('.a-verse.is-open, .agency-scripture.is-open');
+      // Clicking a verse that hovering opened pins it.
+      if (inVerse && !this.state.scripturePinned && HOVER_VERSES.has(this.state.scriptureOpen)) {
+        this._cancelScriptureClose();
+        this.setState(s => ({ scripturePinned: s.scriptureOpen, scriptureOpen: null }));
+        return;
+      }
+      if (!this.state.scripturePinned) return;
+      if (t && t.closest && t.closest('.agency-ref-btn, .stew-ref, .a-verse.is-open, .agency-scripture.is-open, .stew-verse-pop')) return;
       this.setState({ scripturePinned: null });
     };
     this._onScriptureEsc = (e) => {
-      if (e.key === 'Escape' && this.state.scripturePinned) this.setState({ scripturePinned: null });
+      if (e.key !== 'Escape') return;
+      if (this.state.scripturePinned || HOVER_VERSES.has(this.state.scriptureOpen)) {
+        this._cancelScriptureClose();
+        this.setState(s => ({ scripturePinned: null, scriptureOpen: HOVER_VERSES.has(s.scriptureOpen) ? null : s.scriptureOpen }));
+      }
+    };
+    // Hover keeps a verse open while the pointer is over a reference or the
+    // verse itself; anywhere else starts the quarter-second close. The pointer
+    // type is remembered so a tap on a touch screen doesn't count as hover.
+    this._onScripturePointer = (e) => {
+      this._lastPointer = e.pointerType;
+      if (e.type === 'pointerdown' || e.pointerType !== 'mouse') return;
+      this._px = e.clientX; this._py = e.clientY;
+      if (!HOVER_VERSES.has(this.state.scriptureOpen)) return;
+      if (this._pointerOnScripture()) this._cancelScriptureClose();
+      else this.leaveScripture();
     };
     document.addEventListener('click', this._onScriptureAway);
     document.addEventListener('keydown', this._onScriptureEsc);
+    document.addEventListener('pointerover', this._onScripturePointer);
+    document.addEventListener('pointermove', this._onScripturePointer, { passive: true });
+    document.addEventListener('pointerdown', this._onScripturePointer);
     try {
       const raw = localStorage.getItem('stewardship_todo');
       if (raw) this.setState({ todoChecked: JSON.parse(raw) });
@@ -391,6 +420,7 @@ export default class StewardshipGuide extends Component {
     [60, 250, 600].forEach((t) => setTimeout(paint, t));
   }
   componentDidUpdate(prevProps) {
+    this._updateVerseSwaps();
     if (prevProps.locationKey !== this.props.locationKey) this._followRoute()
     if (this._lastView !== this.state.view && this.state.view !== 'home') this.clearPaper();
     if (this._lastView !== this.state.view && (this.state.view === 'purpose' || this.state.view === 'identity' || this.state.view === 'relationships' || this.state.view === 'growth' || this.state.view === 'action')) {
@@ -412,6 +442,11 @@ export default class StewardshipGuide extends Component {
   componentWillUnmount() {
     document.removeEventListener('click', this._onScriptureAway);
     document.removeEventListener('keydown', this._onScriptureEsc);
+    document.removeEventListener('pointerover', this._onScripturePointer);
+    document.removeEventListener('pointermove', this._onScripturePointer);
+    document.removeEventListener('pointerdown', this._onScripturePointer);
+    clearTimeout(this._scriptureTimer);
+    Object.values(this._verseSwapT || {}).forEach(clearTimeout);
     if (this._paintHeroZoom) {
       window.removeEventListener('scroll', this._paintHeroZoom);
       window.removeEventListener('resize', this._paintHeroZoom);
@@ -474,7 +509,8 @@ export default class StewardshipGuide extends Component {
   };
   // Original view switch (was `go`): show a principle (or home at the top).
   _showView(view) {
-    this.setState({ view, scripturePinned: null });
+    this._cancelScriptureClose();
+    this.setState({ view, scripturePinned: null, scriptureOpen: null });
     requestAnimationFrame(() => {
       const preHero = view === 'purpose' ? document.getElementById('agency-prehero-nav') : null;
       window.scrollTo({ top: preHero ? preHero.offsetHeight : 0, behavior: 'auto' });
@@ -488,6 +524,104 @@ export default class StewardshipGuide extends Component {
   }
   toggleScripturePin(key) {
     this.setState(s => ({ scripturePinned: s.scripturePinned === key ? null : key }));
+  }
+  // Principle-page verses: hovering a reference opens its verse, and it
+  // stays open while the pointer is over the reference or the verse, closing
+  // a quarter second after it leaves both. A click or tap pins it open; a
+  // second click or tap closes it.
+  hoverScripture(key) {
+    if (this._lastPointer && this._lastPointer !== 'mouse') return; // touch opens on tap
+    this._cancelScriptureClose();
+    this.setState(s => ({
+      scriptureOpen: key,
+      scripturePinned: s.scripturePinned && s.scripturePinned !== key ? null : s.scripturePinned,
+    }));
+  }
+  leaveScripture() {
+    if (!HOVER_VERSES.has(this.state.scriptureOpen)) return;
+    if (this._scriptureTimer) return;
+    this._scriptureTimer = setTimeout(() => {
+      this._scriptureTimer = null;
+      if (this._pointerOnScripture()) return;
+      this.setState({ scriptureOpen: null });
+    }, 250);
+  }
+  // Is the mouse over a reference, the open verse, or the space between
+  // them? (Opening a verse can push the references down a little, so the
+  // gap counts too and the verse doesn't flicker shut under a still mouse.)
+  _pointerOnScripture() {
+    const x = this._px, y = this._py;
+    if (x == null) return false;
+    const t = document.elementFromPoint(x, y);
+    if (t && t.closest && t.closest('.agency-ref-btn, .a-verse.is-open, .agency-scripture.is-open')) return true;
+    const verse = document.querySelector('.stew .a-verse.is-open');
+    const refs = verse && verse.closest('.view') && verse.closest('.view').querySelector('.a-refs');
+    if (!verse || !refs) return false;
+    const a = verse.getBoundingClientRect(), b = refs.getBoundingClientRect();
+    return x >= Math.min(a.left, b.left) && x <= Math.max(a.right, b.right) && y >= Math.min(a.top, b.top) && y <= Math.max(a.bottom, b.bottom);
+  }
+  _cancelScriptureClose() {
+    clearTimeout(this._scriptureTimer);
+    this._scriptureTimer = null;
+  }
+  // Which verse a page shows. Opening shows the chosen verse straight away
+  // (the box fades in); switching to another reference while the box is open
+  // keeps showing the current verse until it has faded out (see
+  // _updateVerseSwaps); closing keeps it in place while the box fades away.
+  _verseDisplay(group, wanted) {
+    this._verseWanted = this._verseWanted || {};
+    this._verseWasOpen = this._verseWasOpen || {};
+    this._verseWanted[group] = wanted;
+    const shown = this.state.verseShown[group];
+    if (wanted && (!this._verseWasOpen[group] || !shown)) return wanted;
+    return shown || wanted || '';
+  }
+  // Switching verses: fade the current one out (0.4 s), swap in the newest
+  // choice, ease the box to its new height and fade it in. Quick moves
+  // across several references only ever fade in the last one.
+  _updateVerseSwaps() {
+    const wantedAll = this._verseWanted || {};
+    this._verseSwapT = this._verseSwapT || {};
+    for (const group of Object.keys(wantedAll)) {
+      const wanted = wantedAll[group];
+      const was = this._verseWasOpen[group];
+      this._verseWasOpen[group] = !!wanted;
+      if (!wanted) continue;
+      const shown = this.state.verseShown[group];
+      if (!was || !shown) {
+        clearTimeout(this._verseSwapT[group]);
+        this._verseSwapT[group] = null;
+        if (shown !== wanted || this.state.verseSwapping[group]) {
+          this.setState(s => ({ verseShown: { ...s.verseShown, [group]: wanted }, verseSwapping: { ...s.verseSwapping, [group]: false } }));
+        }
+        continue;
+      }
+      if (shown === wanted || this._verseSwapT[group]) continue;
+      this.setState(s => ({ verseSwapping: { ...s.verseSwapping, [group]: true } }));
+      this._verseSwapT[group] = setTimeout(() => {
+        this._verseSwapT[group] = null;
+        const latest = this._verseWanted[group] || this.state.verseShown[group];
+        const boxes = [...document.querySelectorAll('.stew .a-verse.is-open .a-verse-swap')];
+        const before = boxes.map(b => b.offsetHeight);
+        this.setState(s => ({ verseShown: { ...s.verseShown, [group]: latest }, verseSwapping: { ...s.verseSwapping, [group]: false } }), () => {
+          boxes.forEach((b, i) => {
+            const after = b.scrollHeight;
+            if (Math.abs(after - before[i]) < 1) return;
+            b.style.transition = 'height .3s ease';
+            b.style.height = before[i] + 'px';
+            void b.offsetHeight;
+            b.style.height = after + 'px';
+            setTimeout(() => { b.style.height = ''; b.style.transition = ''; }, 320);
+          });
+        });
+      }, 400);
+    }
+  }
+  clickScripture(key) {
+    this._cancelScriptureClose();
+    this.setState(s => s.scripturePinned === key
+      ? { scripturePinned: null, scriptureOpen: null }
+      : { scripturePinned: key, scriptureOpen: null });
   }
   renderVals() {
     const v = this.state.view;
@@ -504,38 +638,36 @@ export default class StewardshipGuide extends Component {
       scriptureOpen: null,
       scripturePinned: (s.scripturePinned === 'becoming' || s.scripturePinned === 'becoming2') ? null : s.scripturePinned
     }));
-    const onBecomingScriptureEnter = () => {}; // verses open on click (see onBecomingScriptureToggle)
-    const onBecomingScriptureLeave = () => {};
+    const onBecomingScriptureEnter = () => this.hoverScripture('becoming');
+    const onBecomingScriptureLeave = () => this.leaveScripture();
     const isBecoming2ScriptureOpen = this.state.scriptureOpen === 'becoming2';
-    const onBecoming2ScriptureEnter = () => {}; // verses open on click (see onBecoming2ScriptureToggle)
-    const onBecoming2ScriptureLeave = () => {};
+    const onBecoming2ScriptureEnter = () => this.hoverScripture('becoming2');
+    const onBecoming2ScriptureLeave = () => this.leaveScripture();
     const isAgencyScriptureOpen = this.state.scriptureOpen === 'agency';
-    const onAgencyScriptureEnter = () => {}; // verses open on click (see onAgencyScriptureToggle)
-    const onAgencyScriptureLeave = () => {};
+    const onAgencyScriptureEnter = () => this.hoverScripture('agency');
+    const onAgencyScriptureLeave = () => this.leaveScripture();
     const onAgencyHeroLeave = () => {};
     const isBednarTooltipOpen = this.state.scriptureOpen === 'bednar-link';
     const onBednarLinkEnter = () => this.openScripture('bednar-link');
     const onBednarLinkLeave = () => this.closeScripture();
     const isAgency2ScriptureOpen = this.state.scriptureOpen === 'agency2';
-    const onAgency2ScriptureEnter = () => {}; // verses open on click (see onAgency2ScriptureToggle)
-    const onAgency2ScriptureLeave = () => {};
+    const onAgency2ScriptureEnter = () => this.hoverScripture('agency2');
+    const onAgency2ScriptureLeave = () => this.leaveScripture();
     const agencyRefOpenKey = this.state.scriptureOpen || this.state.scripturePinned;
     const isAgencyVerseOpen = agencyRefOpenKey === 'agency' || agencyRefOpenKey === 'agency2';
-    if (isAgencyVerseOpen) this._lastAgencyKey = agencyRefOpenKey;
-    const agencyShowKey = isAgencyVerseOpen ? agencyRefOpenKey : (this._lastAgencyKey || '');
+    const agencyShowKey = this._verseDisplay('agency', isAgencyVerseOpen ? agencyRefOpenKey : null);
     const agencyVerseText = agencyShowKey === 'agency'
       ? 'And because that they are redeemed from the fall they have become free forever, knowing good from evil; to act for themselves and not to be acted upon.'
       : agencyShowKey === 'agency2'
       ? 'For the earth is full, and there is enough and to spare; yea, I prepared all things, and have given unto the children of men to be agents unto themselves.'
       : '';
     const agencyScriptureClass = 'agency-scripture' + (isAgencyVerseOpen ? ' is-open' : '');
-    const agencyVerseBoxClass = 'a-verse' + (isAgencyVerseOpen ? ' is-open' : '');
+    const agencyVerseBoxClass = 'a-verse' + (isAgencyVerseOpen ? ' is-open' : '') + (this.state.verseSwapping.agency ? ' is-swapping' : '');
     const agencyVerseRef = agencyShowKey === 'agency' ? '2 Nephi 2:26' : agencyShowKey === 'agency2' ? 'D&C 104:17' : '';
     const becomingRefOpenKey = this.state.scriptureOpen || this.state.scripturePinned;
     const isBecomingVerseOpen = becomingRefOpenKey === 'becoming' || becomingRefOpenKey === 'becoming2';
-    if (isBecomingVerseOpen) this._lastBecomingKey = becomingRefOpenKey;
-    const becomingShowKey = isBecomingVerseOpen ? becomingRefOpenKey : (this._lastBecomingKey || '');
-    const becomingVerseBoxClass = 'a-verse' + (isBecomingVerseOpen ? ' is-open' : '');
+    const becomingShowKey = this._verseDisplay('becoming', isBecomingVerseOpen ? becomingRefOpenKey : null);
+    const becomingVerseBoxClass = 'a-verse' + (isBecomingVerseOpen ? ' is-open' : '') + (this.state.verseSwapping.becoming ? ' is-swapping' : '');
     const onBecomingHeroLeave = () => {};
     const becomingVerseText = becomingShowKey === 'becoming'
       ? 'Behold, I have refined thee, but not with silver; I have chosen thee in the furnace of affliction.'
@@ -545,13 +677,12 @@ export default class StewardshipGuide extends Component {
     const becomingVerseRef = becomingShowKey === 'becoming' ? 'Isaiah 48:10' : becomingShowKey === 'becoming2' ? 'Romans 5:3-5' : '';
     const becomingScriptureClass = 'agency-scripture' + (isBecomingVerseOpen ? ' is-open' : '');
     const becomingVerseFontSize = becomingRefOpenKey === 'becoming' ? 37 : 27;
-    const onBecomingScriptureToggle = () => this.toggleScripturePin('becoming');
-    const onBecoming2ScriptureToggle = () => this.toggleScripturePin('becoming2');
+    const onBecomingScriptureToggle = () => this.clickScripture('becoming');
+    const onBecoming2ScriptureToggle = () => this.clickScripture('becoming2');
     const fellowshipRefOpenKey = this.state.scriptureOpen || this.state.scripturePinned;
     const isFellowshipVerseOpen = fellowshipRefOpenKey === 'fellowship' || fellowshipRefOpenKey === 'fellowship2' || fellowshipRefOpenKey === 'fellowship3';
-    if (isFellowshipVerseOpen) this._lastFellowshipKey = fellowshipRefOpenKey;
-    const fellowshipShowKey = isFellowshipVerseOpen ? fellowshipRefOpenKey : (this._lastFellowshipKey || '');
-    const fellowshipVerseBoxClass = 'a-verse' + (isFellowshipVerseOpen ? ' is-open' : '');
+    const fellowshipShowKey = this._verseDisplay('fellowship', isFellowshipVerseOpen ? fellowshipRefOpenKey : null);
+    const fellowshipVerseBoxClass = 'a-verse' + (isFellowshipVerseOpen ? ' is-open' : '') + (this.state.verseSwapping.fellowship ? ' is-swapping' : '');
     const onFellowshipHeroLeave = () => {};
     const fellowshipVerseText = fellowshipShowKey === 'fellowship'
       ? '"Umuntu ngumuntu ngabantu" — often translated as "A person is a person through other people."'
@@ -563,33 +694,31 @@ export default class StewardshipGuide extends Component {
     const fellowshipVerseRef = fellowshipShowKey === 'fellowship' ? 'Ubuntu Philosophy' : fellowshipShowKey === 'fellowship2' ? 'Mosiah 18:8-9' : fellowshipShowKey === 'fellowship3' ? 'Mosiah 27:17' : '';
     const fellowshipScriptureClass = 'agency-scripture' + (isFellowshipVerseOpen ? ' is-open' : '');
     const fellowshipVerseFontSize = fellowshipRefOpenKey === 'fellowship2' ? 24 : fellowshipRefOpenKey === 'fellowship' ? 34 : 27;
-    const onFellowshipScriptureToggle = () => this.toggleScripturePin('fellowship');
-    const onFellowship2ScriptureToggle = () => this.toggleScripturePin('fellowship2');
-    const onFellowship3ScriptureToggle = () => this.toggleScripturePin('fellowship3');
+    const onFellowshipScriptureToggle = () => this.clickScripture('fellowship');
+    const onFellowship2ScriptureToggle = () => this.clickScripture('fellowship2');
+    const onFellowship3ScriptureToggle = () => this.clickScripture('fellowship3');
     const discernmentRefOpenKey = this.state.scriptureOpen || this.state.scripturePinned;
     const isDiscernmentVerseOpen = discernmentRefOpenKey === 'discernment';
-    if (isDiscernmentVerseOpen) this._lastDiscernmentKey = discernmentRefOpenKey;
-    const discernmentShowKey = isDiscernmentVerseOpen ? discernmentRefOpenKey : (this._lastDiscernmentKey || '');
-    const discernmentVerseBoxClass = 'a-verse' + (isDiscernmentVerseOpen ? ' is-open' : '');
+    const discernmentShowKey = this._verseDisplay('discernment', isDiscernmentVerseOpen ? discernmentRefOpenKey : null);
+    const discernmentVerseBoxClass = 'a-verse' + (isDiscernmentVerseOpen ? ' is-open' : '') + (this.state.verseSwapping.discernment ? ' is-swapping' : '');
     const onDiscernmentHeroLeave = () => {};
     const discernmentVerseText = discernmentShowKey === 'discernment'
       ? 'For behold, my brethren, it is given unto you to judge, that ye may know good from evil; and the way to judge is as plain, that ye may know with a perfect knowledge, as the daylight is from the dark night.'
       : '';
     const discernmentVerseRef = discernmentShowKey === 'discernment' ? 'Mosiah 7:15' : '';
     const discernmentScriptureClass = 'agency-scripture' + (isDiscernmentVerseOpen ? ' is-open' : '');
-    const onDiscernmentScriptureToggle = () => this.toggleScripturePin('discernment');
+    const onDiscernmentScriptureToggle = () => this.clickScripture('discernment');
     const integrityRefOpenKey = this.state.scriptureOpen || this.state.scripturePinned;
     const isIntegrityVerseOpen = integrityRefOpenKey === 'integrity';
-    if (isIntegrityVerseOpen) this._lastIntegrityKey = integrityRefOpenKey;
-    const integrityShowKey = isIntegrityVerseOpen ? integrityRefOpenKey : (this._lastIntegrityKey || '');
-    const integrityVerseBoxClass = 'a-verse' + (isIntegrityVerseOpen ? ' is-open' : '');
+    const integrityShowKey = this._verseDisplay('integrity', isIntegrityVerseOpen ? integrityRefOpenKey : null);
+    const integrityVerseBoxClass = 'a-verse' + (isIntegrityVerseOpen ? ' is-open' : '') + (this.state.verseSwapping.integrity ? ' is-swapping' : '');
     const onIntegrityHeroLeave = () => {};
     const integrityVerseText = integrityShowKey === 'integrity'
       ? 'And they were all young men, and they were exceedingly valiant for courage, and also for strength and activity; but behold, this was not all\u2014they were men who were true at all times in whatsoever thing they were entrusted. Yea, they were men of truth and soberness, for they had been taught to keep the commandments of God and to walk uprightly before him.'
       : '';
     const integrityVerseRef = integrityShowKey === 'integrity' ? 'Alma 53:20-21' : '';
     const integrityScriptureClass = 'agency-scripture' + (isIntegrityVerseOpen ? ' is-open' : '');
-    const onIntegrityScriptureToggle = () => this.toggleScripturePin('integrity');
+    const onIntegrityScriptureToggle = () => this.clickScripture('integrity');
     const agencySpineActiveKey = this.state.agencySpineActive || 'principle';
     const agencySpineActiveIdx = this.agencySpineDefs.findIndex(s => s.key === agencySpineActiveKey);
     const AGENCY_ROW_H = 190; // keep in sync with .agency-rail-item min-height in CSS
@@ -610,23 +739,23 @@ export default class StewardshipGuide extends Component {
     const agencyPauseHeight = (this.props.agencyPauseHeightVh ?? 100) + 'vh';
     const agencyPracticeClass = 'agency-step agency-flow' + (agencyActiveSpineKey === 'practice' ? ' is-spine-active' : '');
     const agencyWatchClass = 'agency-step agency-flow last' + (agencyActiveSpineKey === 'watch' ? ' is-spine-active' : '');
-    const onAgencyScriptureToggle = () => this.toggleScripturePin('agency');
-    const onAgency2ScriptureToggle = () => this.toggleScripturePin('agency2');
+    const onAgencyScriptureToggle = () => this.clickScripture('agency');
+    const onAgency2ScriptureToggle = () => this.clickScripture('agency2');
     const isFellowshipScriptureOpen = this.state.scriptureOpen === 'fellowship';
-    const onFellowshipScriptureEnter = () => {}; // verses open on click (see onFellowshipScriptureToggle)
-    const onFellowshipScriptureLeave = () => {};
+    const onFellowshipScriptureEnter = () => this.hoverScripture('fellowship');
+    const onFellowshipScriptureLeave = () => this.leaveScripture();
     const isFellowship2ScriptureOpen = this.state.scriptureOpen === 'fellowship2';
-    const onFellowship2ScriptureEnter = () => {}; // verses open on click (see onFellowship2ScriptureToggle)
-    const onFellowship2ScriptureLeave = () => {};
+    const onFellowship2ScriptureEnter = () => this.hoverScripture('fellowship2');
+    const onFellowship2ScriptureLeave = () => this.leaveScripture();
     const isFellowship3ScriptureOpen = this.state.scriptureOpen === 'fellowship3';
-    const onFellowship3ScriptureEnter = () => {}; // verses open on click (see onFellowship3ScriptureToggle)
-    const onFellowship3ScriptureLeave = () => {};
+    const onFellowship3ScriptureEnter = () => this.hoverScripture('fellowship3');
+    const onFellowship3ScriptureLeave = () => this.leaveScripture();
     const isDiscernmentScriptureOpen = this.state.scriptureOpen === 'discernment';
-    const onDiscernmentScriptureEnter = () => {}; // verses open on click (see onDiscernmentScriptureToggle)
-    const onDiscernmentScriptureLeave = () => {};
+    const onDiscernmentScriptureEnter = () => this.hoverScripture('discernment');
+    const onDiscernmentScriptureLeave = () => this.leaveScripture();
     const isIntegrityScriptureOpen = this.state.scriptureOpen === 'integrity';
-    const onIntegrityScriptureEnter = () => {}; // verses open on click (see onIntegrityScriptureToggle)
-    const onIntegrityScriptureLeave = () => {};
+    const onIntegrityScriptureEnter = () => this.hoverScripture('integrity');
+    const onIntegrityScriptureLeave = () => this.leaveScripture();
     const isStewardshipScriptureOpen = this.state.scripturePinned === 'stewardship';
     const cardOn = this.state.cardOn;
     const cardEnter = (k) => () => { if (this.state.cardOn !== k) this.setState({ cardOn: k }); };

@@ -131,26 +131,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .principle-continue-nav > * { min-width:0; }
 .stew .principle-continue-nav .prow:hover .pname { color: #0047BA !important; }
 .stew .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.14) !important; }
-.stew .view[data-screen-label="01 Agency"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="01 Agency"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="01 Agency"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="01 Agency"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="01 Agency"] .vc-frame span { color: #141414 !important; }
 .stew .view[data-screen-label="02 Becoming"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
@@ -161,20 +141,18 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="04 Discernment"] .vc-frame span { color: #141414 !important; }
 .stew .view[data-screen-label="05 Integrity"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="05 Integrity"] .vc-frame span { color: #141414 !important; }
-.stew .view[data-screen-label="01 Agency"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover { color: #0047BA !important; border-color: #0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
-.stew .view[data-screen-label="01 Agency"] .agency-ref-btn:hover, .stew .view[data-screen-label="01 Agency"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] p, .stew .view[data-screen-label="01 Agency"] h3, .stew .view[data-screen-label="01 Agency"] li, .stew .view[data-screen-label="01 Agency"] span, .stew .view[data-screen-label="01 Agency"] a, .stew .view[data-screen-label="01 Agency"] button { }
 .stew .view[data-screen-label="01 Agency"] .agency-scripture-inner p { color:#141414 !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-scripture-inner p + p { color:#0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-scripture { display:none !important; }
 .stew .view[data-screen-label="01 Agency"] .a-verse { display:grid; margin:0 0 26px; }
 .stew .view[data-screen-label="01 Agency"] .a-verse > * { grid-area:1/1; }
-.stew .view[data-screen-label="01 Agency"] .a-sub { align-self:start; transition:opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="01 Agency"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .35s ease, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="01 Agency"] .a-sub { align-self:start; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="01 Agency"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .6s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 .stew .view[data-screen-label="01 Agency"] .a-verse.is-open .a-sub { opacity:0; transform:translateY(-12px); }
-.stew .view[data-screen-label="01 Agency"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .55s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="01 Agency"] .a-verse-swap p { transition:opacity .3s ease; }
+.stew .view[data-screen-label="01 Agency"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .9s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="01 Agency"] .a-verse-swap p { transition:opacity .6s ease .3s; }
 .stew .view[data-screen-label="01 Agency"] .a-verse.is-open { opacity:1; transform:none; }
 .stew .view[data-screen-label="01 Agency"] .agency-spine, .stew .view[data-screen-label="01 Agency"] .agency-spine::before { background:transparent !important; backdrop-filter:none; }
 .stew .view[data-screen-label="01 Agency"] .agency-rail-dot { background:#FFFFFF !important; }
@@ -182,7 +160,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="01 Agency"] .agency-rail-item.is-active .agency-rail-label, .stew .view[data-screen-label="01 Agency"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-outline-btn:hover { color:#FFFFFF !important; }
 .stew .view[data-screen-label="01 Agency"] .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.08) !important; }
-.stew .view[data-screen-label="01 Agency"] .vc-quotebelow { background: rgba(20,20,20,0.04) !important; border-color: rgba(20,20,20,0.14) !important; backdrop-filter:none; }
 .stew .view[data-screen-label="01 Agency"] .vc-frame { background: rgba(20,20,20,0.05) !important; }
 .stew .view[data-screen-label="01 Agency"] .a-back:hover { color:#002E5D !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-step.first { height:auto !important; min-height:0 !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:clamp(40px,5vw,88px); padding:80px max(40px, calc((100% - 1240px)/2)) 80px !important; overflow:visible !important; z-index:5; background:#F5F6F8; border-bottom:1px solid rgba(20,20,20,0.1); }
@@ -194,7 +171,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="01 Agency"] .a-sub { font-size:clamp(20px,1.8vw,28px) !important; }
 .stew .view[data-screen-label="01 Agency"] .a-refs { justify-content:flex-start !important; }
 .stew .view[data-screen-label="01 Agency"] .agency-ref-btn { white-space:nowrap !important; padding:8px 14px !important; border:1px solid rgba(20,20,20,0.2) !important; border-radius:999px; background:#FFFFFF; }
-.stew .view[data-screen-label="01 Agency"] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] [data-spine-key] { min-height:0 !important; padding-top:104px !important; padding-bottom:104px !important; }
 .stew .view[data-screen-label="01 Agency"] [data-spine-key="principle"] > p { font-size:clamp(22px,2vw,30px) !important; }
 .stew .view[data-screen-label="01 Agency"] [data-spine-key="pause"] > div { background:#002E5D !important; border-color:#002E5D !important; border:1px solid rgba(20,20,20,0.1); border-radius:18px; padding:clamp(32px,4vw,56px); box-shadow:0 20px 44px -30px rgba(20,20,20,0.35); }
@@ -204,7 +180,7 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="01 Agency"] [data-spine-key="pause"] > div > p { font-size:clamp(32px,3.4vw,54px) !important; }
 .stew .view[data-screen-label="01 Agency"] #agency-prehero-nav { display:none !important; }
 .stew .view[data-screen-label="01 Agency"] #agency-nav { grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)) !important; }
-.stew .view[data-screen-label="01 Agency"] #agency-nav .pname { font-size:clamp(20px,1.8vw,26px) !important; overflow-wrap:anywhere; }
+.stew .view[data-screen-label="01 Agency"] #agency-nav .pname { font-size:clamp(18px,1.55vw,22px) !important; overflow-wrap:normal; }
 .stew .view[data-screen-label="01 Agency"] [style*="201, .stew 162, .stew 39"][style*="border-radius"], .stew .view[data-screen-label="01 Agency"] [style*="#0047BA"][style*="border-radius"] { background:#0047BA !important; }
 .stew .view[data-screen-label="01 Agency"] .upractice-col { background:#FFFFFF !important; border:1px solid rgba(20,20,20,0.1); box-shadow:0 12px 30px -24px rgba(20,20,20,0.4); }
 .stew .view[data-screen-label="01 Agency"] [data-spine-key] h3 { font-size:14px !important; letter-spacing:.2em !important; }
@@ -216,24 +192,20 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-item.is-active .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
-.stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] p, .stew .view[data-screen-label="02 Becoming"] h1, .stew .view[data-screen-label="02 Becoming"] h3, .stew .view[data-screen-label="02 Becoming"] li, .stew .view[data-screen-label="02 Becoming"] span, .stew .view[data-screen-label="02 Becoming"] a, .stew .view[data-screen-label="02 Becoming"] button { }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item.is-active .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
-.stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] p, .stew .view[data-screen-label="03 Fellowship"] h1, .stew .view[data-screen-label="03 Fellowship"] h3, .stew .view[data-screen-label="03 Fellowship"] li, .stew .view[data-screen-label="03 Fellowship"] span, .stew .view[data-screen-label="03 Fellowship"] a, .stew .view[data-screen-label="03 Fellowship"] button { }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-item.is-active .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
-.stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] p, .stew .view[data-screen-label="04 Discernment"] h1, .stew .view[data-screen-label="04 Discernment"] h3, .stew .view[data-screen-label="04 Discernment"] li, .stew .view[data-screen-label="04 Discernment"] span, .stew .view[data-screen-label="04 Discernment"] a, .stew .view[data-screen-label="04 Discernment"] button { }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-item.is-active .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
-.stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] p, .stew .view[data-screen-label="05 Integrity"] h1, .stew .view[data-screen-label="05 Integrity"] h3, .stew .view[data-screen-label="05 Integrity"] li, .stew .view[data-screen-label="05 Integrity"] span, .stew .view[data-screen-label="05 Integrity"] a, .stew .view[data-screen-label="05 Integrity"] button { }
-.stew .agency-ref-btn:hover, .stew .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
+.stew .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .agency-ref-btn:focus-visible { outline:2px solid #0047BA; outline-offset:4px; border-radius:2px; }
 .stew .agency-fade-in { opacity:0; transform:translateY(14px); transition:opacity .9s ease, transform .9s ease, backdrop-filter .9s ease, -webkit-backdrop-filter .9s ease; }
 .stew .agency-fade-in.is-shown { opacity:1; transform:none; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
@@ -305,26 +277,20 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="02 Becoming"] .agency-step.is-spine-active { background:transparent !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-outline-btn:hover { border-color:#0047BA !important; background:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-step { animation: none !important; opacity: 1 !important; transform: none !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="02 Becoming"] .vc-frame span { color: #141414 !important; }
-.stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover { color: #0047BA !important; border-color: #0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
-.stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] p, .stew .view[data-screen-label="02 Becoming"] h3, .stew .view[data-screen-label="02 Becoming"] li, .stew .view[data-screen-label="02 Becoming"] span, .stew .view[data-screen-label="02 Becoming"] a, .stew .view[data-screen-label="02 Becoming"] button { }
 .stew .view[data-screen-label="02 Becoming"] .agency-scripture-inner p { color:#141414 !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-scripture-inner p + p { color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-scripture { display:none !important; }
 .stew .view[data-screen-label="02 Becoming"] .a-verse { display:grid; margin:0 0 26px; }
 .stew .view[data-screen-label="02 Becoming"] .a-verse > * { grid-area:1/1; }
-.stew .view[data-screen-label="02 Becoming"] .a-sub { align-self:start; transition:opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="02 Becoming"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .35s ease, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="02 Becoming"] .a-sub { align-self:start; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="02 Becoming"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .6s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 .stew .view[data-screen-label="02 Becoming"] .a-verse.is-open .a-sub { opacity:0; transform:translateY(-12px); }
-.stew .view[data-screen-label="02 Becoming"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .55s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="02 Becoming"] .a-verse-swap p { transition:opacity .3s ease; }
+.stew .view[data-screen-label="02 Becoming"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .9s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="02 Becoming"] .a-verse-swap p { transition:opacity .6s ease .3s; }
 .stew .view[data-screen-label="02 Becoming"] .a-verse.is-open { opacity:1; transform:none; }
 .stew .view[data-screen-label="02 Becoming"] .agency-spine, .stew .view[data-screen-label="02 Becoming"] .agency-spine::before { background:transparent !important; backdrop-filter:none; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-dot { background:#FFFFFF !important; }
@@ -332,7 +298,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="02 Becoming"] .agency-rail-item.is-active .agency-rail-label, .stew .view[data-screen-label="02 Becoming"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-outline-btn:hover { color:#FFFFFF !important; }
 .stew .view[data-screen-label="02 Becoming"] .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.08) !important; }
-.stew .view[data-screen-label="02 Becoming"] .vc-quotebelow { background: rgba(20,20,20,0.04) !important; border-color: rgba(20,20,20,0.14) !important; backdrop-filter:none; }
 .stew .view[data-screen-label="02 Becoming"] .vc-frame { background: rgba(20,20,20,0.05) !important; }
 .stew .view[data-screen-label="02 Becoming"] .a-back:hover { color:#002E5D !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-step.first { height:auto !important; min-height:0 !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:clamp(40px,5vw,88px); padding:80px max(40px, calc((100% - 1240px)/2)) 80px !important; overflow:visible !important; z-index:5; background:#F5F6F8; border-bottom:1px solid rgba(20,20,20,0.1); }
@@ -344,13 +309,12 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="02 Becoming"] .a-sub { font-size:clamp(20px,1.8vw,28px) !important; }
 .stew .view[data-screen-label="02 Becoming"] .a-refs { justify-content:flex-start !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn { white-space:nowrap !important; padding:8px 14px !important; border:1px solid rgba(20,20,20,0.2) !important; border-radius:999px; background:#FFFFFF; }
-.stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] [data-spine-key] { min-height:0 !important; padding-top:104px !important; padding-bottom:104px !important; }
 .stew .view[data-screen-label="02 Becoming"] [data-spine-key="principle"] > p { font-size:clamp(22px,2vw,30px) !important; }
 .stew .view[data-screen-label="02 Becoming"] [data-spine-key="pause"] > div { background:#FFFFFF; border:1px solid rgba(20,20,20,0.1); border-radius:18px; padding:clamp(32px,4vw,56px); box-shadow:0 20px 44px -30px rgba(20,20,20,0.35); }
 .stew .view[data-screen-label="02 Becoming"] [data-spine-key="pause"] > div > p { font-size:clamp(32px,3.4vw,54px) !important; }
 .stew .view[data-screen-label="02 Becoming"] .agency-content .principle-continue-nav { grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)) !important; }
-.stew .view[data-screen-label="02 Becoming"] .agency-content .principle-continue-nav .pname { font-size:clamp(20px,1.8vw,26px) !important; overflow-wrap:anywhere; }
+.stew .view[data-screen-label="02 Becoming"] .agency-content .principle-continue-nav .pname { font-size:clamp(18px,1.55vw,22px) !important; overflow-wrap:normal; }
 .stew .view[data-screen-label="02 Becoming"] [style*="201, .stew 162, .stew 39"][style*="border-radius"], .stew .view[data-screen-label="02 Becoming"] [style*="#0047BA"][style*="border-radius"] { background:#0047BA !important; }
 .stew .view[data-screen-label="02 Becoming"] .upractice-col { background:#FFFFFF !important; border:1px solid rgba(20,20,20,0.1); box-shadow:0 12px 30px -24px rgba(20,20,20,0.4); }
 .stew .view[data-screen-label="02 Becoming"] [data-spine-key] h3 { font-size:14px !important; letter-spacing:.2em !important; }
@@ -362,26 +326,20 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-step.is-spine-active { background:transparent !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-outline-btn:hover { border-color:#0047BA !important; background:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-step { animation: none !important; opacity: 1 !important; transform: none !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="03 Fellowship"] .vc-frame span { color: #141414 !important; }
-.stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover { color: #0047BA !important; border-color: #0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
-.stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] p, .stew .view[data-screen-label="03 Fellowship"] h3, .stew .view[data-screen-label="03 Fellowship"] li, .stew .view[data-screen-label="03 Fellowship"] span, .stew .view[data-screen-label="03 Fellowship"] a, .stew .view[data-screen-label="03 Fellowship"] button { }
 .stew .view[data-screen-label="03 Fellowship"] .agency-scripture-inner p { color:#141414 !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-scripture-inner p + p { color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-scripture { display:none !important; }
 .stew .view[data-screen-label="03 Fellowship"] .a-verse { display:grid; margin:0 0 26px; }
 .stew .view[data-screen-label="03 Fellowship"] .a-verse > * { grid-area:1/1; }
-.stew .view[data-screen-label="03 Fellowship"] .a-sub { align-self:start; transition:opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="03 Fellowship"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .35s ease, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="03 Fellowship"] .a-sub { align-self:start; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="03 Fellowship"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .6s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 .stew .view[data-screen-label="03 Fellowship"] .a-verse.is-open .a-sub { opacity:0; transform:translateY(-12px); }
-.stew .view[data-screen-label="03 Fellowship"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .55s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="03 Fellowship"] .a-verse-swap p { transition:opacity .3s ease; }
+.stew .view[data-screen-label="03 Fellowship"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .9s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="03 Fellowship"] .a-verse-swap p { transition:opacity .6s ease .3s; }
 .stew .view[data-screen-label="03 Fellowship"] .a-verse.is-open { opacity:1; transform:none; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-spine, .stew .view[data-screen-label="03 Fellowship"] .agency-spine::before { background:transparent !important; backdrop-filter:none; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-dot { background:#FFFFFF !important; }
@@ -389,7 +347,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item.is-active .agency-rail-label, .stew .view[data-screen-label="03 Fellowship"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-outline-btn:hover { color:#FFFFFF !important; }
 .stew .view[data-screen-label="03 Fellowship"] .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.08) !important; }
-.stew .view[data-screen-label="03 Fellowship"] .vc-quotebelow { background: rgba(20,20,20,0.04) !important; border-color: rgba(20,20,20,0.14) !important; backdrop-filter:none; }
 .stew .view[data-screen-label="03 Fellowship"] .vc-frame { background: rgba(20,20,20,0.05) !important; }
 .stew .view[data-screen-label="03 Fellowship"] .a-back:hover { color:#002E5D !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-step.first { height:auto !important; min-height:0 !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:clamp(40px,5vw,88px); padding:80px max(40px, calc((100% - 1240px)/2)) 80px !important; overflow:visible !important; z-index:5; background:#F5F6F8; border-bottom:1px solid rgba(20,20,20,0.1); }
@@ -401,13 +358,12 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="03 Fellowship"] .a-sub { font-size:clamp(20px,1.8vw,28px) !important; }
 .stew .view[data-screen-label="03 Fellowship"] .a-refs { justify-content:flex-start !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn { white-space:nowrap !important; padding:8px 14px !important; border:1px solid rgba(20,20,20,0.2) !important; border-radius:999px; background:#FFFFFF; }
-.stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] [data-spine-key] { min-height:0 !important; padding-top:104px !important; padding-bottom:104px !important; }
 .stew .view[data-screen-label="03 Fellowship"] [data-spine-key="principle"] > p { font-size:clamp(22px,2vw,30px) !important; }
 .stew .view[data-screen-label="03 Fellowship"] [data-spine-key="pause"] > div { background:#FFFFFF; border:1px solid rgba(20,20,20,0.1); border-radius:18px; padding:clamp(32px,4vw,56px); box-shadow:0 20px 44px -30px rgba(20,20,20,0.35); }
 .stew .view[data-screen-label="03 Fellowship"] [data-spine-key="pause"] > div > p { font-size:clamp(32px,3.4vw,54px) !important; }
 .stew .view[data-screen-label="03 Fellowship"] .agency-content .principle-continue-nav { grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)) !important; }
-.stew .view[data-screen-label="03 Fellowship"] .agency-content .principle-continue-nav .pname { font-size:clamp(20px,1.8vw,26px) !important; overflow-wrap:anywhere; }
+.stew .view[data-screen-label="03 Fellowship"] .agency-content .principle-continue-nav .pname { font-size:clamp(18px,1.55vw,22px) !important; overflow-wrap:normal; }
 .stew .view[data-screen-label="03 Fellowship"] [style*="201, .stew 162, .stew 39"][style*="border-radius"], .stew .view[data-screen-label="03 Fellowship"] [style*="#0047BA"][style*="border-radius"] { background:#0047BA !important; }
 .stew .view[data-screen-label="03 Fellowship"] .upractice-col { background:#FFFFFF !important; border:1px solid rgba(20,20,20,0.1); box-shadow:0 12px 30px -24px rgba(20,20,20,0.4); }
 .stew .view[data-screen-label="03 Fellowship"] [data-spine-key] h3 { font-size:14px !important; letter-spacing:.2em !important; }
@@ -419,26 +375,20 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="04 Discernment"] .agency-step.is-spine-active { background:transparent !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-outline-btn:hover { border-color:#0047BA !important; background:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-step { animation: none !important; opacity: 1 !important; transform: none !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="04 Discernment"] .vc-frame span { color: #141414 !important; }
-.stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover { color: #0047BA !important; border-color: #0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
-.stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] p, .stew .view[data-screen-label="04 Discernment"] h3, .stew .view[data-screen-label="04 Discernment"] li, .stew .view[data-screen-label="04 Discernment"] span, .stew .view[data-screen-label="04 Discernment"] a, .stew .view[data-screen-label="04 Discernment"] button { }
 .stew .view[data-screen-label="04 Discernment"] .agency-scripture-inner p { color:#141414 !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-scripture-inner p + p { color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-scripture { display:none !important; }
 .stew .view[data-screen-label="04 Discernment"] .a-verse { display:grid; margin:0 0 26px; }
 .stew .view[data-screen-label="04 Discernment"] .a-verse > * { grid-area:1/1; }
-.stew .view[data-screen-label="04 Discernment"] .a-sub { align-self:start; transition:opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="04 Discernment"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .35s ease, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="04 Discernment"] .a-sub { align-self:start; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="04 Discernment"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .6s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 .stew .view[data-screen-label="04 Discernment"] .a-verse.is-open .a-sub { opacity:0; transform:translateY(-12px); }
-.stew .view[data-screen-label="04 Discernment"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .55s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="04 Discernment"] .a-verse-swap p { transition:opacity .3s ease; }
+.stew .view[data-screen-label="04 Discernment"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .9s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="04 Discernment"] .a-verse-swap p { transition:opacity .6s ease .3s; }
 .stew .view[data-screen-label="04 Discernment"] .a-verse.is-open { opacity:1; transform:none; }
 .stew .view[data-screen-label="04 Discernment"] .agency-spine, .stew .view[data-screen-label="04 Discernment"] .agency-spine::before { background:transparent !important; backdrop-filter:none; }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-dot { background:#FFFFFF !important; }
@@ -446,7 +396,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="04 Discernment"] .agency-rail-item.is-active .agency-rail-label, .stew .view[data-screen-label="04 Discernment"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-outline-btn:hover { color:#FFFFFF !important; }
 .stew .view[data-screen-label="04 Discernment"] .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.08) !important; }
-.stew .view[data-screen-label="04 Discernment"] .vc-quotebelow { background: rgba(20,20,20,0.04) !important; border-color: rgba(20,20,20,0.14) !important; backdrop-filter:none; }
 .stew .view[data-screen-label="04 Discernment"] .vc-frame { background: rgba(20,20,20,0.05) !important; }
 .stew .view[data-screen-label="04 Discernment"] .a-back:hover { color:#002E5D !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-step.first { height:auto !important; min-height:0 !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:clamp(40px,5vw,88px); padding:80px max(40px, calc((100% - 1240px)/2)) 80px !important; overflow:visible !important; z-index:5; background:#F5F6F8; border-bottom:1px solid rgba(20,20,20,0.1); }
@@ -458,13 +407,12 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="04 Discernment"] .a-sub { font-size:clamp(20px,1.8vw,28px) !important; }
 .stew .view[data-screen-label="04 Discernment"] .a-refs { justify-content:flex-start !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn { white-space:nowrap !important; padding:8px 14px !important; border:1px solid rgba(20,20,20,0.2) !important; border-radius:999px; background:#FFFFFF; }
-.stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] [data-spine-key] { min-height:0 !important; padding-top:104px !important; padding-bottom:104px !important; }
 .stew .view[data-screen-label="04 Discernment"] [data-spine-key="principle"] > p { font-size:clamp(22px,2vw,30px) !important; }
 .stew .view[data-screen-label="04 Discernment"] [data-spine-key="pause"] > div { background:#FFFFFF; border:1px solid rgba(20,20,20,0.1); border-radius:18px; padding:clamp(32px,4vw,56px); box-shadow:0 20px 44px -30px rgba(20,20,20,0.35); }
 .stew .view[data-screen-label="04 Discernment"] [data-spine-key="pause"] > div > p { font-size:clamp(32px,3.4vw,54px) !important; }
 .stew .view[data-screen-label="04 Discernment"] .agency-content .principle-continue-nav { grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)) !important; }
-.stew .view[data-screen-label="04 Discernment"] .agency-content .principle-continue-nav .pname { font-size:clamp(20px,1.8vw,26px) !important; overflow-wrap:anywhere; }
+.stew .view[data-screen-label="04 Discernment"] .agency-content .principle-continue-nav .pname { font-size:clamp(18px,1.55vw,22px) !important; overflow-wrap:normal; }
 .stew .view[data-screen-label="04 Discernment"] [style*="201, .stew 162, .stew 39"][style*="border-radius"], .stew .view[data-screen-label="04 Discernment"] [style*="#0047BA"][style*="border-radius"] { background:#0047BA !important; }
 .stew .view[data-screen-label="04 Discernment"] .upractice-col { background:#FFFFFF !important; border:1px solid rgba(20,20,20,0.1); box-shadow:0 12px 30px -24px rgba(20,20,20,0.4); }
 .stew .view[data-screen-label="04 Discernment"] [data-spine-key] h3 { font-size:14px !important; letter-spacing:.2em !important; }
@@ -476,26 +424,20 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="05 Integrity"] .agency-step.is-spine-active { background:transparent !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-outline-btn:hover { border-color:#0047BA !important; background:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-step { animation: none !important; opacity: 1 !important; transform: none !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow { background: rgba(18,15,11,0.7) !important; border-color: rgba(20,20,20,0.18) !important; backdrop-filter: blur(6px); }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote { border-left-color: #0047BA !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote span { color: #141414 !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow blockquote span[style*="IBM Plex"] { color: #0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .vc-frame { background: rgba(20,20,20,0.04) !important; }
 .stew .view[data-screen-label="05 Integrity"] .vc-frame span { color: #141414 !important; }
-.stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover, .stew .view[data-screen-label="02 Becoming"] .agency-ref-btn:hover, .stew .view[data-screen-label="03 Fellowship"] .agency-ref-btn:hover, .stew .view[data-screen-label="04 Discernment"] .agency-ref-btn:hover { color: #0047BA !important; border-color: #0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-item.is-active .agency-rail-dot { background:#0047BA !important; border-color:#0047BA !important; box-shadow:0 0 0 5px rgba(0,71,186,.14) !important; }
-.stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover, .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:focus-visible { color:#0047BA !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] p, .stew .view[data-screen-label="05 Integrity"] h3, .stew .view[data-screen-label="05 Integrity"] li, .stew .view[data-screen-label="05 Integrity"] span, .stew .view[data-screen-label="05 Integrity"] a, .stew .view[data-screen-label="05 Integrity"] button { }
 .stew .view[data-screen-label="05 Integrity"] .agency-scripture-inner p { color:#141414 !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-scripture-inner p + p { color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-scripture { display:none !important; }
 .stew .view[data-screen-label="05 Integrity"] .a-verse { display:grid; margin:0 0 26px; }
 .stew .view[data-screen-label="05 Integrity"] .a-verse > * { grid-area:1/1; }
-.stew .view[data-screen-label="05 Integrity"] .a-sub { align-self:start; transition:opacity .45s ease, transform .7s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="05 Integrity"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .35s ease, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="05 Integrity"] .a-sub { align-self:start; transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="05 Integrity"] .a-verse-swap { opacity:0; transform:translateY(14px); max-height:2.4em; overflow:hidden; pointer-events:none; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .6s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 .stew .view[data-screen-label="05 Integrity"] .a-verse.is-open .a-sub { opacity:0; transform:translateY(-12px); }
-.stew .view[data-screen-label="05 Integrity"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .55s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
-.stew .view[data-screen-label="05 Integrity"] .a-verse-swap p { transition:opacity .3s ease; }
+.stew .view[data-screen-label="05 Integrity"] .a-verse.is-open .a-verse-swap { opacity:1; transform:none; max-height:220px; transition:max-height .8s cubic-bezier(.16,1,.3,1), opacity .9s ease .12s, transform .8s cubic-bezier(.16,1,.3,1); }
+.stew .view[data-screen-label="05 Integrity"] .a-verse-swap p { transition:opacity .6s ease .3s; }
 .stew .view[data-screen-label="05 Integrity"] .a-verse.is-open { opacity:1; transform:none; }
 .stew .view[data-screen-label="05 Integrity"] .agency-spine, .stew .view[data-screen-label="05 Integrity"] .agency-spine::before { background:transparent !important; backdrop-filter:none; }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-dot { background:#FFFFFF !important; }
@@ -503,7 +445,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="05 Integrity"] .agency-rail-item.is-active .agency-rail-label, .stew .view[data-screen-label="05 Integrity"] .agency-rail-item:hover .agency-rail-label { color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-outline-btn:hover { color:#FFFFFF !important; }
 .stew .view[data-screen-label="05 Integrity"] .principle-continue-nav .prow:hover { background: rgba(0,71,186,0.08) !important; }
-.stew .view[data-screen-label="05 Integrity"] .vc-quotebelow { background: rgba(20,20,20,0.04) !important; border-color: rgba(20,20,20,0.14) !important; backdrop-filter:none; }
 .stew .view[data-screen-label="05 Integrity"] .vc-frame { background: rgba(20,20,20,0.05) !important; }
 .stew .view[data-screen-label="05 Integrity"] .a-back:hover { color:#002E5D !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-step.first { height:auto !important; min-height:0 !important; flex-direction:row !important; align-items:center !important; justify-content:space-between !important; gap:clamp(40px,5vw,88px); padding:80px max(40px, calc((100% - 1240px)/2)) 80px !important; overflow:visible !important; z-index:5; background:#F5F6F8; border-bottom:1px solid rgba(20,20,20,0.1); }
@@ -515,13 +456,12 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="05 Integrity"] .a-sub { font-size:clamp(20px,1.8vw,28px) !important; }
 .stew .view[data-screen-label="05 Integrity"] .a-refs { justify-content:flex-start !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-ref-btn { white-space:nowrap !important; padding:8px 14px !important; border:1px solid rgba(20,20,20,0.2) !important; border-radius:999px; background:#FFFFFF; }
-.stew .view[data-screen-label="05 Integrity"] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] [data-spine-key] { min-height:0 !important; padding-top:104px !important; padding-bottom:104px !important; }
 .stew .view[data-screen-label="05 Integrity"] [data-spine-key="principle"] > p { font-size:clamp(22px,2vw,30px) !important; }
 .stew .view[data-screen-label="05 Integrity"] [data-spine-key="pause"] > div { background:#FFFFFF; border:1px solid rgba(20,20,20,0.1); border-radius:18px; padding:clamp(32px,4vw,56px); box-shadow:0 20px 44px -30px rgba(20,20,20,0.35); }
 .stew .view[data-screen-label="05 Integrity"] [data-spine-key="pause"] > div > p { font-size:clamp(32px,3.4vw,54px) !important; }
 .stew .view[data-screen-label="05 Integrity"] .agency-content .principle-continue-nav { grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)) !important; }
-.stew .view[data-screen-label="05 Integrity"] .agency-content .principle-continue-nav .pname { font-size:clamp(20px,1.8vw,26px) !important; overflow-wrap:anywhere; }
+.stew .view[data-screen-label="05 Integrity"] .agency-content .principle-continue-nav .pname { font-size:clamp(18px,1.55vw,22px) !important; overflow-wrap:normal; }
 .stew .view[data-screen-label="05 Integrity"] [style*="201, .stew 162, .stew 39"][style*="border-radius"], .stew .view[data-screen-label="05 Integrity"] [style*="#0047BA"][style*="border-radius"] { background:#0047BA !important; }
 .stew .view[data-screen-label="05 Integrity"] .upractice-col { background:#FFFFFF !important; border:1px solid rgba(20,20,20,0.1); box-shadow:0 12px 30px -24px rgba(20,20,20,0.4); }
 .stew .view[data-screen-label="05 Integrity"] [data-spine-key] h3 { font-size:14px !important; letter-spacing:.2em !important; }
@@ -645,7 +585,6 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 }
 
 /* ---- Watch & Learn video carousel (from VideoCarousel.dc.html) ---------- */
-.stew .vc-frame:hover + .vc-quotebelow { max-height: 400px !important; opacity: 1 !important; }
 
 /* ---- Hover styles (the original template's style-hover attributes) ------ */
 /* Agency: hover styles from the original template */
@@ -658,3 +597,44 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .stew-discernment-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }
 /* Integrity: hover styles from the original template */
 .stew .stew-integrity-hv0:hover { background:#E3E3E3 !important;color:#141414 !important; }
+
+/* ---- "Watch & Learn" tiles (VideoCarousel) ---- */
+.stew .vc-stage { position:relative; transition:height .42s cubic-bezier(.2,.7,.2,1); }
+.stew .vc-viewport { position:absolute; top:-40px; bottom:-40px; left:var(--vc-strip); right:var(--vc-strip); padding:40px 0; overflow:clip; pointer-events:none; }
+.stew .vc-track { pointer-events:auto; }
+.stew .vc-track { display:flex; align-items:flex-start; transition:transform .42s cubic-bezier(.2,.7,.2,1); touch-action:pan-y; }
+.stew .vc-slide { flex:0 0 100%; box-sizing:border-box; padding:0 var(--vc-gutter); }
+/* flat on the page at rest; lifted into a card while the carousel moves */
+.stew .vc-tile { box-sizing:border-box; padding:var(--vc-pad, 18px); border-radius:16px; background:rgba(255,255,255,0); box-shadow:0 0 0 1px rgba(20,20,20,0), 0 14px 28px -14px rgba(20,20,20,0), 0 1px 6px rgba(20,20,20,0); transition:background-color .3s ease, box-shadow .3s ease; }
+.stew .vc-tile.is-lifted { background:rgba(255,255,255,1); box-shadow:0 0 0 1px rgba(20,20,20,.08), 0 14px 28px -14px rgba(20,20,20,.32), 0 1px 6px rgba(20,20,20,.08); transition-duration:.15s; }
+.stew .vc-quote { margin:0 0 18px; padding:2px 0 2px 20px; border-left:3px solid #0047BA; }
+.stew .vc-quote--only { margin:0; padding-block:10px; }
+.stew .vc-quote__text { display:block; font-family:'Newsreader',Georgia,serif; font-size:clamp(18px, 2vw, 24px); line-height:1.6; color:#141414; }
+.stew .vc-quote--only .vc-quote__text { font-size:clamp(20px, 2.2vw, 26px); }
+.stew .vc-quote__cite { display:block; margin-top:12px; font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:14px; letter-spacing:.06em; color:#0047BA; }
+/* arrow strips beside the tile: the full height is clickable */
+.stew .vc-strip { all:unset; box-sizing:border-box; position:absolute; top:0; bottom:0; width:var(--vc-strip); display:flex; align-items:center; justify-content:center; cursor:pointer; color:rgba(20,20,20,.6); z-index:2; -webkit-tap-highlight-color:transparent; transition:color .2s ease, opacity .2s ease; }
+.stew .vc-strip--prev { left:0; }
+.stew .vc-strip--next { right:0; }
+.stew .vc-strip[data-hidden] { opacity:0; visibility:hidden; pointer-events:none; }
+.stew .vc-strip::before { content:""; position:absolute; inset:0; border-radius:16px; opacity:0; transition:opacity .25s ease; pointer-events:none; }
+.stew .vc-strip--next::before { background:linear-gradient(90deg, rgba(0,46,93,0) 0%, rgba(0,46,93,.16) 100%); }
+.stew .vc-strip--prev::before { background:linear-gradient(270deg, rgba(0,46,93,0) 0%, rgba(0,46,93,.16) 100%); }
+.stew .vc-chevron { position:relative; display:block; }
+.stew .vc-strip:focus-visible { outline:2px solid #0047BA; outline-offset:-2px; border-radius:16px; }
+@media (hover:hover) and (pointer:fine) {
+  .stew .vc-strip:hover { color:#0047BA; }
+  .stew .vc-strip:hover::before { opacity:1; }
+}
+.stew .vc-dots { display:flex; justify-content:center; gap:9px; margin-top:16px; }
+.stew .vc-dot { all:unset; cursor:pointer; display:block; width:9px; height:9px; border-radius:999px; background:#CCCCCC; transition:width .25s ease, background .2s ease; }
+.stew .vc-dot.is-active { width:26px; background:#0047BA; }
+@media (prefers-reduced-motion: reduce) {
+  .stew .vc-stage, .stew .vc-track, .stew .vc-tile, .stew .vc-tile.is-lifted { transition:none; }
+}
+
+/* Switching between two verses: the current one fades out before the next fades in */
+.stew .view .a-verse.is-swapping .a-verse-swap p { opacity:0; transition:opacity .4s ease; }
+
+/* Scripture reference buttons on the principle pages: white text on blue when hovered */
+.stew .view[data-screen-label] .agency-ref-btn:hover { background:#0047BA !important; color:#FFFFFF !important; border-color:#0047BA !important; }
