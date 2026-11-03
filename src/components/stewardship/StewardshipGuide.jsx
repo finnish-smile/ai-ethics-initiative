@@ -213,7 +213,7 @@ export default class StewardshipGuide extends Component {
         return;
       }
       if (!this.state.scripturePinned) return;
-      if (t && t.closest && t.closest('.agency-ref-btn, .stew-ref, .a-verse.is-open, .agency-scripture.is-open, .stew-verse-pop')) return;
+      if (t && t.closest && t.closest('.agency-ref-btn, .a-verse.is-open, .agency-scripture.is-open')) return;
       this.setState({ scripturePinned: null });
     };
     this._onScriptureEsc = (e) => {
@@ -757,7 +757,6 @@ export default class StewardshipGuide extends Component {
     const isIntegrityScriptureOpen = this.state.scriptureOpen === 'integrity';
     const onIntegrityScriptureEnter = () => this.hoverScripture('integrity');
     const onIntegrityScriptureLeave = () => this.leaveScripture();
-    const isStewardshipScriptureOpen = this.state.scripturePinned === 'stewardship';
     const cardOn = this.state.cardOn;
     const cardEnter = (k) => () => { if (this.state.cardOn !== k) this.setState({ cardOn: k }); };
     const onCardLeave = () => { if (this.state.cardOn) this.setState({ cardOn: null }); };
@@ -773,10 +772,6 @@ export default class StewardshipGuide extends Component {
     const cardIntegrityClass = cardOn === 'Integrity' ? 'is-on' : '';
     const cardIndex = { Agency: 1, Becoming: 2, Fellowship: 3, Discernment: 4, Integrity: 5 };
     const cardRowClass = cardOn ? 'has-on on-' + cardIndex[cardOn] : '';
-    const onStewardshipScriptureEnter = () => {};
-    const onStewardshipScriptureLeave = () => {};
-    const onStewardshipScriptureToggle = () => this.toggleScripturePin('stewardship');
-    const onStewardshipScriptureKey = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggleScripturePin('stewardship'); } };
     const goToAgencyFn1 = (e) => this.goToFootnote('agency', 'fn-agency-1', e);
     const goToAgencyFn2 = (e) => this.goToFootnote('agency', 'fn-agency-2', e);
     const goToAgencyFn3 = (e) => this.goToFootnote('agency', 'fn-agency-3', e);
@@ -990,7 +985,6 @@ export default class StewardshipGuide extends Component {
       isIntegrityScriptureOpen,
       onIntegrityScriptureEnter,
       onIntegrityScriptureLeave,
-      isStewardshipScriptureOpen,
       onCardAgencyEnter,
       onCardBecomingEnter,
       onCardFellowshipEnter,
@@ -1003,10 +997,6 @@ export default class StewardshipGuide extends Component {
       cardDiscernmentClass,
       cardIntegrityClass,
       cardRowClass,
-      onStewardshipScriptureEnter,
-      onStewardshipScriptureLeave,
-      onStewardshipScriptureToggle,
-      onStewardshipScriptureKey,
       kickerStyle: { position: 'absolute', top: this.state.kickerPos.y, left: this.state.kickerPos.x, maxWidth: '260px', textAlign: 'left', cursor: 'grab', userSelect: 'none', zIndex: 50, background: 'rgba(20,17,12,0.45)', padding: '10px 14px', borderRadius: '4px' },
       onKickerDragStart: this.onKickerDragStart,
       goToAgencyFn1,
