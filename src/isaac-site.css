@@ -298,6 +298,10 @@ p { text-wrap: pretty; }
   color: #FFFFFF;
   text-shadow: 0 1px 5px rgba(0, 46, 93, 0.55);
 }
+/* Solid white bar (Principles guidebook, while its step bar is pinned). The
+   blur strip under the header isn't needed then: the step bar sits there. */
+.nav[data-solid="true"] { background: #fff; }
+:has(> .nav[data-solid="true"]) > .nav-fade { display: none; }
 .nav[data-over="dark"] .nav__toggle span {
   background: #FFFFFF;
   box-shadow: 0 1px 4px rgba(0, 46, 93, 0.4);

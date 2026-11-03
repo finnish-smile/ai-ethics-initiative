@@ -20,6 +20,15 @@
    open; keep the site footer above it, as the frame used to. */
 main:has(> .stew) + .foot { position: relative; z-index: 2; }
 
+/* ---- Fitting under the site header -------------------------------------
+   The guide used to start below the header, inside its frame. The home view
+   now runs its painting up under the header, like the site's other painting
+   pages; each principle page starts below the header, as before, and its
+   sticky step bar stops just under the header as that changes height. */
+.stew .view[data-screen-label] { padding-top: var(--nav-h-open); }
+.stew .view .agency-body > .agency-spine,
+.stew .view .agency-body > .agency-spine[class] { top: var(--nav-cur) !important; }
+
 /* ---- The guidebook's stylesheet ----------------------------------------- */
 .stew * { box-sizing: border-box; }
 .stew { margin: 0; }

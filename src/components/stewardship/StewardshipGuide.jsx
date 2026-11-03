@@ -14,6 +14,13 @@ import IntegrityView from './IntegrityView.jsx'
 import { asset, GUIDE_FONTS } from './util.js'
 import { slugForView } from '../../data/stewardship.js'
 
+// The site header's current height. The guide used to sit below the header in
+// its own frame; now it's on the page, so jumps to a section of a principle
+// page (the step rail, footnote links) stop below the header too.
+function siteHeaderHeight() {
+  return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-cur')) || 0
+}
+
 // The shell every view shares: image preloads and the painting behind the
 // guide (the logic zooms and moves it as you scroll or change view).
 function GuideShell({ V }) {
@@ -168,7 +175,7 @@ export default class StewardshipGuide extends Component {
     const el = document.querySelector('[data-spine-key="' + key + '"]');
     if (!el) return;
     const bar = document.querySelector('.view nav[aria-label="Section progress"]');
-    const off = (bar ? bar.offsetHeight : 0) + 16;
+    const off = (bar ? bar.offsetHeight : 0) + 16 + siteHeaderHeight();
     const top = el.getBoundingClientRect().top + window.scrollY - off;
     window.scrollTo({ top, behavior: 'smooth' });
   };
@@ -178,7 +185,7 @@ export default class StewardshipGuide extends Component {
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) {
-        const top = el.getBoundingClientRect().top + window.pageYOffset - 120;
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 120 - siteHeaderHeight();
         window.scrollTo({ top, behavior: 'smooth' });
       }
     }, 60);

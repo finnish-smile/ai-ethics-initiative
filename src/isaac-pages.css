@@ -123,7 +123,7 @@
    Navy stays as the fallback colour while the painting loads. */
 .mission {
   position: relative;
-  background: var(--navy) url('/stewardship-outline/assets/mission-inness-peace-and-plenty.jpg') 50% 80% / cover no-repeat;
+  background: var(--navy) url('/images/stewardship/mission-inness-peace-and-plenty.jpg') 50% 80% / cover no-repeat;
   color: #fff;
   /* On wide screens the band grows with the viewport so the sky, the two
      elms and the harvest workers all stay in frame; below ~1400px the

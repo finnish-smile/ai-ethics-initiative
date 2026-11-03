@@ -103,10 +103,42 @@ function ramp(p, start, end) {
   return Math.max(0, Math.min(1, (p - start) / (end - start)))
 }
 
+// The Principles guidebook's five painted principle cards are narrower than
+// the page, so rather than any overlap they count as "dark under the header"
+// when they cover most of the header's name and links.
+const GUIDE_DARK = '.stew .pcard'
+function guideDarkUnderHeader(navH) {
+  const boxes = document.querySelectorAll(GUIDE_DARK)
+  if (!boxes.length) return false
+  const header = document.querySelector('header.nav')
+  if (!header) return false
+  const texts = [header.querySelector('.brand'), header.querySelector('.nav__links'), header.querySelector('.nav__toggle')]
+    .map((el) => el && el.getBoundingClientRect())
+    .filter((r) => r && r.width > 0 && r.height > 0 && r.top < navH)
+  const total = texts.reduce((sum, t) => sum + t.width * t.height, 0)
+  if (!total) return false
+  let covered = 0
+  boxes.forEach((el) => {
+    const r = el.getBoundingClientRect()
+    if (r.top >= navH || r.bottom <= 0) return
+    texts.forEach((t) => {
+      const w = Math.min(r.right, t.right) - Math.max(r.left, t.left)
+      const h = Math.min(r.bottom, t.bottom) - Math.max(r.top, t.top)
+      if (w > 0 && h > 0) covered += w * h
+    })
+  })
+  return covered / total > 0.5
+}
+
 export default function Layout() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [onDark, setOnDark] = useState(false)
+  // On a guidebook principle page, once its step bar (Principle · Pause ·
+  // Practice · Watch & Learn) is pinned under the header, the header turns
+  // solid white, so the page scrolling past never shows through behind it —
+  // as when the guidebook sat below the header in its own frame.
+  const [solidHeader, setSolidHeader] = useState(false)
   const location = useLocation()
   const [mode, setMode] = useState(() => (window.innerWidth < 860 ? 'narrow' : 'mid'))
   const modeRef = useRef(mode)
@@ -115,8 +147,7 @@ export default function Layout() {
   const fullNameRef = useRef(null)
   const shortNameRef = useRef(null)
   const measureLinksRef = useRef(null)
-  // The Principles guidebook (/principles and /principles/<principle>). Its
-  // header is shown collapsed for now, while the guidebook is being rebuilt.
+  // The Principles guidebook (/principles and /principles/<principle>).
   const onPrinciples = /^\/principles(\/|$)/.test(location.pathname)
   // The menu link for the section you're in (Principles stays marked on
   // each principle's own page).
@@ -125,10 +156,9 @@ export default function Layout() {
   const prevPathRef = useRef(location.pathname)
 
   // Header progress for the current scroll position: 0 = top of the page
-  // (full name), 1 = collapsed (short name). Narrow and Principles are
-  // always collapsed.
+  // (full name), 1 = collapsed (short name). Narrow is always collapsed.
   const progressNow = () =>
-    modeRef.current === 'narrow' || onPrinciples ? 1 : Math.max(0, Math.min(1, window.scrollY / COLLAPSE_PX))
+    modeRef.current === 'narrow' ? 1 : Math.max(0, Math.min(1, window.scrollY / COLLAPSE_PX))
 
   useEffect(() => {
     // Moving within the guidebook (between its home and a principle), the
@@ -226,7 +256,7 @@ export default function Layout() {
   useEffect(() => {
     // In the narrow layout there's no room for the full wordmark next to the
     // menu button, so the logo stays in its short/collapsed state there
-    // regardless of scroll position (and on Principles, see above).
+    // regardless of scroll position.
     const onScroll = () => {
       setScrollProgress(progressNow())
 
@@ -257,11 +287,17 @@ export default function Layout() {
       // Compare against the header's live height (taller at the top of the
       // page on wide screens, while the links sit on their own line).
       const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-cur')) || NAV_HEIGHT
-      const isDark = Array.from(darkEls).some((el) => {
-        const r = el.getBoundingClientRect()
-        return r.top < navH && r.bottom > 0
-      })
-      setOnDark(isDark)
+      const isDark =
+        Array.from(darkEls).some((el) => {
+          const r = el.getBoundingClientRect()
+          return r.top < navH && r.bottom > 0
+        }) || guideDarkUnderHeader(navH)
+      const bar = document.querySelector('.stew .view .agency-spine')
+      // (its position without the fade-in slide it may be part-way through)
+      const barShift = bar ? new DOMMatrixReadOnly(getComputedStyle(bar).transform).m42 : 0
+      const pinned = !!bar && bar.getBoundingClientRect().top - barShift <= navH + 0.5
+      setSolidHeader(pinned)
+      setOnDark(isDark && !pinned)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -295,7 +331,13 @@ export default function Layout() {
           ))}
         </div>
       </div>
-      <header className="nav" data-mode={mode} data-open={menuOpen} data-over={darkHeader ? 'dark' : 'light'}>
+      <header
+        className="nav"
+        data-mode={mode}
+        data-open={menuOpen}
+        data-over={darkHeader ? 'dark' : 'light'}
+        data-solid={solidHeader || undefined}
+      >
         <div className="wrap" ref={wrapRef}>
           <Link className="brand" to="/" aria-label="AI & Ethics Initiative — home">
             <ScrollLogo progress={scrollProgress} light={darkHeader} />

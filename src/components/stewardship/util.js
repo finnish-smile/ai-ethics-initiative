@@ -38,7 +38,7 @@ export function asList(v) {
 
 // The guidebook's paintings and images.
 export function asset(name) {
-  return `${import.meta.env.BASE_URL}stewardship-outline/assets/${name}`
+  return `${import.meta.env.BASE_URL}images/stewardship/${name}`
 }
 
 // The fonts the guidebook was designed with (Newsreader with its optical-size
