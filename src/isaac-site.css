@@ -300,7 +300,13 @@ p { text-wrap: pretty; }
 }
 /* Solid white bar (Principles guidebook, while its step bar is pinned). The
    blur strip under the header isn't needed then: the step bar sits there. */
-.nav[data-solid="true"] { background: #fff; }
+.nav[data-solid="true"] {
+  background: #fff;
+  /* A 2px white edge underneath closes any hairline between the header and
+     the pinned step bar (the phone header is 78px against the bar's 79px,
+     and display scaling can round open a gap at other sizes too). */
+  box-shadow: 0 2px 0 #fff;
+}
 :has(> .nav[data-solid="true"]) > .nav-fade { display: none; }
 .nav[data-over="dark"] .nav__toggle span {
   background: #FFFFFF;
