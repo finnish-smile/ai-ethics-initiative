@@ -25,19 +25,23 @@ export default function ScrollLogo({ progress = 0, light = false }) {
   useLayoutEffect(() => {
     const measure = () => {
       const widths = {}
+      // Exact (fractional) widths: offsetWidth rounds down, which left each
+      // word's box a fraction of a pixel too narrow and clipped its last letter.
       Object.entries(refs).forEach(([k, r]) => {
-        if (r.current) widths[k] = r.current.offsetWidth
+        if (r.current) widths[k] = r.current.getBoundingClientRect().width
       })
       setW(widths)
     }
     measure()
-    // The initial measurement can run before the IBM Plex Sans webfont has
-    // finished loading, baking in narrower fallback-font widths that clip
-    // the real (wider) glyphs once the font swaps in. Re-measure once fonts
-    // are actually ready.
+    // The initial measurement can run before the webfont has finished
+    // loading, baking in fallback-font widths that clip the real glyphs once
+    // the font swaps in. Re-measure once fonts are ready, and again whenever
+    // more fonts finish loading later on.
     if (document.fonts?.ready) {
       document.fonts.ready.then(measure)
     }
+    document.fonts?.addEventListener?.('loadingdone', measure)
+    return () => document.fonts?.removeEventListener?.('loadingdone', measure)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -81,7 +85,9 @@ export default function ScrollLogo({ progress = 0, light = false }) {
           ...wordStyle,
           display: 'inline-block',
           overflow: 'hidden',
-          width: w[key] * prog,
+          // While fully shown the word takes its natural width, so it can
+          // never be cut off; the measured width is only used as it shrinks.
+          width: prog >= 1 ? 'auto' : w[key] * prog,
           opacity: prog,
           marginRight: GAP * prog,
         }}

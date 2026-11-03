@@ -40,8 +40,3 @@ export function asList(v) {
 export function asset(name) {
   return `${import.meta.env.BASE_URL}images/stewardship/${name}`
 }
-
-// The fonts the guidebook was designed with (Newsreader with its optical-size
-// axis, IBM Plex Sans).
-export const GUIDE_FONTS =
-  'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap'

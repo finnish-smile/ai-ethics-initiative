@@ -3,7 +3,7 @@
 // is the original guidebook's logic class kept as-is — scroll-driven painting,
 // scenes, the side rail, scripture pop-ups, footnotes — now a React class
 // component. The only changes are marked under "Site integration": the view
-// follows the page address, and the guide's fonts load while it's on screen.
+// follows the page address, and the guide uses the site's fonts.
 import { Component } from 'react'
 import HomeView from './HomeView.jsx'
 import AgencyView from './AgencyView.jsx'
@@ -11,7 +11,7 @@ import BecomingView from './BecomingView.jsx'
 import FellowshipView from './FellowshipView.jsx'
 import DiscernmentView from './DiscernmentView.jsx'
 import IntegrityView from './IntegrityView.jsx'
-import { asset, GUIDE_FONTS } from './util.js'
+import { asset } from './util.js'
 import { slugForView } from '../../data/stewardship.js'
 
 // The site header's current height. The guide used to sit below the header in
@@ -236,7 +236,6 @@ export default class StewardshipGuide extends Component {
     this._paintHeroZoom();
     window.addEventListener('scroll', this._paintHeroZoom, { passive: true });
     window.addEventListener('resize', this._paintHeroZoom);
-    this._mountGuideFonts();
     // Opened straight on a principle's address: switch to it the same way a
     // card click does (so its opening animation plays).
     if (this.props.routeView !== 'home') this._showView(this.props.routeView);
@@ -411,7 +410,6 @@ export default class StewardshipGuide extends Component {
     this.applySizeVars();
   }
   componentWillUnmount() {
-    this._unmountGuideFonts();
     document.removeEventListener('click', this._onScriptureAway);
     document.removeEventListener('keydown', this._onScriptureEsc);
     if (this._paintHeroZoom) {
@@ -972,19 +970,6 @@ export default class StewardshipGuide extends Component {
     const end = root.getBoundingClientRect().bottom + window.scrollY
     const max = Math.max(0, end - window.innerHeight)
     if (window.scrollY > max) window.scrollTo({ top: max, behavior: 'auto' })
-  }
-  // The guide's typefaces (Newsreader with its optical-size axis), loaded
-  // only while the guide is on screen, as the original did in its own page.
-  _mountGuideFonts() {
-    if (document.getElementById('stew-fonts')) return
-    const link = document.createElement('link')
-    link.id = 'stew-fonts'
-    link.rel = 'stylesheet'
-    link.href = GUIDE_FONTS
-    document.head.appendChild(link)
-  }
-  _unmountGuideFonts() {
-    document.getElementById('stew-fonts')?.remove()
   }
 
   render() {
