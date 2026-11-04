@@ -34,6 +34,10 @@
 
   --maxw: 1240px;
   --gutter: clamp(20px, 5vw, 64px);
+  /* One height for every painting header (Principles, Learn, News, Events), so
+     they match exactly; it grows with the screen width so paintings aren't
+     cropped to a thin slice on wide monitors. */
+  --hero-h: max(calc(58dvh + 79px), min(90vh, 52vw));
   --radius: 3px;
 
   --shadow-sm: 0 1px 2px rgba(0, 46, 93, 0.08);
@@ -467,9 +471,7 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
 .phead--painting {
   position: relative;
   overflow: hidden;
-  /* Grow with the screen width on wide monitors (up to 88% of the screen
-     height) so squarish paintings aren't cropped to a thin horizontal slice. */
-  min-height: max(min(78vh, 760px), min(88vh, 46vw));
+  height: var(--hero-h); /* shared by all four painting headers */
   display: flex;
   align-items: flex-end;
   background: #2a2118; /* shows while the image loads */

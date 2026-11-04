@@ -500,7 +500,7 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
      --stew-hero-h is shared by .stew-hero-fixed (set in StewardshipGuide's
      _paintHeroZoom), .stew-hero-content and .stew-hero-spacer. It grows with the
      screen width so the painting isn't cropped to a slice on wide monitors. ---- */
-.stew { --stew-hero-h: max(calc(58dvh + 79px), min(90vh, 52vw)); }
+.stew { --stew-hero-h: var(--hero-h); } /* the shared painting-header height (isaac-site.css) */
 .stew .stew-hero-head { position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(56px, 8vw, 96px); }
 .stew .stew-hero-kicker { margin:0; font-family:'IBM Plex Sans',system-ui,sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.75); }
 .stew .stew-hero-content .stew-morph-title { margin:14px 0 0; font-family:'Newsreader',Georgia,serif; font-size:clamp(38px, 6vw, 66px); line-height:1.08; font-weight:400; letter-spacing:.075em; text-transform:uppercase; color:#F4F0E8; text-shadow:0 2px 18px rgba(20,17,12,0.55); }
