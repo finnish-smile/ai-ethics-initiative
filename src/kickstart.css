@@ -20,15 +20,12 @@
   margin-top: 14px;
   max-width: 56ch;
 }
-/* Painting variant: an inset painting header, like Principles, News and
-   Events — inside the page margins below the menu (left edge lined up with
-   the site name), with the shared --hero-h height (isaac-site.css). */
+/* Painting variant: full-bleed artwork behind the title, like the
+   Principles page's Lackawanna Valley opening. */
 .ks-hero--painting {
   position: relative;
   overflow: hidden;
-  height: var(--hero-h);
-  margin: var(--nav-h-open) var(--hero-side) 0;
-  border-radius: 4px;
+  min-height: min(78vh, 760px);
   display: flex;
   align-items: flex-end;
   border-bottom: 0;
@@ -44,7 +41,8 @@
   filter: brightness(1.12); /* lift the painting's dark interior a little */
 }
 /* Subtle fade along the bottom only, so the white title and description stay
-   readable without darkening the painting. */
+   readable without darkening the painting (the nav gets its own band — see
+   .nav[data-band] in isaac-site.css). */
 .ks-hero--painting::after {
   content: '';
   position: absolute;
@@ -56,9 +54,6 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0 var(--hero-pad) clamp(48px, 7vw, 88px);
   color: #fff;
 }
 /* Title styled like the Stewardship outline's cover title: regular weight,
@@ -72,7 +67,7 @@
 .ks-hero--painting p.lead { color: rgba(255, 255, 255, 0.88); }
 .ks-hero__caption {
   position: absolute;
-  left: 14px;
+  left: 20px;
   bottom: 14px;
   z-index: 1;
   margin: 0;

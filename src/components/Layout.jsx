@@ -139,6 +139,9 @@ export default function Layout() {
   // solid white, so the page scrolling past never shows through behind it —
   // as when the guidebook sat below the header in its own frame.
   const [solidHeader, setSolidHeader] = useState(false)
+  // A painting header (Principles, Learn, News, Events) is under the header:
+  // the header sits on a see-through dark band over it (isaac-site.css).
+  const [onPainting, setOnPainting] = useState(false)
   const location = useLocation()
   const [mode, setMode] = useState(() => (window.innerWidth < 860 ? 'narrow' : 'mid'))
   const modeRef = useRef(mode)
@@ -299,13 +302,22 @@ export default function Layout() {
       const pinned = !!bar && bar.getBoundingClientRect().top - barShift <= navH + 0.5
       setSolidHeader(pinned)
       setOnDark(isDark && !pinned)
+      // The painting band shows while a painting header fills the strip
+      // behind the header (and not once you've scrolled past it).
+      const painting = Array.from(
+        document.querySelectorAll('.ks-hero--painting, .phead--painting, .stew-hero-content'),
+      ).some((el) => {
+        const r = el.getBoundingClientRect()
+        return r.top < navH && r.bottom > navH
+      })
+      setOnPainting(painting && !pinned)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     // Also re-check when the page's content changes without a scroll — e.g.
     // the Principles guidebook swapping its home view (painting header) for a
-    // principle's page — so the header doesn't keep white text over a white
-    // page until the first scroll.
+    // principle's page — so the header doesn't keep the painting band and
+    // white text over a white page until the first scroll.
     // (A short timer rather than requestAnimationFrame: rAF can be paused —
     // e.g. in a background or embedded tab — which would leave the check
     // pending, while a timer always runs. Batches a burst of changes into
@@ -360,6 +372,7 @@ export default function Layout() {
         data-open={menuOpen}
         data-over={darkHeader ? 'dark' : 'light'}
         data-solid={solidHeader || undefined}
+        data-band={onPainting && !menuOpen ? 'painting' : undefined}
       >
         <div className="wrap" ref={wrapRef}>
           <Link className="brand" to="/" aria-label="AI & Ethics Initiative — home">

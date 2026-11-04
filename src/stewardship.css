@@ -495,25 +495,13 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 .stew .view[data-screen-label="05 Integrity"] .agency-painting-box img { height:auto !important; }
 .stew .stew-content-panel > section:first-of-type { height:auto !important; min-height:0 !important; padding-top:72px !important; }
 /* ---- Painting header (home view) — matches the Learn, News and Events headers:
-     the title sits bottom-left on the painting, and D&C 136:27 is written out
-     just below it (.stew-epigraph). ---- */
-/* Inset, like the Learn, News and Events headers: on the home view the painting
-   sits inside the page margins below the menu (left edge lined up with the site
-   name) with the shared --hero-h height (isaac-site.css). The guide script
-   positions .stew-hero-fixed inline (it fills the screen on a principle's page),
-   so the home-view placement uses !important; :has(.stew-hero-content) limits it
-   to the home view. --stew-hero-h is the total space the header takes up (menu
-   clearance + painting), used by the spacer. */
-.stew { --stew-hero-h: calc(var(--nav-h-open) + var(--hero-h)); }
-.stew:has(.stew-hero-content) .stew-hero-fixed,
-.stew .stew-hero-content { top:var(--nav-h-open) !important; left:var(--hero-side) !important; right:var(--hero-side) !important; width:auto !important; height:var(--hero-h) !important; }
-.stew:has(.stew-hero-content) .stew-hero-fixed { border-radius:4px; }
-.stew .stew-hero-head .wrap { max-width:none; margin:0; padding:0 var(--hero-pad); }
-.stew .stew-hero-caption { left:14px !important; }
+     the painting runs to the top under the nav's see-through band, the title sits
+     bottom-left on it, and D&C 136:27 is written out just below (.stew-epigraph).
+     --stew-hero-h is shared by .stew-hero-fixed (set in StewardshipGuide's
+     _paintHeroZoom), .stew-hero-content and .stew-hero-spacer. It grows with the
+     screen width so the painting isn't cropped to a slice on wide monitors. ---- */
+.stew { --stew-hero-h: max(calc(58dvh + 79px), min(90vh, 52vw)); }
 .stew .stew-hero-head { position:absolute; left:0; right:0; bottom:0; padding-bottom:clamp(56px, 8vw, 96px); }
-/* up to tablet width the painting is cropped by height, so the seated figure sits
-   higher: give the title more room so the figure stays below it */
-@media (max-width: 1100px) { .stew .stew-hero-head { padding-bottom:130px; } }
 .stew .stew-hero-kicker { margin:0; font-family:'IBM Plex Sans',system-ui,sans-serif; font-weight:700; font-size:12.5px; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,0.75); }
 .stew .stew-hero-content .stew-morph-title { margin:14px 0 0; font-family:'Newsreader',Georgia,serif; font-size:clamp(38px, 6vw, 66px); line-height:1.08; font-weight:400; letter-spacing:.075em; text-transform:uppercase; color:#F4F0E8; text-shadow:0 2px 18px rgba(20,17,12,0.55); }
 /* the lightest bottom-only fade, on the home view only (on a principle's page the
@@ -522,7 +510,7 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 /* credit line: 70% transparent */
 .stew .stew-hero-caption { color:rgba(255,255,255,0.3) !important; text-shadow:none; }
 /* D&C 136:27, written out just below the painting */
-.stew .stew-epigraph { padding:64px var(--hero-side) 0; } /* lines up with the painting's left edge */
+.stew .stew-epigraph { padding:64px max(32px, calc((100% - 1320px)/2)) 0; }
 .stew .stew-epigraph blockquote { margin:0; max-width:760px; border-left:2px solid rgba(20,20,20,0.18); padding-left:24px; }
 .stew .stew-epigraph p { margin:0; font-family:'Newsreader',Georgia,serif; font-style:italic; font-size:clamp(20px, 2vw, 28px); line-height:1.5; color:#2a2620; text-wrap:pretty; }
 .stew .stew-epigraph cite { display:block; margin-top:12px; font-family:'IBM Plex Sans',system-ui,sans-serif; font-style:normal; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#0047BA; }
