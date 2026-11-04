@@ -7,12 +7,15 @@ export default function GetInvolved() {
   return (
     <>
       <header className="phead phead--painting">
-        {/* Zoomed 5% to crop off the dotted border Seurat painted around the canvas. */}
+        {/* Anchored to the top, so the women's heads stay in view on wide screens
+            (where the painting is cropped top and bottom). Seurat painted a
+            dotted border around the canvas: the 5% zoom from the top edge plus the
+            small upward nudge keep it out of view at every width. */}
         <img
           className="phead__painting"
           src={`${import.meta.env.BASE_URL}images/grande-jatte-seurat.jpg`}
           alt="Georges Seurat, A Sunday on La Grande Jatte, a painting of people relaxing together on a sunny riverbank park"
-          style={{ objectPosition: '50% 50%', transform: 'scale(1.05)', transformOrigin: '50% 50%' }}
+          style={{ objectPosition: '50% calc(-1.2vw - 8px)', transform: 'scale(1.05)', transformOrigin: '50% 0%' }}
         />
         <div className="wrap">
           <h1>Events and Activities</h1>

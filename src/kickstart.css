@@ -59,12 +59,23 @@
 /* Title styled like the Stewardship outline's cover title: regular weight,
    wide tracking, warm white, soft shadow. */
 .ks-hero--painting h1 {
+  /* same size as the Principles, News and Events titles (.phead h1) */
+  font-size: clamp(38px, 6vw, 66px);
+  line-height: 1.08;
+  margin: 0;
   color: #F4F0E8;
   font-weight: 400;
   letter-spacing: 0.075em;
   text-shadow: 0 2px 18px rgba(20, 17, 12, 0.55);
 }
-.ks-hero--painting p.lead { color: rgba(255, 255, 255, 0.88); }
+/* description: same size and spacing as the News tagline (.phead p) */
+.ks-hero--painting p.lead {
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.6;
+  margin: 20px 0 0;
+  max-width: 60ch;
+  color: rgba(255, 255, 255, 0.88);
+}
 .ks-hero__caption {
   position: absolute;
   left: 20px;
