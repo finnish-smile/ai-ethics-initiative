@@ -106,7 +106,7 @@ export default function News() {
         <div className="wrap">
           <p className="kicker">News</p>
           <h1>The Inchworm Dispatch</h1>
-          <p>The week&rsquo;s AI ethics news, gathered in one place.</p>
+          <p>Recent top stories in AI and ethics.</p>
         </div>
         <p className="phead__caption">Wilhelm Leibl, The Village Politicians, 1877</p>
       </header>
