@@ -19,6 +19,7 @@ export default function GetInvolved() {
         />
         <div className="wrap">
           <h1>Events and Activities</h1>
+          <p>Check in on upcoming events, workshops, and competitions.</p>
         </div>
         <p className="phead__caption">Georges Seurat, A Sunday on La Grande Jatte, 1884–86</p>
       </header>
