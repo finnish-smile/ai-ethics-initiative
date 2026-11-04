@@ -18,8 +18,7 @@ export default function Kickstart() {
         <div className="wrap">
           <h1>Learn</h1>
           <p className="lead">
-            Courses, guides, and tools built by professors and practitioners to help you use AI well,
-            collected in one place.
+            Courses, guides, and tools built by experts to help you use and understand AI better.
           </p>
         </div>
         <p className="ks-hero__caption">Winslow Homer, The Country School, 1871</p>
