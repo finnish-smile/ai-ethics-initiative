@@ -11,6 +11,9 @@
  * site calls `finish`, which moves them to Submissions, adds the Sheet row, and
  * sends the emails. An upload that never reaches `finish` stays in Incoming and
  * is not an entry.
+ *
+ * Students can add a LinkedIn post link on the form, or later with `linkedin`,
+ * which saves it on their latest entry (matched by email).
  */
 
 // ---- Settings: fill these in from the club account ----
@@ -38,17 +41,20 @@ const ALLOWED_TYPES = {
   video: ['video/mp4', 'video/quicktime', 'video/webm', 'video/x-m4v'],
 }
 const BYU_EMAIL = /^[^\s@]+@byu\.edu$/i
-const EMAIL_COLUMN = 3 // Sheet columns: Submitted | Name | Email | Major | Year | Constitution | Video | Reviewed
+// Sheet columns: Submitted | Name | Email | Major | Year | Constitution | Video | Reviewed | LinkedIn post
+const EMAIL_COLUMN = 3
+const LINKEDIN_COLUMN = 9
+const LINKEDIN_URL = /^https:\/\/([a-z]{2,3}\.)?linkedin\.com\/\S+$/i
 
-// Every refusal carries a code the site can act on: 'closed', 'limit', or 'invalid'.
+// Every refusal carries a code the site can act on: 'closed', 'limit', 'invalid', or 'notfound'.
 function refuse(code, message) {
   const err = new Error(message)
   err.code = code
   return err
 }
 
-// The site posts JSON as text/plain (no CORS preflight). Two actions only:
-// neither one returns entries or file links.
+// The site posts JSON as text/plain (no CORS preflight). None of the actions
+// return entries or file links.
 function doPost(e) {
   try {
     // Kill switch: Project Settings > Script properties > SUBMISSIONS_OPEN = true
@@ -58,6 +64,7 @@ function doPost(e) {
     const req = JSON.parse(e.postData.contents)
     if (req.action === 'start') return json(startUpload(req))
     if (req.action === 'finish') return json(finishEntry(req))
+    if (req.action === 'linkedin') return json(addLinkedIn(req))
     throw refuse('invalid', 'Unknown action')
   } catch (err) {
     return json({ ok: false, code: err.code || 'error', error: String(err.message || err) })
@@ -103,6 +110,7 @@ function finishEntry(req) {
   const f = req.fields || {}
   const clean = (v) => String(v || '').trim().slice(0, 200)
   const email = clean(f.email).toLowerCase()
+  const linkedin = cleanLinkedIn(f.linkedin) // optional; anything that isn't a LinkedIn link is dropped
 
   const lock = LockService.getScriptLock()
   lock.waitLock(20000) // two finishes at once can't both slip under the limit
@@ -123,6 +131,7 @@ function finishEntry(req) {
       docFile.getUrl(),
       videoFile.getUrl(),
       '', // Reviewed (the team fills this in)
+      linkedin,
     ])
     SpreadsheetApp.flush()
 
@@ -137,6 +146,7 @@ function finishEntry(req) {
         '',
         'Constitution: ' + docFile.getUrl(),
         'Video: ' + videoFile.getUrl(),
+        'LinkedIn post: ' + (linkedin || '(not yet)'),
       ].join('\n'),
     })
 
@@ -152,9 +162,65 @@ function finishEntry(req) {
         '',
         '  Constitution: ' + clean(req.docName),
         '  Video: ' + clean(req.videoName),
+        '  LinkedIn post: ' + (linkedin || 'not added yet. You can add the link later on the constitution page.'),
         '',
         'Keep this email as your record. Need to change something? Reply to this email or write to ' +
           CONTACT_EMAIL + '.',
+        '',
+        'BYU AI & Ethics Initiative',
+      ].join('\n'),
+    })
+  } finally {
+    lock.releaseLock()
+  }
+  return { ok: true }
+}
+
+function cleanLinkedIn(v) {
+  const url = String(v || '').trim().slice(0, 500)
+  return LINKEDIN_URL.test(url) ? url : ''
+}
+
+// Saves a LinkedIn post link on the latest entry for this email. The student
+// is emailed each time, so a link added by someone else gets noticed.
+function addLinkedIn(req) {
+  const email = String(req.email || '').trim().toLowerCase()
+  if (!BYU_EMAIL.test(email)) {
+    throw refuse('invalid', 'Please use your BYU email address (ending in @byu.edu).')
+  }
+  const url = cleanLinkedIn(req.url)
+  if (!url) throw refuse('invalid', 'Please paste the link to your LinkedIn post.')
+
+  const lock = LockService.getScriptLock()
+  lock.waitLock(20000)
+  try {
+    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0]
+    const rows = sheet.getLastRow() - 1
+    const emails = rows < 1 ? [] : sheet.getRange(2, EMAIL_COLUMN, rows, 1).getValues()
+    let row = -1
+    for (let i = emails.length - 1; i >= 0; i--) {
+      if (String(emails[i][0]).trim().toLowerCase() === email) {
+        row = i + 2
+        break
+      }
+    }
+    if (row < 0) {
+      throw refuse('notfound', "We couldn't find a submission for that email. Submit your constitution first.")
+    }
+    sheet.getRange(row, LINKEDIN_COLUMN).setValue(url)
+    SpreadsheetApp.flush()
+
+    MailApp.sendEmail({
+      to: email,
+      replyTo: CONTACT_EMAIL,
+      name: 'BYU AI & Ethics Initiative',
+      subject: 'We added your LinkedIn post to your constitution entry',
+      body: [
+        'Your LinkedIn post is now linked to your constitution entry:',
+        '',
+        '  ' + url,
+        '',
+        "Didn't do this? Reply to this email or write to " + CONTACT_EMAIL + '.',
         '',
         'BYU AI & Ethics Initiative',
       ].join('\n'),

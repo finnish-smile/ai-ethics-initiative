@@ -84,3 +84,10 @@ export async function checkVideo(file, { getDuration = readDuration } = {}) {
   }
   return { error: null, seconds }
 }
+
+export const LINKEDIN_MESSAGE = 'Please paste the link to your LinkedIn post (starting with https://www.linkedin.com/).'
+
+// A link to a post on LinkedIn. Optional on the form, so empty is checked by the caller.
+export function isLinkedInUrl(url) {
+  return /^https:\/\/([a-z]{2,3}\.)?linkedin\.com\/\S+$/i.test(String(url || '').trim())
+}

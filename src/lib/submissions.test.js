@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { chunkRanges, mimeFor, submitEntry, SubmitError } from './submissions.js'
+import { addLinkedIn, chunkRanges, mimeFor, submitEntry, SubmitError } from './submissions.js'
 
 const MB = 1024 * 1024
 
@@ -100,5 +100,24 @@ describe('submitEntry', () => {
     }
     await submitEntry(entry(), { ...deps, fetchImpl: spy })
     expect(bodies.every((b) => (b.email ?? b.fields.email) === 'H@byu.edu')).toBe(true)
+  })
+})
+
+describe('addLinkedIn', () => {
+  it('sends the trimmed email and link with the linkedin action', async () => {
+    let sent
+    const fetchImpl = async (url, init) => {
+      sent = JSON.parse(init.body)
+      return { json: async () => ({ ok: true }) }
+    }
+    await addLinkedIn({ email: ' H@byu.edu ', url: ' https://www.linkedin.com/posts/h ' }, { url: 'SCRIPT', fetchImpl })
+    expect(sent).toEqual({ action: 'linkedin', email: 'H@byu.edu', url: 'https://www.linkedin.com/posts/h' })
+  })
+
+  it('passes on "no entry yet" as code notfound', async () => {
+    const fetchImpl = async () => ({ json: async () => ({ ok: false, code: 'notfound', error: 'No entry' }) })
+    await expect(addLinkedIn({ email: 'h@byu.edu', url: 'x' }, { url: 'SCRIPT', fetchImpl })).rejects.toMatchObject({
+      code: 'notfound',
+    })
   })
 })

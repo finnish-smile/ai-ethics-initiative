@@ -13,9 +13,12 @@ import {
   formatDuration,
   formatSize,
   isByuEmail,
+  isLinkedInUrl,
   BYU_EMAIL_MESSAGE,
+  LINKEDIN_MESSAGE,
 } from '../lib/validation.js'
-import { CONTACT_EMAIL, submitEntry } from '../lib/submissions.js'
+import { CONTACT_EMAIL, addLinkedIn, submitEntry } from '../lib/submissions.js'
+import { SITE_URL } from '../lib/site.js'
 import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
@@ -54,8 +57,8 @@ const WHAT_WHY_HOW = [
     title: 'How',
     text: (
       <>
-        Write your five articles, use them as a <Harness /> in your AI tools’ custom instructions, and explain your
-        choices in a 30–120 second video.
+        Write your five articles, use them as a <Harness /> in your AI tools’ custom instructions, explain your
+        choices in a 30–120 second video, and share it all in a LinkedIn post.
       </>
     ),
   },
@@ -222,7 +225,16 @@ function Confirmation({ sent }) {
             {sent.videoSeconds ? ` · ${formatDuration(sent.videoSeconds)}` : ''}
           </span>
         </li>
+        {sent.linkedin && (
+          <li>
+            <b>LinkedIn post</b>
+            <span>Linked</span>
+          </li>
+        )}
       </ul>
+      {!sent.linkedin && (
+        <p>Once your LinkedIn post is up, add its link with the “Add your LinkedIn post” form on this page.</p>
+      )}
       <p>
         We sent a receipt to <strong>{sent.email}</strong>. Keep it as your record.
       </p>
@@ -234,8 +246,9 @@ function Confirmation({ sent }) {
 }
 
 function SubmissionForm() {
-  const [form, setForm] = useState({ name: '', email: '', major: '', year: '' })
+  const [form, setForm] = useState({ name: '', email: '', major: '', year: '', linkedin: '' })
   const [emailError, setEmailError] = useState('')
+  const [linkedinError, setLinkedinError] = useState('')
   const [doc, setDoc] = useState(null)
   const [docError, setDocError] = useState('')
   const [video, setVideo] = useState(null)
@@ -253,6 +266,7 @@ function SubmissionForm() {
       setEmailError('')
       if (status === 'limit') setStatus('idle')
     }
+    if (k === 'linkedin') setLinkedinError('')
   }
 
   // Ask before leaving mid-upload.
@@ -285,6 +299,10 @@ function SubmissionForm() {
       setEmailError(BYU_EMAIL_MESSAGE)
       ok = false
     }
+    if (form.linkedin.trim() && !isLinkedInUrl(form.linkedin)) {
+      setLinkedinError(LINKEDIN_MESSAGE)
+      ok = false
+    }
     if (!doc) {
       setDocError(docError || 'Please attach your written constitution.')
       ok = false
@@ -299,12 +317,12 @@ function SubmissionForm() {
     setProgress({ sent: 0, total: doc.size + video.size })
     try {
       const { receivedAt } = await submitEntry({
-        fields: form,
+        fields: { ...form, linkedin: form.linkedin.trim() },
         doc,
         video,
         onProgress: (s, total) => setProgress({ sent: s, total }),
       })
-      setSent({ receivedAt, doc, video, videoSeconds, email: form.email.trim() })
+      setSent({ receivedAt, doc, video, videoSeconds, email: form.email.trim(), linkedin: form.linkedin.trim() })
       setStatus('done')
     } catch (err) {
       setStatus(err.code === 'limit' ? 'limit' : 'failed')
@@ -399,6 +417,32 @@ function SubmissionForm() {
         locked={sending}
       />
 
+      <label className="bc-field">
+        <span>
+          LinkedIn post link <span className="bc-optional">(optional)</span>
+        </span>
+        <input
+          type="url"
+          value={form.linkedin}
+          onChange={set('linkedin')}
+          placeholder="https://www.linkedin.com/posts/…"
+          className={linkedinError ? 'lc-input--error' : undefined}
+          aria-invalid={linkedinError ? true : undefined}
+          aria-describedby={linkedinError ? 'bc-linkedin-error' : 'bc-linkedin-hint'}
+          disabled={sending || undefined}
+        />
+        {!linkedinError && (
+          <span className="bc-hint" id="bc-linkedin-hint">
+            Haven’t posted yet? Submit now and add the link later.
+          </span>
+        )}
+        {linkedinError && (
+          <span className="lc-error" id="bc-linkedin-error" role="alert">
+            {linkedinError}
+          </span>
+        )}
+      </label>
+
       {sending && (
         <div className="bc-progress" role="status" aria-live="polite">
           <div className="bc-progress__top">
@@ -441,6 +485,82 @@ function SubmissionForm() {
           <span className="bc-closed">Due {STUDENT_DEADLINE}.</span>
         )}
       </div>
+    </form>
+  )
+}
+
+// For students who already submitted: attaches a LinkedIn post link to their
+// latest entry, matched by their BYU email.
+function LinkedInLater() {
+  const [email, setEmail] = useState('')
+  const [url, setUrl] = useState('')
+  const [error, setError] = useState('')
+  // idle | sending | done
+  const [status, setStatus] = useState('idle')
+  const sending = status === 'sending'
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    if (!SUBMISSIONS_OPEN || sending) return
+    if (!isByuEmail(email)) return setError(BYU_EMAIL_MESSAGE)
+    if (!isLinkedInUrl(url)) return setError(LINKEDIN_MESSAGE)
+    setError('')
+    setStatus('sending')
+    try {
+      await addLinkedIn({ email, url })
+      setStatus('done')
+    } catch (err) {
+      setStatus('idle')
+      setError(err.code === 'notfound' || err.code === 'invalid' ? err.message : FAILED_MESSAGE)
+    }
+  }
+
+  if (status === 'done') {
+    return (
+      <div className="bc-later" role="status">
+        <h3>LinkedIn post added</h3>
+        <p>
+          It’s now linked to your submission. We sent a note to <strong>{email.trim()}</strong>.
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <form className="bc-later" onSubmit={onSubmit}>
+      <h3>Already submitted? Add your LinkedIn post</h3>
+      <p>Use the same BYU email you submitted with, and we’ll attach the link to your entry.</p>
+      <label>
+        BYU email
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@byu.edu"
+          autoComplete="email"
+          disabled={sending || undefined}
+        />
+      </label>
+      <label>
+        LinkedIn post link
+        <input
+          type="url"
+          required
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://www.linkedin.com/posts/…"
+          disabled={sending || undefined}
+        />
+      </label>
+      {error && (
+        <p className="lc-error" role="alert">
+          {error}
+        </p>
+      )}
+      <button type="submit" className="btn btn--ghost" disabled={!SUBMISSIONS_OPEN || sending}>
+        {sending ? 'Adding…' : 'Add my LinkedIn post'}
+      </button>
     </form>
   )
 }
@@ -534,6 +654,20 @@ export default function BuildConstitution() {
                   <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
                 </div>
               </div>
+              <div className="bc-deliverable bc-deliverable--wide">
+                <span className="bc-deliverable__num">3</span>
+                <div>
+                  <h3>LinkedIn post</h3>
+                  <p>Show your network what you built.</p>
+                  <ol className="bc-mini-steps">
+                    <li>Make a LinkedIn post.</li>
+                    <li>Share your constitution and how you’re using it with AI.</li>
+                    <li>
+                      Include a link to our website: <a href={SITE_URL}>{SITE_URL.replace(/^https:\/\//, '')}</a>
+                    </li>
+                  </ol>
+                </div>
+              </div>
             </div>
             <p className="bc-tip">
               Need a starting point? Draft your articles in the{' '}
@@ -608,9 +742,13 @@ export default function BuildConstitution() {
               <li>Fill in your details.</li>
               <li>Attach your written constitution.</li>
               <li>Attach your 30–120 second video.</li>
+              <li>Paste your LinkedIn post link (optional now, you can add it later).</li>
             </ol>
           </div>
           <SubmissionForm />
+        </div>
+        <div className="wrap">
+          <LinkedInLater />
         </div>
       </section>
     </div>

@@ -92,3 +92,18 @@ describe('checkVideo first-bytes check (2.8)', () => {
     expect((await checkVideo(mp4AsWebm, seconds(60))).error).toMatch(/not a valid/)
   })
 })
+
+import { isLinkedInUrl } from './validation.js'
+
+describe('isLinkedInUrl', () => {
+  it('accepts LinkedIn post links', () => {
+    expect(isLinkedInUrl('https://www.linkedin.com/posts/jane-doe_ai-activity-123')).toBe(true)
+    expect(isLinkedInUrl(' https://linkedin.com/feed/update/urn:li:activity:123 ')).toBe(true)
+  })
+  it('rejects other sites, plain http and look-alikes', () => {
+    expect(isLinkedInUrl('')).toBe(false)
+    expect(isLinkedInUrl('http://www.linkedin.com/posts/x')).toBe(false)
+    expect(isLinkedInUrl('https://linkedin.com.evil.io/posts/x')).toBe(false)
+    expect(isLinkedInUrl('https://www.linkedin.com/')).toBe(false)
+  })
+})

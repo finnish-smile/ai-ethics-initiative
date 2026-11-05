@@ -98,3 +98,9 @@ export async function submitEntry({ fields, doc, video, onProgress = () => {} },
   )
   return { receivedAt: new Date() }
 }
+
+// Adds a LinkedIn post link to a student's latest entry, matched by email.
+// Refused with code 'notfound' if that email has no entry yet.
+export async function addLinkedIn({ email, url }, deps = {}) {
+  await callScript({ action: 'linkedin', email: email.trim(), url: url.trim() }, deps)
+}

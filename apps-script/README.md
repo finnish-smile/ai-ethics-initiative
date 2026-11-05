@@ -7,7 +7,7 @@ Entries from `/constitution` are saved in the club's Google Drive, logged in a G
 1. **Folders:** in Google Drive, create a folder `Constitution Submissions`, and inside it two folders: `Incoming` and `Submissions`. Open each and copy its ID from the address bar (the part after `/folders/`).
    - `Submissions` holds complete entries only. `Incoming` holds uploads that never finished; it is safe to empty now and then.
 2. **Sheet:** create a Google Sheet named `Constitution Submissions Log`. In row 1, type these headers, one per column, in this order:
-   `Submitted | Name | Email | Major | Year | Constitution | Video | Reviewed`.
+   `Submitted | Name | Email | Major | Year | Constitution | Video | Reviewed | LinkedIn post`.
    Copy its ID from the address bar (between `/d/` and `/edit`).
 3. **Script:** go to script.google.com, click **New project**, and name it `Constitution Submissions`.
    - Paste `Code.gs` into the editor over the starter code.
@@ -38,6 +38,8 @@ Entries from `/constitution` are saved in the club's Google Drive, logged in a G
 ## After changing Code.gs
 
 **Deploy → Manage deployments → edit → Version: New version.** The `/exec` URL stays the same.
+
+If the Sheet was made before the LinkedIn post column existed, type `LinkedIn post` in cell I1 (the column after `Reviewed`).
 
 ## Limits (regular Gmail account)
 
