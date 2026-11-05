@@ -75,6 +75,42 @@ const RUBRIC = [
 
 const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior']
 
+// How-to video: putting your constitution into an AI tool's custom instructions.
+// Empty shows a "coming soon" placeholder. To add the video, set this to either:
+//   - a YouTube embed link, e.g. 'https://www.youtube.com/embed/VIDEO_ID'
+//   - a file in public/constitution/, e.g. 'constitution/harness-how-to.mp4'
+const HARNESS_VIDEO = ''
+
+function HarnessVideo() {
+  if (!HARNESS_VIDEO) {
+    return (
+      <div className="bc-video bc-video--empty">
+        <span className="bc-video__play" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 24 24">
+            <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
+          </svg>
+        </span>
+        <p>Video coming soon</p>
+      </div>
+    )
+  }
+  const isFile = /\.(mp4|webm|mov|m4v)$/i.test(HARNESS_VIDEO)
+  return (
+    <div className="bc-video">
+      {isFile ? (
+        <video controls preload="metadata" src={`${import.meta.env.BASE_URL}${HARNESS_VIDEO}`} />
+      ) : (
+        <iframe
+          src={HARNESS_VIDEO}
+          title="How to add your constitution to your AI tool"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+        />
+      )}
+    </div>
+  )
+}
+
 function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra, locked }) {
   const input = useRef(null)
   const onChange = async (e) => {
@@ -480,6 +516,23 @@ export default function BuildConstitution() {
               <Link to="/kickstart/ethics">Constitution Builder in Learn, Module 2</Link>, then download and refine
               them.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How-to video */}
+      <section className="section bc-howto" id="how-to" data-screen-label="How to use it">
+        <div className="wrap">
+          <div className="bc-section-head" data-reveal>
+            <p className="kicker">How to use it</p>
+            <h2>Put your constitution to work</h2>
+            <p>
+              Watch how to paste your constitution into your AI tool’s custom instructions so it shapes every
+              conversation.
+            </p>
+          </div>
+          <div data-reveal>
+            <HarnessVideo />
           </div>
         </div>
       </section>

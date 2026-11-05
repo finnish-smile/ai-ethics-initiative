@@ -184,6 +184,38 @@
 .bc-deliverable p { margin: 0; font-size: 15px; color: var(--muted); }
 .bc-tip { font-size: 15px; color: var(--muted); }
 
+/* ---- How-to video ---- */
+.bc-video {
+  position: relative;
+  max-width: 880px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+}
+.bc-video iframe,
+.bc-video video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.bc-video--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--parchment);
+  border: 2px dashed var(--parchment-2);
+  color: var(--sepia-soft);
+}
+.bc-video--empty p { margin: 0; font-size: 15px; letter-spacing: 0.02em; }
+.bc-video__play {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--parchment-2);
+  color: var(--sepia);
+}
+
 /* ---- Articles ---- */
 .bc-articles { background: var(--parchment); }
 .bc-article-list {
