@@ -25,6 +25,21 @@ import '../build-constitution.css'
 // switch (script property SUBMISSIONS_OPEN), which is the real lock.
 export const SUBMISSIONS_OPEN = import.meta.env.VITE_SUBMISSIONS_OPEN === 'true'
 
+const HARNESS_DEFINITION =
+  'A harness is a set of rules and guidelines your AI works within. It shapes how the tool responds to you.'
+
+// "harness" with a definition that appears on hover, keyboard focus, or tap.
+function Harness({ children = 'harness' }) {
+  return (
+    <span className="bc-term" tabIndex={0}>
+      {children}
+      <span className="bc-term__tip" role="tooltip">
+        {HARNESS_DEFINITION}
+      </span>
+    </span>
+  )
+}
+
 // The three cards along the bottom of the first screen.
 const WHAT_WHY_HOW = [
   {
@@ -37,7 +52,12 @@ const WHAT_WHY_HOW = [
   },
   {
     title: 'How',
-    text: 'Write your five articles, use them as a harness in your AI tools’ custom instructions, and explain your choices in a 30–120 second video.',
+    text: (
+      <>
+        Write your five articles, use them as a <Harness /> in your AI tools’ custom instructions, and explain your
+        choices in a 30–120 second video.
+      </>
+    ),
   },
 ]
 
@@ -491,7 +511,11 @@ export default function BuildConstitution() {
               use AI in your learning, work, and life.
             </p>
             <p>
-              Your constitution doubles as a <strong>harness</strong>. Paste it into the custom instructions of the
+              Your constitution doubles as a{' '}
+              <strong>
+                <Harness />
+              </strong>
+              . Paste it into the custom instructions of the
               AI tools you use, and it shapes how they respond to you: when to push back, when to ask you to do the
               thinking, when to cite sources.
             </p>
