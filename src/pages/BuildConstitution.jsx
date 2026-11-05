@@ -73,7 +73,7 @@ const RUBRIC = [
   },
 ]
 
-const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Graduate student']
+const YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior']
 
 function DropZone({ id, label, prompt, help, accept, file, error, onPick, extra, locked }) {
   const input = useRef(null)
