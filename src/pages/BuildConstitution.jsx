@@ -601,9 +601,7 @@ export default function BuildConstitution() {
           style={{ objectPosition: '50% 45%', filter: 'brightness(0.8) saturate(0.9)' }}
         />
         <div className="wrap">
-          <p className="kicker">The Constitution Assignment</p>
           <h1>Build your personal AI constitution</h1>
-          <p>Write the rules you want your AI to follow, and that you want to follow when you use it.</p>
         </div>
         <p className="phead__caption">Raphael, The School of Athens, 1509–1511</p>
       </header>
