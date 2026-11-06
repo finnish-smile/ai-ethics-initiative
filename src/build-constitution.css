@@ -24,19 +24,24 @@
 .bc-section-head > p:not(.kicker) { color: var(--muted); margin: 14px 0 0; }
 .bc-section-head .lc-pending { color: var(--navy); }
 
-/* ---- Introduction ---- */
-.bc-intro__grid {
+/* ---- Introduction: heading across the top, then parts 1 and 2 and the
+   lighter bonus card in one row, then the starting-point tip. ---- */
+.bc .section.bc-intro { padding-block: clamp(36px, 4vw, 48px); }
+.bc .section.bc-rubric { padding-top: clamp(16px, 2vw, 24px); }
+.bc-intro h2 { font-size: clamp(26px, 3vw, 34px); margin: 8px 0 24px; }
+.bc-intro__row {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(24px, 5vw, 64px);
+  grid-template-columns: 1fr 1fr 0.85fr;
+  gap: 16px;
+  align-items: stretch;
 }
-.bc-intro h2 { font-size: clamp(28px, 4vw, 40px); margin: 10px 0 0; }
-.bc-intro__body > p { margin: 0 0 16px; max-width: 62ch; }
-@media (max-width: 860px) { .bc-intro__grid { grid-template-columns: 1fr; } }
+@media (max-width: 1000px) {
+  .bc-intro__row { grid-template-columns: 1fr 1fr; }
+  .bc-intro__row .bc-bonus { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) { .bc-intro__row { grid-template-columns: 1fr; } }
+.bc-intro .bc-tip { margin: 18px 0 0; }
 
-.bc-deliverables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
-@media (max-width: 640px) { .bc-deliverables { grid-template-columns: 1fr; } }
-.bc-intro__body > .bc-deliverables:first-child { margin-top: 0; }
 .bc-deliverable {
   display: flex;
   gap: 14px;
@@ -65,13 +70,14 @@
 .bc-deliverable h3 { font-size: 20px; }
 .bc-deliverable p { color: var(--ink); }
 
-/* LinkedIn bonus: one quiet line under the two parts. */
+/* LinkedIn bonus: a lighter card next to parts 1 and 2. */
 .bc-bonus {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin: -8px 0 24px;
-  padding: 12px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 20px;
   border: 1px dashed var(--line-2);
   border-radius: var(--radius);
 }

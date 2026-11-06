@@ -610,29 +610,27 @@ export default function BuildConstitution() {
 
       {/* Introduction */}
       <section className="section bc-intro" data-screen-label="The assignment">
-        <div className="wrap bc-intro__grid">
-          <div data-reveal>
+        <div className="wrap">
+          <div className="bc-intro__head" data-reveal>
             <p className="kicker">The assignment</p>
             <h2>Creating a personal set of guidelines for your AI to use</h2>
           </div>
-          <div className="bc-intro__body" data-reveal>
-            <div className="bc-deliverables">
-              <div className="bc-deliverable">
-                <span className="bc-deliverable__num">1</span>
-                <div>
-                  <h3>Written constitution</h3>
-                  <p>One article for each of the five guiding principles, written as rules you can follow and an AI can apply.</p>
-                </div>
-              </div>
-              <div className="bc-deliverable">
-                <span className="bc-deliverable__num">2</span>
-                <div>
-                  <h3>Video explanation</h3>
-                  <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
-                </div>
+          {/* Parts 1 and 2, then the optional bonus as a lighter third card. */}
+          <div className="bc-intro__row" data-reveal>
+            <div className="bc-deliverable">
+              <span className="bc-deliverable__num">1</span>
+              <div>
+                <h3>Written constitution</h3>
+                <p>One article for each of the five guiding principles, written as rules you can follow and an AI can apply.</p>
               </div>
             </div>
-            {/* Bonus, not required: kept small so parts 1 and 2 carry the focus. */}
+            <div className="bc-deliverable">
+              <span className="bc-deliverable__num">2</span>
+              <div>
+                <h3>Video explanation</h3>
+                <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
+              </div>
+            </div>
             <div className="bc-bonus">
               <span className="bc-bonus__tag">Bonus</span>
               <p>
@@ -640,12 +638,12 @@ export default function BuildConstitution() {
                 link to our site: <a href={SITE_URL}>{SITE_URL.replace(/^https:\/\//, '')}</a>
               </p>
             </div>
-            <p className="bc-tip">
-              Need a starting point? Draft your articles in the{' '}
-              <Link to="/kickstart/ethics">Constitution Builder in Learn, Module 2</Link>, then download and refine
-              them.
-            </p>
           </div>
+          <p className="bc-tip">
+            Need a starting point? Draft your articles in the{' '}
+            <Link to="/kickstart/ethics">Constitution Builder in Learn, Module 2</Link>, then download and refine
+            them.
+          </p>
         </div>
       </section>
 
