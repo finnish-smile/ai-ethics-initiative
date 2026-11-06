@@ -625,23 +625,9 @@ export default function BuildConstitution() {
         <div className="wrap bc-intro__grid">
           <div data-reveal>
             <p className="kicker">The assignment</p>
-            <h2>A founding document for how you use AI</h2>
+            <h2>Creating a personal set of guidelines for your AI to use</h2>
           </div>
           <div className="bc-intro__body" data-reveal>
-            <p>
-              Every nation’s founders wrote down what they believed before they had to act on it. You’re invited
-              to do the same for AI: draft a short personal constitution that states how you will — and won’t —
-              use AI in your learning, work, and life.
-            </p>
-            <p>
-              Your constitution doubles as a{' '}
-              <strong>
-                <Harness />
-              </strong>
-              . Paste it into the custom instructions of the
-              AI tools you use, and it shapes how they respond to you: when to push back, when to ask you to do the
-              thinking, when to cite sources.
-            </p>
             <div className="bc-deliverables">
               <div className="bc-deliverable">
                 <span className="bc-deliverable__num">1</span>
@@ -739,7 +725,15 @@ export default function BuildConstitution() {
               <tbody>
                 {RUBRIC.map((r) => (
                   <tr key={r.criterion}>
-                    <th scope="row">{r.criterion}</th>
+                    <th scope="row">
+                      {r.criterion === 'Usable as a harness' ? (
+                        <>
+                          Usable as a <Harness />
+                        </>
+                      ) : (
+                        r.criterion
+                      )}
+                    </th>
                     <td>{r.lookFor}</td>
                     <td className="bc-table__pts">{r.points}</td>
                   </tr>

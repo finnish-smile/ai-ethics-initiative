@@ -123,6 +123,7 @@
 
 .bc-deliverables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
 @media (max-width: 640px) { .bc-deliverables { grid-template-columns: 1fr; } }
+.bc-intro__body > .bc-deliverables:first-child { margin-top: 0; }
 .bc-deliverable {
   display: flex;
   gap: 14px;
@@ -219,6 +220,26 @@
   border: 6px solid transparent;
   border-top-color: var(--navy);
 }
+/* Inside the rubric table (which scrolls sideways and would clip a box above):
+   open below the word, lined up with its left edge. */
+.bc-table .bc-term__tip {
+  bottom: auto;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 260px;
+  white-space: normal;
+  text-transform: none;
+  transform: translateY(-4px);
+}
+.bc-table .bc-term__tip::after {
+  top: auto;
+  bottom: 100%;
+  left: 18px;
+  border-top-color: transparent;
+  border-bottom-color: var(--navy);
+}
+.bc-table .bc-term:hover .bc-term__tip,
+.bc-table .bc-term:focus .bc-term__tip { transform: none; }
 .bc-term:hover .bc-term__tip,
 .bc-term:focus .bc-term__tip {
   opacity: 1;
