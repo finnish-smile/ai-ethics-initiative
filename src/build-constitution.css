@@ -247,6 +247,24 @@
   transform: translate(-50%, 0);
 }
 
+/* ---- Examples + how-to video: two boxes side by side under the submission
+   area, each the size of the "Already submitted?" box. ---- */
+.bc-extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 24px;
+  padding-bottom: clamp(40px, 6vw, 72px);
+}
+.bc-extras .bc-extra { margin-top: 0; flex: 1 1 320px; }
+.bc-extra .bc-example-list { gap: 8px; }
+.bc-extra .bc-example summary { padding: 12px 14px; gap: 10px; }
+.bc-extra .bc-example__num { width: 28px; height: 28px; font-size: 14px; }
+.bc-extra .bc-example__title strong { font-size: 16px; }
+.bc-extra .bc-example__body { padding: 0 14px 14px; font-size: 15px; }
+.bc-extra .bc-video { max-width: none; }
+
 /* ---- Example constitutions (dropdowns) ---- */
 .bc-example-list { display: grid; gap: 12px; max-width: 880px; }
 .bc-example {

@@ -667,39 +667,6 @@ export default function BuildConstitution() {
         </div>
       </section>
 
-      {/* Example constitutions */}
-      <section className="section bc-examples" id="examples" data-screen-label="Examples">
-        <div className="wrap">
-          <div className="bc-section-head" data-reveal>
-            <p className="kicker">Examples</p>
-            <h2>Don’t know where to start?</h2>
-            <p>Here are 3 unique student AI constitution examples.</p>
-          </div>
-          <div className="bc-example-list" data-reveal>
-            {CONSTITUTION_EXAMPLES.map((ex, i) => (
-              <Example key={i} example={ex} n={i + 1} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How-to video */}
-      <section className="section bc-howto" id="how-to" data-screen-label="How to use it">
-        <div className="wrap">
-          <div className="bc-section-head" data-reveal>
-            <p className="kicker">How to use it</p>
-            <h2>Put your constitution to work</h2>
-            <p>
-              Watch how to paste your constitution into your AI tool’s custom instructions so it shapes every
-              conversation.
-            </p>
-          </div>
-          <div data-reveal>
-            <HarnessVideo />
-          </div>
-        </div>
-      </section>
-
       {/* Rubric */}
       <section className="section bc-rubric" id="rubric" data-screen-label="Rubric">
         <div className="wrap">
@@ -762,6 +729,24 @@ export default function BuildConstitution() {
         </div>
         <div className="wrap">
           <LinkedInLater />
+        </div>
+
+        {/* Examples (left) and how-to video (right), same size as the box above */}
+        <div className="wrap bc-extras">
+          <div className="bc-later bc-extra" id="examples" data-screen-label="Examples">
+            <h3>Don’t know where to start?</h3>
+            <p>Here are 3 unique student AI constitution examples.</p>
+            <div className="bc-example-list">
+              {CONSTITUTION_EXAMPLES.map((ex, i) => (
+                <Example key={i} example={ex} n={i + 1} />
+              ))}
+            </div>
+          </div>
+          <div className="bc-later bc-extra" id="how-to" data-screen-label="How to use it">
+            <h3>Put your constitution to work</h3>
+            <p>Watch how to paste your constitution into your AI tool’s custom instructions so it shapes every conversation.</p>
+            <HarnessVideo />
+          </div>
         </div>
       </section>
     </div>
