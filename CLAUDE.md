@@ -47,7 +47,7 @@ Deliverables
 
 Written constitution (PDF, Word, or text, ≤10 MB)
 30–120 second video explaining what, why, and how (incl. how AI was used)
-LinkedIn post sharing the constitution and how they use it, with a link to our website (required, not scored). The post link is optional on the form; students can add it later with their BYU email, and it's saved to their latest entry in the Sheet. The website link shown to students is SITE_URL in src/lib/site.js; update it once the final domain is set.
+Optional bonus: LinkedIn post sharing the constitution and how they use it, with a link to our website (not required, not scored). The post link is optional on the form; students can add it later with their BYU email, and it's saved to their latest entry in the Sheet. The website link shown to students is SITE_URL in src/lib/site.js; update it once the final domain is set.
 Rubric (100 pts)
 
 Criterion	Points

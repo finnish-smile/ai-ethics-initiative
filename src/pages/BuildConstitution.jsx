@@ -643,20 +643,14 @@ export default function BuildConstitution() {
                   <p>A 30–120 second video on why you wrote your constitution and how you built it, including how you used AI.</p>
                 </div>
               </div>
-              <div className="bc-deliverable bc-deliverable--wide">
-                <span className="bc-deliverable__num">3</span>
-                <div>
-                  <h3>LinkedIn post</h3>
-                  <p>Show your network what you built.</p>
-                  <ol className="bc-mini-steps">
-                    <li>Make a LinkedIn post.</li>
-                    <li>Share your constitution and how you’re using it with AI.</li>
-                    <li>
-                      Include a link to our website: <a href={SITE_URL}>{SITE_URL.replace(/^https:\/\//, '')}</a>
-                    </li>
-                  </ol>
-                </div>
-              </div>
+            </div>
+            {/* Bonus, not required: kept small so parts 1 and 2 carry the focus. */}
+            <div className="bc-bonus">
+              <span className="bc-bonus__tag">Bonus</span>
+              <p>
+                <strong>LinkedIn post (optional).</strong> Share your constitution and how you’re using it, with a
+                link to our site: <a href={SITE_URL}>{SITE_URL.replace(/^https:\/\//, '')}</a>
+              </p>
             </div>
             <p className="bc-tip">
               Need a starting point? Draft your articles in the{' '}
@@ -722,7 +716,7 @@ export default function BuildConstitution() {
               <li>Fill in your details.</li>
               <li>Attach your written constitution.</li>
               <li>Attach your 30–120 second video.</li>
-              <li>Paste your LinkedIn post link (optional now, you can add it later).</li>
+              <li>Optional: add your LinkedIn post link, now or later.</li>
             </ol>
           </div>
           <SubmissionForm />
