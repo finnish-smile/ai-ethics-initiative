@@ -44,27 +44,6 @@ function Harness({ children = 'harness' }) {
   )
 }
 
-// The three cards along the bottom of the first screen.
-const WHAT_WHY_HOW = [
-  {
-    title: 'What',
-    text: 'A short personal constitution, one article per guiding principle, that sets the rules for how you will and won’t use AI.',
-  },
-  {
-    title: 'Why',
-    text: 'Deciding your values before you open the chat window keeps you, not the tool, in charge of your learning, choices, and integrity.',
-  },
-  {
-    title: 'How',
-    text: (
-      <>
-        Write your five articles, use them as a <Harness /> in your AI tools’ custom instructions, explain your
-        choices in a 30–120 second video, and share it all in a LinkedIn post.
-      </>
-    ),
-  },
-]
-
 // Rubric, 100 points total.
 const RUBRIC = [
   {
@@ -625,10 +604,6 @@ export default function BuildConstitution() {
           <div className="bc-hero__text">
             <p className="kicker">The Constitution Assignment</p>
             <h1>Build your personal AI constitution</h1>
-            <p className="bc-preamble">
-              “We, the students, in order to think more clearly, learn more deeply, and use these tools as
-              stewards rather than servants…”
-            </p>
             <p className="bc-hero__lede">
               Write the rules you want your AI to follow — and that you want to follow when you use it.
             </p>
@@ -642,14 +617,6 @@ export default function BuildConstitution() {
             </a>
           </div>
         </div>
-        <ul className="wrap bc-wwh">
-          {WHAT_WHY_HOW.map((c) => (
-            <li key={c.title}>
-              <h2>{c.title}</h2>
-              <p>{c.text}</p>
-            </li>
-          ))}
-        </ul>
         <p className="wrap bc-hero__credit">Background: Raphael, The School of Athens, 1509–1511</p>
       </header>
 

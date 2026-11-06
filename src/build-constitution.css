@@ -12,8 +12,7 @@
 }
 
 /* ---- Hero: fills the first screen. The School of Athens sits faded
-   behind the text, the two calls to action come next, and the What /
-   Why / How cards are pinned to the bottom edge. ---- */
+   behind the text, with the two calls to action below it. ---- */
 .bc-hero {
   position: relative;
   isolation: isolate;
@@ -60,14 +59,6 @@
   color: var(--navy);
   margin: 12px 0 0;
 }
-.bc-preamble {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(18px, 2vw, 22px);
-  color: var(--sepia);
-  margin: 22px auto 0;
-  max-width: 50ch;
-}
 .bc-hero__lede { margin: 16px auto 0; color: var(--ink); font-size: 18px; max-width: 48ch; }
 
 .bc-hero__actions {
@@ -86,27 +77,6 @@
 .bc-hero__actions .btn--ghost { background: rgba(255, 255, 255, 0.85); border-color: var(--navy); }
 .bc-hero__actions .btn--ghost:hover { background: #fff; }
 
-/* What / Why / How */
-.bc-wwh {
-  list-style: none;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-}
-.bc-wwh li {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid var(--parchment-2);
-  border-top: 3px solid var(--navy);
-  border-radius: var(--radius);
-  padding: 18px 20px;
-}
-.bc-wwh h2 {
-  font-size: 22px;
-  margin: 0 0 6px;
-}
-.bc-wwh p { margin: 0; font-size: 15.5px; line-height: 1.5; color: var(--ink); }
-
 .bc-hero__credit {
   margin: 10px auto 0;
   padding-bottom: clamp(16px, 2vw, 24px);
@@ -117,24 +87,17 @@
   text-align: right;
 }
 
-/* Shorter laptop screens: tighten the hero so the cards still land on
-   the first screen. */
+/* Shorter laptop screens: tighten the hero. */
 @media (min-width: 861px) and (max-height: 820px) {
   .bc-hero__main { padding-top: calc(var(--nav-h-open) + 16px); padding-bottom: 18px; }
   .bc-hero h1 { font-size: clamp(32px, 3.8vw, 48px); }
-  .bc-preamble { font-size: 18px; margin-top: 14px; }
   .bc-hero__lede { margin-top: 10px; font-size: 16.5px; }
   .bc-hero__actions { margin-top: 22px; }
   .bc-hero__actions .btn { padding: 15px 30px; font-size: 17px; }
-  .bc-wwh { gap: 12px; }
-  .bc-wwh li { padding: 12px 16px; }
-  .bc-wwh h2 { font-size: 19px; margin-bottom: 2px; }
-  .bc-wwh p { font-size: 14.5px; }
 }
 
 @media (max-width: 860px) {
   .bc-hero { min-height: 0; }
-  .bc-wwh { grid-template-columns: 1fr; }
 }
 @media (max-width: 560px) {
   .bc-hero__actions { flex-direction: column; align-self: stretch; }
