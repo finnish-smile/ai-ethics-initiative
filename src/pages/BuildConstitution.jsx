@@ -19,6 +19,7 @@ import {
 } from '../lib/validation.js'
 import { CONTACT_EMAIL, addLinkedIn, submitEntry } from '../lib/submissions.js'
 import { SITE_URL } from '../lib/site.js'
+import { CONSTITUTION_EXAMPLES } from '../data/constitutionExamples.js'
 import '../showcase.css'
 import '../ai-constitution-competition.css'
 import '../build-constitution.css'
@@ -489,6 +490,41 @@ function SubmissionForm() {
   )
 }
 
+// One example constitution as a dropdown. Blank lines split paragraphs;
+// lines starting with "## " are headings.
+function Example({ example, n }) {
+  const { author, detail, body, file } = example
+  const blocks = body.trim() ? body.trim().split(/\n\s*\n/) : []
+  return (
+    <details className="bc-example">
+      <summary>
+        <span className="bc-example__num">{n}</span>
+        <span className="bc-example__title">
+          <strong>Example {n}</strong>
+          {author && (
+            <span>
+              {author}
+              {detail && ` · ${detail}`}
+            </span>
+          )}
+        </span>
+        <span className="bc-example__chev" aria-hidden="true" />
+      </summary>
+      <div className="bc-example__body">
+        {blocks.length === 0 && !file && <p className="bc-example__empty">Example coming soon.</p>}
+        {blocks.map((b, i) =>
+          b.startsWith('## ') ? <h4 key={i}>{b.slice(3)}</h4> : <p key={i}>{b}</p>
+        )}
+        {file && (
+          <a className="bc-example__file" href={`${import.meta.env.BASE_URL}${file}`} download>
+            Download this constitution
+          </a>
+        )}
+      </div>
+    </details>
+  )
+}
+
 // For students who already submitted: attaches a LinkedIn post link to their
 // latest entry, matched by their BYU email.
 function LinkedInLater() {
@@ -674,6 +710,22 @@ export default function BuildConstitution() {
               <Link to="/kickstart/ethics">Constitution Builder in Learn, Module 2</Link>, then download and refine
               them.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Example constitutions */}
+      <section className="section bc-examples" id="examples" data-screen-label="Examples">
+        <div className="wrap">
+          <div className="bc-section-head" data-reveal>
+            <p className="kicker">Examples</p>
+            <h2>Don’t know where to start?</h2>
+            <p>Here are 3 unique student AI constitution examples.</p>
+          </div>
+          <div className="bc-example-list" data-reveal>
+            {CONSTITUTION_EXAMPLES.map((ex, i) => (
+              <Example key={i} example={ex} n={i + 1} />
+            ))}
           </div>
         </div>
       </section>
