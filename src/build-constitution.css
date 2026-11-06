@@ -187,7 +187,6 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--paper);
-  max-width: 420px;
 }
 .bc-later h3 { margin: 0; font-size: 18px; color: var(--navy); }
 .bc-later p { margin: 0; font-size: 14.5px; color: var(--muted); }
@@ -272,16 +271,18 @@
   transform: translate(-50%, 0);
 }
 
-/* ---- Examples + how-to video: two boxes side by side under the submission
-   area, each the size of the "Already submitted?" box. ---- */
+/* ---- Examples + how-to video: two boxes side by side under the submission area. ---- */
+/* Same columns as the submission grid above, so the boxes line up with the
+   LinkedIn box (left) and the form (right). */
 .bc-extras {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: start;
   margin-top: clamp(28px, 4vw, 40px);
 }
-.bc-extras .bc-extra { margin-top: 0; flex: 1 1 320px; }
+@media (max-width: 860px) { .bc-extras { grid-template-columns: 1fr; gap: 24px; } }
+.bc-extras .bc-extra { margin-top: 0; }
 .bc-extra .bc-example-list { gap: 8px; }
 .bc-extra .bc-example summary { padding: 12px 14px; gap: 10px; }
 .bc-extra .bc-example__num { width: 28px; height: 28px; font-size: 14px; }
