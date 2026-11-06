@@ -726,9 +726,10 @@ export default function BuildConstitution() {
             </ol>
           </div>
           <SubmissionForm />
-        </div>
-        <div className="wrap">
-          <LinkedInLater />
+          {/* Under steps 1-4 on wide screens; after the form on phones. */}
+          <div className="bc-later-slot">
+            <LinkedInLater />
+          </div>
         </div>
 
         {/* Examples (left) and how-to video (right), same size as the box above */}
