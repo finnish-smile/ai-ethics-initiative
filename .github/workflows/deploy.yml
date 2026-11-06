@@ -26,7 +26,13 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      # Repo variables (Settings > Secrets and variables > Actions > Variables).
+      # To close submissions on the site: set VITE_SUBMISSIONS_OPEN to false and
+      # re-run this workflow. The Apps Script's SUBMISSIONS_OPEN property is the real lock.
       - run: npm run build
+        env:
+          VITE_SUBMIT_URL: ${{ vars.VITE_SUBMIT_URL }}
+          VITE_SUBMISSIONS_OPEN: ${{ vars.VITE_SUBMISSIONS_OPEN }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
