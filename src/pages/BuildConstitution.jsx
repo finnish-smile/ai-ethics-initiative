@@ -592,32 +592,20 @@ export default function BuildConstitution() {
   return (
     <div className="bc">
       {/* Hero */}
-      <header className="bc-hero" data-screen-label="Build your constitution">
-        {/* Faded painting behind the hero text; decorative, so hidden from
-            screen readers (credited in the caption below). */}
-        <div
-          className="bc-hero__bg"
-          aria-hidden="true"
-          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}constitution/school-of-athens.jpg)` }}
+      {/* Painting header, same as Principles, Learn, News and Events. */}
+      <header className="phead phead--painting" data-screen-label="Build your constitution">
+        <img
+          className="phead__painting"
+          src={`${import.meta.env.BASE_URL}constitution/school-of-athens.jpg`}
+          alt="Raphael, The School of Athens, a painting of ancient philosophers gathered in a grand arched hall"
+          style={{ objectPosition: '50% 45%', filter: 'brightness(0.8) saturate(0.9)' }}
         />
-        <div className="wrap bc-hero__main">
-          <div className="bc-hero__text">
-            <p className="kicker">The Constitution Assignment</p>
-            <h1>Build your personal AI constitution</h1>
-            <p className="bc-hero__lede">
-              Write the rules you want your AI to follow — and that you want to follow when you use it.
-            </p>
-          </div>
-          <div className="bc-hero__actions">
-            <a className="btn btn--primary" href="#rubric">
-              Read the guidelines <span className="arrow">&rarr;</span>
-            </a>
-            <a className="btn btn--ghost" href="#submit">
-              Submit your work
-            </a>
-          </div>
+        <div className="wrap">
+          <p className="kicker">The Constitution Assignment</p>
+          <h1>Build your personal AI constitution</h1>
+          <p>Write the rules you want your AI to follow, and that you want to follow when you use it.</p>
         </div>
-        <p className="wrap bc-hero__credit">Background: Raphael, The School of Athens, 1509–1511</p>
+        <p className="phead__caption">Raphael, The School of Athens, 1509–1511</p>
       </header>
 
       {/* Introduction */}
