@@ -65,7 +65,14 @@ const RUBRIC = [
   },
   {
     criterion: 'The five principles',
-    lookFor: `How you implemented each of the five principles (${PRINCIPLES.map((p) => p.title).join(', ')}) in your constitution.`,
+    lookFor: (
+      <>
+        {`How you implemented each of the five principles (${PRINCIPLES.map((p) => p.title).join(', ')}) in your constitution. `}
+        <Link to="/principles" className="bc-table__link">
+          Click here to review the principles &rarr;
+        </Link>
+      </>
+    ),
     points: 40,
   },
   {
@@ -637,11 +644,6 @@ export default function BuildConstitution() {
               </p>
             </div>
           </div>
-          <p className="bc-tip">
-            Need a starting point? Draft your articles in the{' '}
-            <Link to="/kickstart/ethics">Constitution Builder in Learn, Module 2</Link>, then download and refine
-            them.
-          </p>
         </div>
       </section>
 
