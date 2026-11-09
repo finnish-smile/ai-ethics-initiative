@@ -12,9 +12,10 @@
 }
 
 /* ---- Painting header: the School of Athens is brighter than the other
-   pages' paintings, so it gets a deeper fade behind the title. ---- */
+   pages' paintings, so it gets a deeper fade right along the bottom, behind
+   the title — limited to the lower 20% so the painting itself stays bright. ---- */
 .bc .phead--painting::after {
-  background: linear-gradient(to top, rgba(20, 15, 10, 0.78) 0%, rgba(20, 15, 10, 0.5) 38%, rgba(20, 15, 10, 0) 68%);
+  background: linear-gradient(to top, rgba(20, 15, 10, 0.72) 0%, rgba(20, 15, 10, 0.4) 11%, rgba(20, 15, 10, 0) 20%);
 }
 
 /* ---- Shared section heads ---- */
