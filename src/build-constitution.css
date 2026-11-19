@@ -14,6 +14,8 @@
 /* ---- Painting header: the School of Athens is brighter than the other
    pages' paintings, so it gets a deeper fade right along the bottom, behind
    the title — limited to the lower 20% so the painting itself stays bright. ---- */
+/* Title in pure white here (the other painting pages use a warm off-white). */
+.bc .phead--painting h1 { color: #fff; }
 .bc .phead--painting::after {
   background: linear-gradient(to top, rgba(20, 15, 10, 0.72) 0%, rgba(20, 15, 10, 0.4) 11%, rgba(20, 15, 10, 0) 20%);
 }
