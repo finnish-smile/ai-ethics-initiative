@@ -511,6 +511,10 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
 /* the credit now sits below the painting (.painting-credit in HomeView), so the
    old one on the painting is hidden */
 .stew .stew-hero-caption { display:none !important; }
+/* The guide resets every paragraph inside it (`.stew :where(… p …) { all: revert }`),
+   which undid .painting-credit and left it white on the white page. Restate the
+   credit's look with a selector that outranks that reset. */
+.stew .painting-credit { margin:8px 0 0; padding:0 20px; font-family:'IBM Plex Sans',system-ui,sans-serif; font-size:11px; line-height:1.4; letter-spacing:.05em; color:rgba(20,20,20,0.32); }
 /* D&C 136:27, written out just below the painting */
 .stew .stew-epigraph { padding:48px max(32px, calc((100% - 1320px)/2)) 0; }
 .stew .stew-epigraph blockquote { margin:0; max-width:760px; border-left:2px solid rgba(20,20,20,0.18); padding-left:24px; }
