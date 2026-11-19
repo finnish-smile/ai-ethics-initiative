@@ -24,6 +24,8 @@ export default function HomeView({ V }) {
       </div>
       <div className="stew-hero-spacer" style={{ height: 'var(--stew-hero-h)', width: '100%' }} />
       <div className={`stew-content-panel ${V.homeReturnClass ?? ''}`} style={{ position: 'relative', zIndex: '1', display: 'block', background: 'transparent' }}>
+        {/* Painting credit, just below the painting (very faint) */}
+        <p className="painting-credit">George Inness, The Lackawanna Valley, 1855</p>
         <div className="stew-epigraph">
           <blockquote>
             <p>

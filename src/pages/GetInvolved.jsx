@@ -21,8 +21,9 @@ export default function GetInvolved() {
           <h1>Events and Activities</h1>
           <p>Check in on upcoming events, workshops, and competitions.</p>
         </div>
-        <p className="phead__caption">Georges Seurat, A Sunday on La Grande Jatte, 1884–86</p>
       </header>
+      {/* Painting credit, just below the painting (very faint) */}
+      <p className="painting-credit">Georges Seurat, A Sunday on La Grande Jatte, 1884–86</p>
 
       <div className="gi-panel">
         <section className="hero" data-screen-label="Spotlights">

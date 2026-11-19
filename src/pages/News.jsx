@@ -108,8 +108,9 @@ export default function News() {
           <h1>The Inchworm Dispatch</h1>
           <p>Top stories in AI and ethics.</p>
         </div>
-        <p className="phead__caption">Wilhelm Leibl, The Village Politicians, 1877</p>
       </header>
+      {/* Painting credit, just below the painting (very faint) */}
+      <p className="painting-credit">Wilhelm Leibl, The Village Politicians, 1877</p>
 
       <section className="section" data-screen-label="Featured">
         <div className="wrap">

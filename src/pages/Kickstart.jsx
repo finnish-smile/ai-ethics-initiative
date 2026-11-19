@@ -21,8 +21,9 @@ export default function Kickstart() {
             Courses, guides, and tools built by experts to help you use and understand AI better.
           </p>
         </div>
-        <p className="ks-hero__caption">Winslow Homer, The Country School, 1871</p>
       </section>
+      {/* Painting credit, just below the painting (very faint) */}
+      <p className="painting-credit">Winslow Homer, The Country School, 1871</p>
 
       <section className="section" data-screen-label="Coursework">
         <div className="wrap">

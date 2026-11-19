@@ -42,8 +42,9 @@ export default function Articles() {
           <h1>The Inchworm Archive</h1>
           <p>All our collected articles on AI Ethics</p>
         </div>
-        <p className="phead__caption">Wilhelm Leibl, The Village Politicians, 1877</p>
       </header>
+      {/* Painting credit, just below the painting (very faint) */}
+      <p className="painting-credit">Wilhelm Leibl, The Village Politicians, 1877</p>
 
       <section className="section" data-screen-label="Article browser">
         <div className="wrap">

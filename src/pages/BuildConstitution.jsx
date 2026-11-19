@@ -610,8 +610,9 @@ export default function BuildConstitution() {
         <div className="wrap">
           <h1>Build your personal AI constitution</h1>
         </div>
-        <p className="phead__caption">Raphael, The School of Athens, 1509–1511</p>
       </header>
+      {/* Painting credit, just below the painting (very faint) */}
+      <p className="painting-credit">Raphael, The School of Athens, 1509–1511</p>
 
       {/* Introduction */}
       <section className="section bc-intro" data-screen-label="The assignment">
