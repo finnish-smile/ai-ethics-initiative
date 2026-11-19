@@ -508,9 +508,11 @@ main:has(> .stew) + .foot { position: relative; z-index: 2; }
    same element holds the white "paper" cover, which must stay clean) */
 .stew:has(.stew-hero-content) .stew-hero-fixed::after { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(to top, rgba(20,15,10,0.35) 0%, rgba(20,15,10,0.12) 30%, rgba(20,15,10,0) 48%); }
 /* credit line: 70% transparent */
-.stew .stew-hero-caption { color:rgba(255,255,255,0.3) !important; text-shadow:none; }
+/* the credit now sits below the painting (.painting-credit in HomeView), so the
+   old one on the painting is hidden */
+.stew .stew-hero-caption { display:none !important; }
 /* D&C 136:27, written out just below the painting */
-.stew .stew-epigraph { padding:64px max(32px, calc((100% - 1320px)/2)) 0; }
+.stew .stew-epigraph { padding:48px max(32px, calc((100% - 1320px)/2)) 0; }
 .stew .stew-epigraph blockquote { margin:0; max-width:760px; border-left:2px solid rgba(20,20,20,0.18); padding-left:24px; }
 .stew .stew-epigraph p { margin:0; font-family:'Newsreader',Georgia,serif; font-style:italic; font-size:clamp(20px, 2vw, 28px); line-height:1.5; color:#2a2620; text-wrap:pretty; }
 .stew .stew-epigraph cite { display:block; margin-top:12px; font-family:'IBM Plex Sans',system-ui,sans-serif; font-style:normal; font-weight:700; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:#0047BA; }

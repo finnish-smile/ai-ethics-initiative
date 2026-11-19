@@ -503,19 +503,16 @@ a.card:not(:has(.link-more)):hover .card__title { text-decoration: underline; te
   text-shadow: 0 2px 18px rgba(20, 17, 12, 0.55);
 }
 .phead--painting p { color: rgba(255, 255, 255, 0.85); }
-/* .phead .phead__caption (not just .phead__caption) so it outranks the
-   generic `.phead p` size/colour/margin rules above. */
-.phead .phead__caption {
-  position: absolute;
-  max-width: none;
-  left: 20px;
-  bottom: 14px;
-  z-index: 1;
-  margin: 0;
+/* Painting credit (all painting pages): sits just below the painting, small
+   and very faint, like a museum label. */
+.painting-credit {
+  margin: 8px 0 0;
+  padding: 0 20px;
+  font-family: var(--font-body);
   font-size: 11px;
+  line-height: 1.4;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.3); /* credit line: 70% transparent */
-  white-space: nowrap;
+  color: rgba(20, 20, 20, 0.32);
 }
 
 /* utility */

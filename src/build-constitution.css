@@ -12,9 +12,10 @@
 }
 
 /* ---- Painting header: the School of Athens is brighter than the other
-   pages' paintings, so it gets a deeper fade behind the title. ---- */
+   pages' paintings, so it gets a deeper fade right along the bottom, behind
+   the title — limited to the lower 20% so the painting itself stays bright. ---- */
 .bc .phead--painting::after {
-  background: linear-gradient(to top, rgba(20, 15, 10, 0.78) 0%, rgba(20, 15, 10, 0.5) 38%, rgba(20, 15, 10, 0) 68%);
+  background: linear-gradient(to top, rgba(20, 15, 10, 0.72) 0%, rgba(20, 15, 10, 0.4) 11%, rgba(20, 15, 10, 0) 20%);
 }
 
 /* ---- Shared section heads ---- */
@@ -40,7 +41,6 @@
   .bc-intro__row .bc-bonus { grid-column: 1 / -1; }
 }
 @media (max-width: 640px) { .bc-intro__row { grid-template-columns: 1fr; } }
-.bc-intro .bc-tip { margin: 18px 0 0; }
 
 .bc-deliverable {
   display: flex;
@@ -64,7 +64,6 @@
 }
 .bc-deliverable h3 { font-size: 18px; margin: 4px 0 4px; color: var(--navy); }
 .bc-deliverable p { margin: 0; font-size: 15px; color: var(--muted); }
-.bc-tip { font-size: 15px; color: var(--muted); }
 /* Parts 1 and 2 are the assignment: give them the weight. */
 .bc-deliverable { padding: 22px; }
 .bc-deliverable h3 { font-size: 20px; }
@@ -354,6 +353,19 @@
 .bc-table tbody th { color: var(--navy); font-weight: 600; white-space: nowrap; }
 .bc-table tbody tr:nth-child(even) { background: var(--parchment); }
 .bc-table__pts { width: 90px; text-align: center !important; }
+/* "Click here to review the principles" in the rubric: bold, with a soft
+   highlight so it stands out from the criteria text */
+.bc-table__link {
+  font-weight: 700;
+  color: var(--accent-ink);
+  background: var(--accent-wash);
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.bc-table__link:hover { background: rgba(0, 71, 186, 0.16); }
 @media (max-width: 640px) { .bc-table tbody th { white-space: normal; } }
 
 /* ---- Form bits ---- */

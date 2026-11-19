@@ -76,17 +76,6 @@
   max-width: 60ch;
   color: rgba(255, 255, 255, 0.88);
 }
-.ks-hero__caption {
-  position: absolute;
-  left: 20px;
-  bottom: 14px;
-  z-index: 1;
-  margin: 0;
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.3); /* credit line: 70% transparent */
-  white-space: nowrap;
-}
 
 .ks-hero__note {
   margin-top: 18px;
